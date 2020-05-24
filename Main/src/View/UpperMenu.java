@@ -12,7 +12,7 @@ public class UpperMenu extends JPanel {
         dim.width=500;
         dim.height=50;
 
-        welcom = new JLabel("Welcome to Mapa Activation:");
+        welcom = new JLabel("Welcome to Mapa Activation");
         welcom.setPreferredSize(dim);
         welcom.setFont(new Font("Arial",Font.PLAIN,36));
 
