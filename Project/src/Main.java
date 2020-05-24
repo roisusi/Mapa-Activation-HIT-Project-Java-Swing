@@ -3,17 +3,5 @@ public class Main {
         System.out.println("EZI");
         System.out.println("EZI");
         System.out.println("EZI");
-        System.out.println("EZI");
-        System.out.println("EZI");
-        System.out.println("EZI");
-        System.out.println("EZI");
-        System.out.println("EZI");
-        System.out.println("EZI");
-        System.out.println("EZI");
-        System.out.println("EZI");
-        System.out.println("EZI");
-        System.out.println("EZI");
-        System.out.println("EZI");
-        System.out.println("EZI");
     }
 }
