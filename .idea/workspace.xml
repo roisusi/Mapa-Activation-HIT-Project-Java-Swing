@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< Updated upstream
     <list default="true" id="078a9f46-dfbb-4a50-b66c-e86ac9f8bf18" name="Default Changelist" comment="">
       <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
@@ -10,12 +11,17 @@
       <change beforePath="$PROJECT_DIR$/Project/README" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/out/production/Project/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Project/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+=======
+    <list default="true" id="aea203f7-7b15-4a66-81a2-3de28967cd20" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Project/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/Main.java" afterDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+<<<<<<< Updated upstream
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -51,22 +57,48 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+=======
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1cL5EjJ6sknbO0kikbNYfwPeCf8" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+>>>>>>> Stashed changes
   </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
+<<<<<<< Updated upstream
       <changelist id="078a9f46-dfbb-4a50-b66c-e86ac9f8bf18" name="Default Changelist" comment="" />
       <created>1590162343287</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1590162343287</updated>
       <workItem from="1590162345757" duration="861000" />
+=======
+      <changelist id="aea203f7-7b15-4a66-81a2-3de28967cd20" name="Default Changelist" comment="" />
+      <created>1590294923320</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1590294923320</updated>
+      <workItem from="1590294924655" duration="20000" />
+>>>>>>> Stashed changes
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
+<<<<<<< Updated upstream
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
@@ -102,5 +134,8 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1089" y="617" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.2560.1400@0.0.2560.1400" timestamp="1590163211499" />
+=======
+    <option name="version" value="2" />
+>>>>>>> Stashed changes
   </component>
 </project>
