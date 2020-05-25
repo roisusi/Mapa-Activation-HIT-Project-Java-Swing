@@ -8,6 +8,8 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -44,6 +46,9 @@ public class LoginUI extends JDialog {
         //-- Password --//
         passwordField.setEchoChar('*');//instead of circles we get ****
 
+        InputMap im = OKButton.getInputMap();
+        im.put( KeyStroke.getKeyStroke( "ENTER" ), "pressed" );
+        im.put( KeyStroke.getKeyStroke( "released ENTER" ), "released" );
 
         // -- Action to OK Button -- //
         OKButton.addActionListener(new ActionListener() {
@@ -63,6 +68,7 @@ public class LoginUI extends JDialog {
                 if(flag == false)
                     JOptionPane.showMessageDialog(LoginUI.this,"Login Failed","Login",JOptionPane.ERROR_MESSAGE);
             }
+
         });
 
         // -- Action to Cancel Button -- //
