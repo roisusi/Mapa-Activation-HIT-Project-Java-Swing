@@ -1,6 +1,6 @@
 package View;
 
-import Model.DataBase;
+import Controller.Contorller;
 import Model.Login;
 
 import javax.swing.*;
@@ -12,8 +12,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class LoginUI extends JDialog {
-    DataBase dataBase = new DataBase();
-    private List<Login> db;
+    private List<Login> loginDB;
+    Contorller contorller;
     private JTextField userField;
     private JPasswordField passwordField;
     private JButton OKButton;
@@ -26,15 +26,16 @@ public class LoginUI extends JDialog {
         passwordField = new JPasswordField(10);
         OKButton = new JButton("OK");
         cancelButton = new JButton("Cancel");
+        contorller = new Contorller();
 
 
         try {
-            dataBase.connect();
+            contorller.connect();
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            dataBase.load();
+            contorller.load();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -52,7 +53,7 @@ public class LoginUI extends JDialog {
                 String user = userField.getText();
                 char[] pass = passwordField.getPassword();
                 boolean flag = false;
-                for (Login login : db) {
+                for (Login login : loginDB) {
                     if (login.getUserName().equals(user) && login.getPassword().equals(new String(pass))){
                         JOptionPane.showMessageDialog(LoginUI.this,"Login Success","Login",JOptionPane.INFORMATION_MESSAGE);
                         flag = true;
@@ -73,23 +74,24 @@ public class LoginUI extends JDialog {
         });
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         layoutControl();
-        setSize(340,280);
+        setSize(400,300);
         setLocationRelativeTo(parent);
     }
 
     private void getUsers(){
-        dataBase.getUsers();
-        db = dataBase.getUsers();
+        contorller.getUsers();
+        loginDB = contorller.getUsers();
     }
 
     private void layoutControl (){
         JPanel controlPanel = new JPanel();
         JPanel buttonsPanel = new JPanel();
 
-        int sapce =20;
-        Border titledBorder = BorderFactory.createTitledBorder("Login");
-        Border spaceBorder = BorderFactory.createEmptyBorder(sapce,sapce,sapce,sapce);
+        int sapce =10;
 
+        Border spaceBorder = BorderFactory.createEmptyBorder(sapce,sapce,sapce,sapce);
+        Border p = BorderFactory.createLineBorder(Color.BLACK);
+        Border titledBorder = BorderFactory.createTitledBorder(p,"Login");
         controlPanel.setBorder(BorderFactory.createCompoundBorder(spaceBorder,titledBorder));
 
         controlPanel.setLayout(new GridBagLayout());
@@ -97,6 +99,8 @@ public class LoginUI extends JDialog {
         gc.fill =  GridBagConstraints.NONE; //dont fill all Cell
         Insets rightPadding = new Insets(0,0,0,15);
         Insets noPadding = new Insets(0,0,0,0);
+        Insets upPadding = new Insets(0,0,40,0);
+        Insets downPadding = new Insets(20,0,0,0);
 
         //-- 1st Row --//
         gc.gridy=0;
@@ -105,11 +109,11 @@ public class LoginUI extends JDialog {
 
         gc.gridx=0;
         gc.anchor = GridBagConstraints.EAST;
-        gc.insets = rightPadding;
+        gc.insets = new Insets(20,0,0,15);
         controlPanel.add(new JLabel("User Name : "),gc);
         gc.gridx++;
         gc.anchor = GridBagConstraints.WEST;
-        gc.insets = noPadding;
+        gc.insets = downPadding;
         controlPanel.add(userField,gc);
         //-- Next Row --//
         gc.gridy++;
@@ -117,11 +121,11 @@ public class LoginUI extends JDialog {
         gc.weightx=1;
         gc.weighty=1;
         gc.anchor = GridBagConstraints.EAST;
-        gc.insets = rightPadding;
+        gc.insets = new Insets(0,0,40,15);
         controlPanel.add(new JLabel("Password : "),gc);
         gc.gridx++;
         gc.anchor = GridBagConstraints.WEST;
-        gc.insets = noPadding;
+        gc.insets = upPadding;
         controlPanel.add(passwordField,gc);
 
 

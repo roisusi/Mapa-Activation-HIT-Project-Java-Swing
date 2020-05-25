@@ -7,10 +7,11 @@ import java.util.List;
 
 public class Contorller {
     DataBase db = new DataBase();
-    public List<Login> getPeople() {
+    Login login;
+
+    public List<Login> getUsers() {
         return db.getUsers();
     }
-    Login login;
 
     /*public void addPerson(FormEvent ev)
     {
