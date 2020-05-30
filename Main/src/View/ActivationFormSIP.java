@@ -92,7 +92,6 @@ public class ActivationFormSIP extends JDialog {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createTitledBorder("טופס התקנה"));
-
         add(mainPanel,BorderLayout.CENTER);
 
         //-- Initialization --//
@@ -291,7 +290,7 @@ public class ActivationFormSIP extends JDialog {
 
 
         FormControl();
-
+        setModal(true);
         setSize(700, 700); // Size the Frame
         //setLocation(300,600); //Center the Frame
         setLocationRelativeTo(parent);
