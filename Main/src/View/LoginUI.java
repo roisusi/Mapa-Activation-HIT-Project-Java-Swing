@@ -15,12 +15,16 @@ import java.util.List;
 
 public class LoginUI extends JDialog {
     private List<Login> loginDB;
-    Contorller contorller;
+    private Contorller contorller;
     private JTextField userField;
     private JPasswordField passwordField;
     private JButton OKButton;
     private JButton cancelButton;
+    private GetUserLogged getUserLogged;
+    private String getUsername;
 
+    public LoginUI() {
+    }
 
     public LoginUI(JFrame parent) {
         super(parent,"Login Page" , true);
@@ -46,10 +50,6 @@ public class LoginUI extends JDialog {
         //-- Password --//
         passwordField.setEchoChar('*');//instead of circles we get ****
 
-        InputMap im = OKButton.getInputMap();
-        im.put( KeyStroke.getKeyStroke( "ENTER" ), "pressed" );
-        im.put( KeyStroke.getKeyStroke( "released ENTER" ), "released" );
-
         // -- Action to OK Button -- //
         OKButton.addActionListener(new ActionListener() {
             @Override
@@ -62,6 +62,7 @@ public class LoginUI extends JDialog {
                     if (login.getUserName().equals(user) && login.getPassword().equals(new String(pass))){
                         JOptionPane.showMessageDialog(LoginUI.this,"Login Success","Login",JOptionPane.INFORMATION_MESSAGE);
                         flag = true;
+                        getUsername = user;
                         dispose();
                     }
                 }
@@ -70,6 +71,7 @@ public class LoginUI extends JDialog {
             }
 
         });
+
 
         // -- Action to Cancel Button -- //
         cancelButton.addActionListener(new ActionListener() {
@@ -82,6 +84,11 @@ public class LoginUI extends JDialog {
         layoutControl();
         setSize(400,300);
         setLocationRelativeTo(parent);
+    }
+    public void setGetUserLogged (GetUserLogged listener)
+    {
+        this.getUserLogged = listener;
+        getUserLogged.getUser(getUsername);
     }
 
     private void getUsers(){

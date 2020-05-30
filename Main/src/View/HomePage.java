@@ -33,7 +33,6 @@ public class HomePage extends JFrame {
         setMinimumSize(new Dimension(400, 500)); //set minimum
         setLocationRelativeTo(null); //Center the Frame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //when i press X it will close
-        loginUI.setVisible(true);
         setVisible(true); //show Frame
     }
 }

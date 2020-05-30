@@ -1,5 +1,7 @@
 package View;
 
+import Model.Login;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -12,6 +14,10 @@ public class HomePageMenu extends JPanel {
     private JButton editForm;
     private JButton reports;
     private JButton manageUsers;
+    private JLabel welcomUser;
+    private LoginUI loginUI;
+    private JLabel userName;
+    private JFrame parent;
     ActivationFormSIP activationFormSIPDialog;
 
     public HomePageMenu() {
@@ -26,8 +32,21 @@ public class HomePageMenu extends JPanel {
         manageUsers = new JButton("Manage Users");
         manageUsers.setPreferredSize(new Dimension(200,50));
 
+        parent = new JFrame();
+        loginUI = new LoginUI(parent);
+
+
+        //-- Login Popup Dialog --//
+        loginUI.setVisible(true);
+        loginUI.setGetUserLogged(new GetUserLogged() {
+            @Override
+            public void getUser(String User) {
+                userName = new JLabel("Hello, " + User);
+            }
+        });
+
         //-- Create The Borders --//
-        Border outerBorder = BorderFactory.createEmptyBorder(200,10,200,10);
+        Border outerBorder = BorderFactory.createEmptyBorder(100,10,300,10);
         Border innerBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black),"Menu Option"); //adds Label to the border
         setBorder(BorderFactory.createCompoundBorder(innerBorder,outerBorder)); //for 2 borders
 
@@ -39,8 +58,19 @@ public class HomePageMenu extends JPanel {
         GridBagConstraints gc = new GridBagConstraints();
         gc.fill = GridBagConstraints.NONE; //if the component isnt the same size as the frame , it resize it. NONE make it non resize
 
-        //-- 1St Row -- //
+        //-- 1St Row --/
         gc.gridy=0;
+        gc.weightx=1;
+        gc.weighty=1;
+        gc.gridx=0;
+        gc.anchor = GridBagConstraints.FIRST_LINE_START;
+        gc.insets = new Insets(0,30,0,30); // make space from label to field text
+        userName.setFont(new Font("Arial",Font.PLAIN,36));
+        userName.setForeground(Color.BLUE);
+        add(userName,gc);
+
+        //-- 2St Row -- //
+        gc.gridy++;
         gc.weightx=1;
         gc.weighty=0.1;
         gc.gridx=0;
@@ -51,7 +81,7 @@ public class HomePageMenu extends JPanel {
         gc.anchor = GridBagConstraints.FIRST_LINE_START;
         add(editForm,gc);
 
-        //-- 2St Row -- //
+        //-- 3St Row -- //
         gc.gridy++;
         gc.weightx=1;
         gc.weighty=2;
