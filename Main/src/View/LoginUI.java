@@ -41,7 +41,7 @@ public class LoginUI extends JDialog {
             e.printStackTrace();
         }
         try {
-            contorller.load();
+            contorller.loadTheUsers();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

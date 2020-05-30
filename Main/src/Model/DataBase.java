@@ -1,21 +1,25 @@
 package Model;
 
-import java.io.*;
+import View.ActivationFormSIP;
+
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 public class DataBase {
     private List<Login> users;
+    private List<ActivationFormSip> sipActivation;
     private Connection con;
 
 
     public DataBase() {
         this.users = new LinkedList<Login>();
+        this.sipActivation = new LinkedList<ActivationFormSip>();
     }
 
-/*    public void addPerson(Person person) {
-        people.add(person);
-    }*/
+    public void addActivationSip(ActivationFormSip sipAct) {
+        sipActivation.add(sipAct);
+    }
 
 /*    public void removePerson(int index) {
         Person person = people.get(index);
@@ -32,6 +36,10 @@ public class DataBase {
         return Collections.unmodifiableList(users);//prevent for other to change the list when they get REF , just get it
     }
 
+    public List<ActivationFormSip> getSipActivation(){
+        return Collections.unmodifiableList(sipActivation);
+    }
+
     public void connect() throws Exception {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -41,8 +49,7 @@ public class DataBase {
         //String connectionUrl = "jdbc:mysql://localhost:3306/swingtest?autoReconnect=true&useSSL=false";
         String connectionUrl = "jdbc:mysql://mysql-9407-0.cloudclusters.net:9407/swingtest?autoReconnect=true&useSSL=false";
         con = DriverManager.getConnection(connectionUrl, "Roi", "prnm4400$");
-        System.out.println("Connected to : " + con);
-
+        //System.out.println("Connected to : " + con);
     }
 
     public void disconnect() {
@@ -143,7 +150,7 @@ public class DataBase {
 
     }*/
 
-    public void load() throws SQLException {
+    public void loadUsers() throws SQLException {
         users.clear();
         String selectSql = "select id,Username,Password from SystemUsers";
         Statement selectStatment = con.createStatement();
@@ -158,8 +165,55 @@ public class DataBase {
             Login user = new Login(id,userName, password);
             users.add(user);
         }
-
         selectStatment.close();
+    }
+    public void loadCalanderSipActivation() throws SQLException {
+        sipActivation.clear();
+        String selectSql = "select CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
+                "SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,Date,WanAddress,LanAddress,IPpbx,InternetUser,Infrastructure," +
+                "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport from Activation_SIP";
+        Statement selectStatment = con.createStatement();
 
+        ResultSet results = selectStatment.executeQuery(selectSql);
+
+        while (results.next()) {
+            int CustomerID = results.getInt("CustomerID");
+            String CustomerName = results.getString("CustomerName");
+            String contactName = results.getString("ContactName");
+            String CustomerPhoneNumber = results.getString("CustomerPhoneNumber");
+            String CustomerEmail = results.getString("CustomerEmail");
+            String TechnicanName = results.getString("TechnicanName");
+            String TechnicanPhone = results.getString("TechnicanPhone");
+            String SwitchType = results.getString("SwitchType");
+            String TypeOfCalls = results.getString("TypeOfCalls");
+            String IdenteficationType = results.getString("IdenteficationType");
+            int TotalNumbers = results.getInt("TotalNumbers");
+            String SNBnumber = results.getString("SNBnumber");
+            String NumberRange = results.getString("NumberRange");
+            String AreaCode = results.getString("AreaCode");
+            String EmergancyCity = results.getString("EmergancyCity");
+            String CallOutCountry = results.getString("CallOutCountry");
+            String CRnumber = results.getString("CRnumber");
+            String TrunkNumber = results.getString("TrunkNumber");
+            Date date = results.getDate("Date");
+            String WanAddress = results.getString("WanAddress");
+            String LanAddress = results.getString("LanAddress");
+            String IPpbx = results.getString("IPpbx");
+            String InternetUser = results.getString("InternetUser");
+            String Infrastructure = results.getString("Infrastructure");
+            String RouterType = results.getString("RouterType");
+            String Codec = results.getString("Codec");
+            int TotalCalls = results.getInt("TotalCalls");
+            String SignalIP = results.getString("SignalIP");
+            String MediaIP = results.getString("MediaIP");
+            int port = results.getInt("SBCport");
+
+
+            ActivationFormSip activation = new ActivationFormSip(CustomerID,CustomerName,contactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,
+                    TypeOfCalls,IdenteficationType,TotalNumbers,SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,date,WanAddress,LanAddress,IPpbx,InternetUser,
+                    Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port);
+            sipActivation.add(activation);
+        }
+        selectStatment.close();
     }
 }

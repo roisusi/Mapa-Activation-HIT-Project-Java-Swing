@@ -1,24 +1,41 @@
 package View;
 
+
+import Controller.Contorller;
+
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 public class HomePage extends JFrame {
     private HomePageCalenderMenu cal;
     private HomePageMenu menu;
     private UpperMenu upperMenu;
-    private LoginUI loginUI;
+    private Contorller contorller;
 
     public HomePage() {
         super("Mapa Activation");
+        contorller = new Contorller();
         setLayout(new BorderLayout()); //set BorderLayout
-        loginUI = new LoginUI(HomePage.this);
 
         //-- Creation of Left Side --//
         menu = new HomePageMenu();
 
         //-- Creation of Right side --//
         cal = new HomePageCalenderMenu();
+        cal.setData(contorller.getSipActivaion());
+        try {
+            contorller.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            contorller.loadTheActivationSip();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        cal.refresh();
+
 
         //-- Creation of UpperMenu --//
         upperMenu = new UpperMenu();
@@ -35,4 +52,5 @@ public class HomePage extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //when i press X it will close
         setVisible(true); //show Frame
     }
+
 }

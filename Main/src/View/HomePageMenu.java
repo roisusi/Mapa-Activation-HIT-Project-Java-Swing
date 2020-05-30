@@ -1,5 +1,6 @@
 package View;
 
+import Controller.Contorller;
 import Model.Login;
 
 import javax.swing.*;
@@ -19,6 +20,11 @@ public class HomePageMenu extends JPanel {
     private JLabel userName;
     private JFrame parent;
     ActivationFormSIP activationFormSIPDialog;
+    private Contorller contorller;
+    private HomePageCalenderMenu homePageCalenderMenu= new HomePageCalenderMenu();
+
+
+
 
     public HomePageMenu() {
 
@@ -34,6 +40,7 @@ public class HomePageMenu extends JPanel {
 
         parent = new JFrame();
         loginUI = new LoginUI(parent);
+        contorller = new Contorller();
 
 
         //-- Login Popup Dialog --//
@@ -52,6 +59,13 @@ public class HomePageMenu extends JPanel {
 
         //-- Create Form Dialog --//
         activationFormSIPDialog = new ActivationFormSIP(HomePageMenu.this);
+        activationFormSIPDialog.setFormListener(new FormListener() {
+            @Override
+            public void formEventOccurred(FormEvent e) {
+                contorller.addActivationSip(e);
+                homePageCalenderMenu.refresh();
+            }
+        });
 
         //Grid Bag Layout - new way to set layouts
         setLayout(new GridBagLayout());
