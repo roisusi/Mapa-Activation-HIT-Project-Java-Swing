@@ -5,6 +5,8 @@ import Controller.Contorller;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 public class HomePage extends JFrame {
@@ -35,7 +37,6 @@ public class HomePage extends JFrame {
             e.printStackTrace();
         }
         cal.refresh();
-
 
         //-- Creation of UpperMenu --//
         upperMenu = new UpperMenu();

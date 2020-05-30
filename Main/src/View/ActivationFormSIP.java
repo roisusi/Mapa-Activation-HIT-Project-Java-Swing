@@ -93,7 +93,6 @@ public class ActivationFormSIP extends JDialog {
     private JLabel sbcPortLabel = new JLabel("פורט SBC : ");
 
 
-
     public ActivationFormSIP(JPanel parent) {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());

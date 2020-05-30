@@ -63,7 +63,15 @@ public class HomePageMenu extends JPanel {
             @Override
             public void formEventOccurred(FormEvent e) {
                 contorller.addActivationSip(e);
-                homePageCalenderMenu.refresh();
+                homePageCalenderMenu.setData(contorller.getSipActivaion());
+                System.out.println(contorller.getSipActivaion().size());
+            }
+        });
+
+        editForm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(contorller.getSipActivaion().size());
             }
         });
 
