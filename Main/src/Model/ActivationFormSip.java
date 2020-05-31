@@ -15,7 +15,7 @@ public class ActivationFormSip extends ActivationForm{
     private String mediaAddress;
     private int sbcPort;
 
-    public ActivationFormSip(int customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber,
+    public ActivationFormSip(String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber,
                              String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, Date datePicker, String wanAddress,String lanAddress
                                 , String ipAddress, String internetUser, String infrastructure,String routerType,String CODEC,int totalCalls,String signalAddress, String mediaAddress,int sbcPort) {
         super(customerID,customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker);
@@ -33,7 +33,7 @@ public class ActivationFormSip extends ActivationForm{
     }
 
     @Override
-    public int getCustomerID() {
+    public String getCustomerID() {
         return super.getCustomerID();
     }
 

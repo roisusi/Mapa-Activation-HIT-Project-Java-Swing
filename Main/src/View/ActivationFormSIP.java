@@ -1,5 +1,6 @@
 package View;
 
+import com.mysql.jdbc.StringUtils;
 import org.jdatepicker.JDatePanel;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.UtilDateModel;
@@ -7,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.util.Date;
 
 public class ActivationFormSIP extends JDialog {
@@ -277,7 +279,7 @@ public class ActivationFormSIP extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                int customerIDEv;
+                String customerIDEv;
                 String customerNameEv;
                 String contactNameEv;
                 String customerPhoneNumberEv;
@@ -307,11 +309,21 @@ public class ActivationFormSIP extends JDialog {
                 String signalAddressEv;
                 String mediaAddressEv;
                 int sbcPortEv;
+                DateLabelFormatter dateLabelFormatter = new DateLabelFormatter();
+                try {
+                    dateLabelFormatter.valueToString((Date)datePicker.getModel().getValue());
+                    System.out.println(dateLabelFormatter.valueToString((Date)datePicker.getModel().getValue()));
 
+                } catch (ParseException parseException) {
+                    parseException.printStackTrace();
+                }
                 if (checkEmptyCells()) {
-                    if (CheckIP())
+                    if (CheckInputDigits() && CheckIP())
                     {
-                        customerIDEv = Integer.parseInt(customerID.getText());
+                        customerIDEv = customerID.getText();
+                        totalNumbersEv = Integer.parseInt(totalNumbers.getText());
+                        sbcPortEv = Integer.parseInt(sbcPort.getValue().toString());
+                        totalCallsEv = Integer.parseInt(totalCalls.getText());
                         customerNameEv = customerName.getText();
                         contactNameEv = contactName.getText();
                         customerPhoneNumberEv = customerPhoneNumber.getText();
@@ -321,7 +333,6 @@ public class ActivationFormSIP extends JDialog {
                         typeOfCallsEv = (String)typeOfCalls.getSelectedItem();
                         pbxTypeEv = pbxType.getText();
                         identificationTypeEv = (String)identificationType.getSelectedItem();
-                        totalNumbersEv = Integer.parseInt(totalNumbers.getText());
                         snbNumberEv = snbNumber.getText();
                         numberRangeEv = numberRange.getText();
                         areaCodeEv = (String)areaCode.getSelectedItem();
@@ -329,7 +340,10 @@ public class ActivationFormSIP extends JDialog {
                         callOutSideCountryEv = callOutSideCountry.getElements().toString();
                         crNumberEv = crNumber.getText();
                         trunkNumberEv = trunkNumber.getText();
+
                         datePickerEv = (Date)datePicker.getModel().getValue();
+
+
                         wanAddressEv = wanAddressA.getText() + "." + wanAddressB.getText() + "." + wanAddressC.getText() + "." + wanAddressD.getText();
                         lanAddressEv = lanAddressA.getText() + "." + lanAddressB.getText() + "." + lanAddressC.getText() + "." + lanAddressD.getText();
                         ipAddressEv =  ipAddressA.getText() + "." + ipAddressB.getText() + "." + ipAddressC.getText() + "." + ipAddressD.getText();
@@ -337,18 +351,22 @@ public class ActivationFormSIP extends JDialog {
                         infrastructureEv = infrastructure.getText();
                         routerTypeEv = routerTypeGroup.getElements().toString();
                         CODECEv = (String)CODEC.getSelectedItem();
-                        totalCallsEv = Integer.parseInt(totalCalls.getText());
                         signalAddressEv = (String)signalAddress.getSelectedItem();
                         mediaAddressEv = (String)mediaAddress.getSelectedItem();
-                        sbcPortEv = Integer.parseInt(sbcPort.getValue().toString());
+
                         FormEvent ev = new FormEvent(this,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,typeOfCallsEv,pbxTypeEv,identificationTypeEv,
                                 totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
                                 infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv);
                         formListener.formEventOccurred(ev);
                     }
-                    else
-                        JOptionPane.showMessageDialog(ActivationFormSIP.this,"כתובת IP אינה תקינה","Error",JOptionPane.ERROR_MESSAGE);
-
+                    else {
+                        if (CheckInputDigits()) {
+                            if (!CheckIP())
+                                JOptionPane.showMessageDialog(ActivationFormSIP.this, "כתובת IP אינה תקינה", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                            else
+                                JOptionPane.showMessageDialog(ActivationFormSIP.this, "יש להזין ערך מספרי בלבד", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 else
                     JOptionPane.showMessageDialog(ActivationFormSIP.this,"נא השלם את הנתונים באדום","Error",JOptionPane.ERROR_MESSAGE);
@@ -368,45 +386,83 @@ public class ActivationFormSIP extends JDialog {
     }
     private boolean CheckIP(){
         boolean allGood = true;
-        Integer wanA = Integer.parseInt(wanAddressA.getText());
-        Integer wanB = Integer.parseInt(wanAddressB.getText());
-        Integer wanC = Integer.parseInt(wanAddressC.getText());
-        Integer wanD = Integer.parseInt(wanAddressD.getText());
-        if (wanA >=0 && wanA <=255 && wanB >=0 && wanB <=255 && wanC >=0 && wanC <=255 && wanD >=0 && wanD <=255)
-        {
-            if((wanA == 10 && wanB != 142) || (wanA == 192 && wanB == 168) || (wanA == 172 && (wanB >=16 && wanB<=31)) || wanA == 127) {
-                wanAddressLabel.setForeground(Color.red);
-                allGood = false;
+            Integer wanA = Integer.parseInt(wanAddressA.getText());
+            Integer wanB = Integer.parseInt(wanAddressB.getText());
+            Integer wanC = Integer.parseInt(wanAddressC.getText());
+            Integer wanD = Integer.parseInt(wanAddressD.getText());
+            if (wanA >= 0 && wanA <= 255 && wanB >= 0 && wanB <= 255 && wanC >= 0 && wanC <= 255 && wanD >= 0 && wanD <= 255) {
+                if ((wanA == 10 && wanB != 142) || (wanA == 192 && wanB == 168) || (wanA == 172 && (wanB >= 16 && wanB <= 31)) || wanA == 127) {
+                    wanAddressLabel.setForeground(Color.red);
+                    allGood = false;
+                }
             }
-        }
 
-        Integer lanA = Integer.parseInt(lanAddressA.getText());
-        Integer lanB = Integer.parseInt(lanAddressB.getText());
-        Integer lanC = Integer.parseInt(lanAddressC.getText());
-        Integer lanD = Integer.parseInt(lanAddressD.getText());
-        if (lanA >=0 && lanA <=255 && lanB >=0 && lanB <=255 && lanC >=0 && lanC <=255 && lanD >=0 && lanD <=255)
-        {
-            if((lanA == 10 && lanB != 142) || (lanA == 192 && lanB == 168) || (lanA == 172 && (lanB >=16 && lanB<=31)) || lanA == 127) {
-                lanAddressLabel.setForeground(Color.red);
-                allGood = false;
-            };
-        }
-
-        Integer ipA = Integer.parseInt(ipAddressA.getText());
-        Integer ipB = Integer.parseInt(ipAddressB.getText());
-        Integer ipC = Integer.parseInt(ipAddressC.getText());
-        Integer ipD = Integer.parseInt(ipAddressD.getText());
-        if (ipA >=0 && ipA <=255 && ipB >=0 && ipB <=255 && ipC >=0 && ipC <=255 && ipD >=0 && ipD <=255)
-        {
-            if((ipA == 10 && ipB != 142) || (ipA == 192 && ipB == 168) || (ipA == 172 && (ipB >=16 && ipB<=31)) || ipA == 127) {
-                ipAddressLabel.setForeground(Color.red);
-                allGood = false;
+            Integer lanA = Integer.parseInt(lanAddressA.getText());
+            Integer lanB = Integer.parseInt(lanAddressB.getText());
+            Integer lanC = Integer.parseInt(lanAddressC.getText());
+            Integer lanD = Integer.parseInt(lanAddressD.getText());
+            if (lanA >= 0 && lanA <= 255 && lanB >= 0 && lanB <= 255 && lanC >= 0 && lanC <= 255 && lanD >= 0 && lanD <= 255) {
+                if ((lanA == 10 && lanB != 142) || (lanA == 192 && lanB == 168) || (lanA == 172 && (lanB >= 16 && lanB <= 31)) || lanA == 127) {
+                    lanAddressLabel.setForeground(Color.red);
+                    allGood = false;
+                }
+                ;
             }
-        }
 
+            Integer ipA = Integer.parseInt(ipAddressA.getText());
+            Integer ipB = Integer.parseInt(ipAddressB.getText());
+            Integer ipC = Integer.parseInt(ipAddressC.getText());
+            Integer ipD = Integer.parseInt(ipAddressD.getText());
+            if (ipA >= 0 && ipA <= 255 && ipB >= 0 && ipB <= 255 && ipC >= 0 && ipC <= 255 && ipD >= 0 && ipD <= 255) {
+                if ((ipA == 10 && ipB != 142) || (ipA == 192 && ipB == 168) || (ipA == 172 && (ipB >= 16 && ipB <= 31)) || ipA == 127) {
+                    ipAddressLabel.setForeground(Color.red);
+                    allGood = false;
+                }
+            }
         return allGood;
     }
+    private boolean CheckInputDigits(){
+        boolean flag=true;
+        if (!StringUtils.isStrictlyNumeric(totalNumbers.getText())) {
+            totalNumbersLabel.setForeground(Color.red);
+            flag = false;
+        }
+        else
+            totalNumbersLabel.setForeground(Color.black);
 
+        if (!StringUtils.isStrictlyNumeric(totalCalls.getText())){
+            totalCallsLabel.setForeground(Color.red);
+            flag = false;
+        }
+        else
+            totalCallsLabel.setForeground(Color.black);
+
+        if (!StringUtils.isStrictlyNumeric(wanAddressA.getText()) || !StringUtils.isStrictlyNumeric(wanAddressB.getText()) ||
+                !StringUtils.isStrictlyNumeric(wanAddressC.getText()) || !StringUtils.isStrictlyNumeric(wanAddressD.getText())) {
+            wanAddressLabel.setForeground(Color.red);
+            flag = false;
+        }
+        else
+            wanAddressLabel.setForeground(Color.black);
+
+        if (!StringUtils.isStrictlyNumeric(lanAddressA.getText()) || !StringUtils.isStrictlyNumeric(lanAddressB.getText()) ||
+                !StringUtils.isStrictlyNumeric(lanAddressC.getText()) || !StringUtils.isStrictlyNumeric(lanAddressD.getText())) {
+            lanAddressLabel.setForeground(Color.red);
+            flag = false;
+        }
+        else
+            lanAddressLabel.setForeground(Color.black);
+
+        if (!StringUtils.isStrictlyNumeric(ipAddressA.getText()) || !StringUtils.isStrictlyNumeric(ipAddressB.getText()) ||
+                !StringUtils.isStrictlyNumeric(ipAddressC.getText()) || !StringUtils.isStrictlyNumeric(ipAddressD.getText())) {
+            ipAddressLabel.setForeground(Color.red);
+            flag = false;
+        }
+        else
+            ipAddressLabel.setForeground(Color.black);
+
+        return flag;
+    }
     private boolean checkEmptyCells(){
         boolean allGood = true;
 
@@ -853,6 +909,16 @@ public class ActivationFormSIP extends JDialog {
         gcLeft.gridx = 0;
         gcLeft.insets = new Insets(0,rightLeftRow,0,0);
         gcLeft.anchor = GridBagConstraints.LINE_END;
+        formPanelLeft.add(datePicker,gcLeft);
+        gcLeft.gridx++;
+        gcLeft.insets = new Insets(0,0,0,0);
+        gcLeft.anchor = GridBagConstraints.LINE_START;
+        formPanelLeft.add(new JLabel("תאריך : "),gcLeft);
+
+        gcLeft.gridy ++;
+        gcLeft.gridx = 0;
+        gcLeft.insets = new Insets(0,rightLeftRow,0,0);
+        gcLeft.anchor = GridBagConstraints.LINE_END;
         formPanelLeft.add(crNumber,gcLeft);
         gcLeft.gridx++;
         gcLeft.insets = new Insets(0,0,0,0);
@@ -878,17 +944,6 @@ public class ActivationFormSIP extends JDialog {
         gcLeft.insets = new Insets(0,0,0,0);
         gcLeft.anchor = GridBagConstraints.LINE_START;
         formPanelLeft.add(sbcPortLabel,gcLeft);
-
-        gcLeft.gridy ++;
-        gcLeft.gridx = 0;
-        gcLeft.insets = new Insets(0,rightLeftRow,0,0);
-        gcLeft.anchor = GridBagConstraints.LINE_END;
-        formPanelLeft.add(datePicker,gcLeft);
-        gcLeft.gridx++;
-        gcLeft.insets = new Insets(0,0,0,0);
-        gcLeft.anchor = GridBagConstraints.LINE_START;
-        formPanelLeft.add(new JLabel("תאריך : "),gcLeft);
-
 
 
         //----------------------------- Right Rows -----------------------------//

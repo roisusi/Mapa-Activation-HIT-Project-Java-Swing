@@ -178,7 +178,7 @@ public class DataBase {
         ResultSet results = selectStatment.executeQuery(selectSql);
 
         while (results.next()) {
-            int CustomerID = results.getInt("CustomerID");
+            String CustomerID = results.getString("CustomerID");
             String CustomerName = results.getString("CustomerName");
             String contactName = results.getString("ContactName");
             String CustomerPhoneNumber = results.getString("CustomerPhoneNumber");
@@ -196,7 +196,7 @@ public class DataBase {
             String CallOutCountry = results.getString("CallOutCountry");
             String CRnumber = results.getString("CRnumber");
             String TrunkNumber = results.getString("TrunkNumber");
-            Date date = results.getDate("Date");
+            java.sql.Date date = results.getDate("Date");
             String WanAddress = results.getString("WanAddress");
             String LanAddress = results.getString("LanAddress");
             String IPpbx = results.getString("IPpbx");

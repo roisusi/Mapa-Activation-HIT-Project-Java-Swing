@@ -4,7 +4,7 @@ import java.util.Date;
 
 public abstract class ActivationForm  {
 
-    protected int customerID;
+    protected String customerID;
     protected String customerName;
     protected String contactName;
     protected String customerPhoneNumber;
@@ -24,7 +24,7 @@ public abstract class ActivationForm  {
     protected String trunkNumber;
     protected Date datePicker;
 
-    public ActivationForm(int customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, Date datePicker) {
+    public ActivationForm(String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, Date datePicker) {
         this.customerID = customerID;
         this.customerName = customerName;
         this.contactName = contactName;
@@ -46,7 +46,7 @@ public abstract class ActivationForm  {
         this.datePicker = datePicker;
     }
 
-    public int getCustomerID() {
+    public String getCustomerID() {
         return customerID;
     }
 

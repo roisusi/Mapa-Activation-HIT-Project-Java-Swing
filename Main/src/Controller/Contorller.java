@@ -23,7 +23,7 @@ public class Contorller {
 
     public void addActivationSip(FormEvent ev)
     {
-        int customerID = ev.getCustomerID();
+        String customerID = ev.getCustomerID();
         String customerName = ev.getCustomerName();
         String contactName = ev.getContactName();
         String customerPhoneNumber = ev.getCustomerPhoneNumber();

@@ -5,7 +5,7 @@ import java.util.Date;
 public class ActivationFormPri extends ActivationForm{
     private String codeLine;
 
-    public ActivationFormPri(int customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, Date datePicker, String codeLine) {
+    public ActivationFormPri(String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, Date datePicker, String codeLine) {
         super(customerID, customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker);
         this.codeLine = codeLine;
     }
@@ -15,7 +15,7 @@ public class ActivationFormPri extends ActivationForm{
     }
 
     @Override
-    public int getCustomerID() {
+    public String getCustomerID() {
         return super.getCustomerID();
     }
 
