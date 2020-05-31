@@ -2,18 +2,23 @@ package View;
 
 
 import Controller.Contorller;
+import Model.ActivationFormSip;
+import Model.DataBase;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.List;
 
 public class HomePage extends JFrame {
     private HomePageCalenderMenu cal;
     private HomePageMenu menu;
     private UpperMenu upperMenu;
     private Contorller contorller;
+    private DataBase db = new DataBase();
+    private getDataFromSipListener getDataFromSipListener;
 
     public HomePage() {
         super("Mapa Activation");
@@ -25,7 +30,7 @@ public class HomePage extends JFrame {
 
         //-- Creation of Right side --//
         cal = new HomePageCalenderMenu();
-        cal.setData(contorller.getSipActivaion());
+        cal.setData(contorller.getSipActivation());
         try {
             contorller.connect();
         } catch (Exception e) {
@@ -37,6 +42,13 @@ public class HomePage extends JFrame {
             e.printStackTrace();
         }
         cal.refresh();
+        menu.setDataToCalander(new getDataFromSipListener() {
+            @Override
+            public void setActivation(List<ActivationFormSip> e) {
+                cal.setData(e);
+                cal.refresh();
+            }
+        });
 
         //-- Creation of UpperMenu --//
         upperMenu = new UpperMenu();
@@ -52,6 +64,7 @@ public class HomePage extends JFrame {
         setLocationRelativeTo(null); //Center the Frame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //when i press X it will close
         setVisible(true); //show Frame
+        contorller.disconnect();
     }
 
 }

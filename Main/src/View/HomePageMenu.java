@@ -1,13 +1,13 @@
 package View;
 
 import Controller.Contorller;
-import Model.Login;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class HomePageMenu extends JPanel {
 
@@ -21,10 +21,7 @@ public class HomePageMenu extends JPanel {
     private JFrame parent;
     ActivationFormSIP activationFormSIPDialog;
     private Contorller contorller;
-    private HomePageCalenderMenu homePageCalenderMenu= new HomePageCalenderMenu();
-
-
-
+    private getDataFromSipListener getDataFromSipListener;
 
     public HomePageMenu() {
 
@@ -41,7 +38,16 @@ public class HomePageMenu extends JPanel {
         parent = new JFrame();
         loginUI = new LoginUI(parent);
         contorller = new Contorller();
-
+        try {
+            contorller.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            contorller.loadTheActivationSip();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
         //-- Login Popup Dialog --//
         loginUI.setVisible(true);
@@ -59,19 +65,11 @@ public class HomePageMenu extends JPanel {
 
         //-- Create Form Dialog --//
         activationFormSIPDialog = new ActivationFormSIP(HomePageMenu.this);
-        activationFormSIPDialog.setFormListener(new FormListener() {
-            @Override
-            public void formEventOccurred(FormEvent e) {
-                contorller.addActivationSip(e);
-                homePageCalenderMenu.setData(contorller.getSipActivaion());
-                System.out.println(contorller.getSipActivaion().size());
-            }
-        });
 
         editForm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(contorller.getSipActivaion().size());
+                System.out.println(contorller.getSipActivation().size());
             }
         });
 
@@ -122,7 +120,17 @@ public class HomePageMenu extends JPanel {
             }
 
         });
+        activationFormSIPDialog.setFormListener(new FormListener() {
+            @Override
+            public void formEventOccurred(FormEvent e) {
+                contorller.addActivationSip(e);
+                getDataFromSipListener.setActivation(contorller.getSipActivation());
+                System.out.println(contorller.getSipActivation().size());
+            }
+        });
 
     }
-
+    public void setDataToCalander(getDataFromSipListener getDataFromSipListener){
+        this.getDataFromSipListener = getDataFromSipListener;
+    }
 }

@@ -37,7 +37,8 @@ public class DataBase {
     }
 
     public List<ActivationFormSip> getSipActivation(){
-        return Collections.unmodifiableList(sipActivation);
+        //return Collections.unmodifiableList(sipActivation);
+        return sipActivation;
     }
 
     public void connect() throws Exception {

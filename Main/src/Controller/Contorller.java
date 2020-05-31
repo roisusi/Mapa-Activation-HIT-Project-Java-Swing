@@ -17,7 +17,7 @@ public class Contorller {
     public List<Login> getUsers() {
         return db.getUsers();
     }
-    public List<ActivationFormSip> getSipActivaion() {
+    public List<ActivationFormSip> getSipActivation() {
         return db.getSipActivation();
     }
 
@@ -57,7 +57,6 @@ public class Contorller {
         ActivationFormSip activationFormSip= new ActivationFormSip(customerID, customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,
             numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort);
         db.addActivationSip(activationFormSip);
-
     }
 /*    public void removePerson(int row)
     {
