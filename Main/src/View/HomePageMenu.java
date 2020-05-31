@@ -51,7 +51,7 @@ public class HomePageMenu extends JPanel {
 
         //-- Login Popup Dialog --//
         loginUI.setVisible(true);
-        loginUI.setGetUserLogged(new GetUserLogged() {
+        loginUI.setGetUserLoggedListener(new GetUserLoggedListener() {
             @Override
             public void getUser(String User) {
                 userName = new JLabel("Hello, " + User);

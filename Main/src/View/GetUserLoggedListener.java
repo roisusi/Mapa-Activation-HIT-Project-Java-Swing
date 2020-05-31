@@ -1,6 +1,6 @@
 package View;
 
-public interface GetUserLogged {
+public interface GetUserLoggedListener {
     public void getUser(String User);
 
 }
