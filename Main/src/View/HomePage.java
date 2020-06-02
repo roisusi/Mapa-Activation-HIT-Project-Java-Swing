@@ -1,14 +1,12 @@
 package View;
 
 
-import Controller.Contorller;
+import Controller.Controller;
 import Model.ActivationFormSip;
 import Model.DataBase;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -16,13 +14,13 @@ public class HomePage extends JFrame {
     private HomePageCalenderMenu cal;
     private HomePageMenu menu;
     private UpperMenu upperMenu;
-    private Contorller contorller;
+    private Controller controller;
     private DataBase db = new DataBase();
     private getDataFromSipListener getDataFromSipListener;
 
     public HomePage() {
         super("Mapa Activation");
-        contorller = new Contorller();
+        controller = new Controller();
         setLayout(new BorderLayout()); //set BorderLayout
 
         //-- Creation of Left Side --//
@@ -30,19 +28,19 @@ public class HomePage extends JFrame {
 
         //-- Creation of Right side --//
         cal = new HomePageCalenderMenu();
-        cal.setData(contorller.getSipActivation());
+        cal.setData(controller.getSipActivation());
         try {
-            contorller.connect();
+            controller.connect();
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            contorller.loadTheActivationSip();
+            controller.loadTheActivationSip();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         cal.refresh();
-        menu.setDataToCalander(new getDataFromSipListener() {
+        menu.setDataToCalender(new getDataFromSipListener() {
             @Override
             public void setActivation(List<ActivationFormSip> e) {
                 cal.setData(e);
@@ -64,7 +62,7 @@ public class HomePage extends JFrame {
         setLocationRelativeTo(null); //Center the Frame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //when i press X it will close
         setVisible(true); //show Frame
-        contorller.disconnect();
+        controller.disconnect();
     }
 
 }

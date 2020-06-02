@@ -93,6 +93,11 @@ public class ActivationFormSIP extends JDialog {
     private JLabel crNumberLabel = new JLabel("מספר תקרית : ");
     private JLabel trunkNumberLabel = new JLabel("שם אלומה : ");
     private JLabel sbcPortLabel = new JLabel("פורט SBC : ");
+    private JLabel dateLabel = new JLabel("תאריך : ");
+    private JLabel fireWallLabel = new JLabel("נתב בניהולנו ? : ");
+
+
+    private String datePickerEv;
 
 
     public ActivationFormSIP(JPanel parent) {
@@ -126,7 +131,6 @@ public class ActivationFormSIP extends JDialog {
         sbcPort = new JSpinner();
         sbcPort.setValue(7500);
 
-
         //-- IP Addresses --//
         wanAddressA = new JTextField(3);
         wanAddressB = new JTextField(3);
@@ -142,7 +146,6 @@ public class ActivationFormSIP extends JDialog {
         ipAddressB = new JTextField(3);
         ipAddressC = new JTextField(3);
         ipAddressD = new JTextField(3);
-
 
 
         //-- ComboBox Configuration --//
@@ -271,14 +274,18 @@ public class ActivationFormSIP extends JDialog {
                 routerTypeTextField.setEnabled(false);
             }
         });
+
+        // new format to Date //
         UtilDateModel model = new UtilDateModel();
         JDatePanel datePanel = new JDatePanel(model);
         datePicker = new JDatePicker(model);
+        datePickerEv="";
+        DateLabelFormatter dateLabelFormatter = new DateLabelFormatter();
+
 
         addToSchedule.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 String customerIDEv;
                 String customerNameEv;
                 String contactNameEv;
@@ -297,7 +304,6 @@ public class ActivationFormSIP extends JDialog {
                 String callOutSideCountryEv;
                 String crNumberEv;
                 String trunkNumberEv;
-                Date datePickerEv;
                 String wanAddressEv;
                 String lanAddressEv;
                 String ipAddressEv;
@@ -309,14 +315,14 @@ public class ActivationFormSIP extends JDialog {
                 String signalAddressEv;
                 String mediaAddressEv;
                 int sbcPortEv;
-                DateLabelFormatter dateLabelFormatter = new DateLabelFormatter();
+                //-- Date --//
                 try {
                     dateLabelFormatter.valueToString((Date)datePicker.getModel().getValue());
-                    System.out.println(dateLabelFormatter.valueToString((Date)datePicker.getModel().getValue()));
-
+                    datePickerEv = dateLabelFormatter.valueToString((Date)datePicker.getModel().getValue());
                 } catch (ParseException parseException) {
                     parseException.printStackTrace();
                 }
+
                 if (checkEmptyCells()) {
                     if (CheckInputDigits() && CheckIP())
                     {
@@ -340,10 +346,6 @@ public class ActivationFormSIP extends JDialog {
                         callOutSideCountryEv = callOutSideCountry.getElements().toString();
                         crNumberEv = crNumber.getText();
                         trunkNumberEv = trunkNumber.getText();
-
-                        datePickerEv = (Date)datePicker.getModel().getValue();
-
-
                         wanAddressEv = wanAddressA.getText() + "." + wanAddressB.getText() + "." + wanAddressC.getText() + "." + wanAddressD.getText();
                         lanAddressEv = lanAddressA.getText() + "." + lanAddressB.getText() + "." + lanAddressC.getText() + "." + lanAddressD.getText();
                         ipAddressEv =  ipAddressA.getText() + "." + ipAddressB.getText() + "." + ipAddressC.getText() + "." + ipAddressD.getText();
@@ -358,6 +360,7 @@ public class ActivationFormSIP extends JDialog {
                                 totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
                                 infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv);
                         formListener.formEventOccurred(ev);
+                        dispose();
                     }
                     else {
                         if (CheckInputDigits()) {
@@ -423,6 +426,7 @@ public class ActivationFormSIP extends JDialog {
     }
     private boolean CheckInputDigits(){
         boolean flag=true;
+
         if (!StringUtils.isStrictlyNumeric(totalNumbers.getText())) {
             totalNumbersLabel.setForeground(Color.red);
             flag = false;
@@ -465,6 +469,13 @@ public class ActivationFormSIP extends JDialog {
     }
     private boolean checkEmptyCells(){
         boolean allGood = true;
+
+        if (datePickerEv.isEmpty()) {
+            dateLabel.setForeground(Color.red);
+            allGood = false;
+        }
+        else
+            dateLabel.setForeground(Color.black);
 
         if (customerID.getText().isEmpty() || customerID.getText().trim().isEmpty()) {
             customerIDLabel.setForeground(Color.red);
@@ -913,7 +924,7 @@ public class ActivationFormSIP extends JDialog {
         gcLeft.gridx++;
         gcLeft.insets = new Insets(0,0,0,0);
         gcLeft.anchor = GridBagConstraints.LINE_START;
-        formPanelLeft.add(new JLabel("תאריך : "),gcLeft);
+        formPanelLeft.add(dateLabel,gcLeft);
 
         gcLeft.gridy ++;
         gcLeft.gridx = 0;
@@ -1077,7 +1088,7 @@ public class ActivationFormSIP extends JDialog {
         gcRight.gridx++;
         gcRight.insets = new Insets(0,0,0,0);
         gcRight.anchor = GridBagConstraints.LINE_START;
-        formPanelRight.add(new JLabel("נתב בניהולנו ? : "),gcRight);
+        formPanelRight.add(fireWallLabel,gcRight);
         gcRight.gridy++;
         gcRight.gridx=0;
         gcRight.anchor = GridBagConstraints.LINE_END;

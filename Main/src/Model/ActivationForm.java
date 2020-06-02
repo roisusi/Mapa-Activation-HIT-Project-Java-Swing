@@ -4,6 +4,8 @@ import java.util.Date;
 
 public abstract class ActivationForm  {
 
+    protected int id;
+    protected static int count=1;
     protected String customerID;
     protected String customerName;
     protected String contactName;
@@ -22,9 +24,15 @@ public abstract class ActivationForm  {
     protected String callOutSideCountry;
     protected String crNumber;
     protected String trunkNumber;
-    protected Date datePicker;
+    protected String datePicker;
 
-    public ActivationForm(String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, Date datePicker) {
+    public ActivationForm(int id ,String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker) {
+        this(customerID,customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker);
+        this.id = id;
+
+    }
+    //-- Without id For Saving --//
+    public ActivationForm(String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker) {
         this.customerID = customerID;
         this.customerName = customerName;
         this.contactName = contactName;
@@ -44,6 +52,12 @@ public abstract class ActivationForm  {
         this.crNumber = crNumber;
         this.trunkNumber = trunkNumber;
         this.datePicker = datePicker;
+        this.id = count;
+        count ++;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getCustomerID() {
@@ -118,7 +132,7 @@ public abstract class ActivationForm  {
         return trunkNumber;
     }
 
-    public Date getDatePicker() {
+    public String getDatePicker() {
         return datePicker;
     }
 }

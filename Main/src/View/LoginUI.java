@@ -1,6 +1,6 @@
 package View;
 
-import Controller.Contorller;
+import Controller.Controller;
 import Model.Login;
 
 import javax.swing.*;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class LoginUI extends JDialog {
     private List<Login> loginDB;
-    private Contorller contorller;
+    private Controller controller;
     private JTextField userField;
     private JPasswordField passwordField;
     private JButton OKButton;
@@ -30,16 +30,16 @@ public class LoginUI extends JDialog {
         passwordField = new JPasswordField(10);
         OKButton = new JButton("OK");
         cancelButton = new JButton("Cancel");
-        contorller = new Contorller();
+        controller = new Controller();
 
 
         try {
-            contorller.connect();
+            controller.connect();
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            contorller.loadTheUsers();
+            controller.loadTheUsers();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -90,8 +90,8 @@ public class LoginUI extends JDialog {
     }
 
     private void getUsers(){
-        contorller.getUsers();
-        loginDB = contorller.getUsers();
+        controller.getUsers();
+        loginDB = controller.getUsers();
     }
 
     private void layoutControl (){

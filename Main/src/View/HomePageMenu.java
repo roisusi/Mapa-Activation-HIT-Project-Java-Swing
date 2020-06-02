@@ -1,6 +1,6 @@
 package View;
 
-import Controller.Contorller;
+import Controller.Controller;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -20,31 +20,31 @@ public class HomePageMenu extends JPanel {
     private JLabel userName;
     private JFrame parent;
     ActivationFormSIP activationFormSIPDialog;
-    private Contorller contorller;
+    private Controller controller;
     private getDataFromSipListener getDataFromSipListener;
 
     public HomePageMenu() {
 
         // -- The 4 Buttons --//
-        createForm = new JButton("Create Activation");
+        createForm = new JButton("צור הפעלת SIP");
         createForm.setPreferredSize(new Dimension(200,50));
-        editForm = new JButton("Edit Activation");
+        editForm = new JButton("ערוך הפעלה");
         editForm.setPreferredSize(new Dimension(200,50));
-        reports = new JButton("Reports");
+        reports = new JButton("דוחות");
         reports.setPreferredSize(new Dimension(200,50));
-        manageUsers = new JButton("Manage Users");
+        manageUsers = new JButton("ניהול משתמשים");
         manageUsers.setPreferredSize(new Dimension(200,50));
 
         parent = new JFrame();
         loginUI = new LoginUI(parent);
-        contorller = new Contorller();
+        controller = new Controller();
         try {
-            contorller.connect();
+            controller.connect();
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            contorller.loadTheActivationSip();
+            controller.loadTheActivationSip();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -65,13 +65,6 @@ public class HomePageMenu extends JPanel {
 
         //-- Create Form Dialog --//
         activationFormSIPDialog = new ActivationFormSIP(HomePageMenu.this);
-
-        editForm.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(contorller.getSipActivation().size());
-            }
-        });
 
         //Grid Bag Layout - new way to set layouts
         setLayout(new GridBagLayout());
@@ -123,14 +116,24 @@ public class HomePageMenu extends JPanel {
         activationFormSIPDialog.setFormListener(new FormListener() {
             @Override
             public void formEventOccurred(FormEvent e) {
-                contorller.addActivationSip(e);
-                getDataFromSipListener.setActivation(contorller.getSipActivation());
-                System.out.println(contorller.getSipActivation().size());
+                getDataFromSipListener.setActivation(controller.getSipActivation());
+                controller.addActivationSip(e);
+                try {
+                    controller.save();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
         });
 
+        editForm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(controller.getSipActivation().size());
+            }
+        });
     }
-    public void setDataToCalander(getDataFromSipListener getDataFromSipListener){
+    public void setDataToCalender(getDataFromSipListener getDataFromSipListener){
         this.getDataFromSipListener = getDataFromSipListener;
     }
 }
