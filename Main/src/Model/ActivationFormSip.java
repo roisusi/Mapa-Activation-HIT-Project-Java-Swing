@@ -17,8 +17,8 @@ public class ActivationFormSip extends ActivationForm{
 
     public ActivationFormSip(int id,String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber,
                              String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress,String lanAddress
-                                , String ipAddress, String internetUser, String infrastructure,String routerType,String CODEC,int totalCalls,String signalAddress, String mediaAddress,int sbcPort) {
-        super(id ,customerID,customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker);
+                                , String ipAddress, String internetUser, String infrastructure,String routerType,String CODEC,int totalCalls,String signalAddress, String mediaAddress,int sbcPort, String firstName) {
+        super(id ,customerID,customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker,firstName);
         this.wanAddress = wanAddress;
         this.lanAddress = lanAddress;
         this.ipAddress = ipAddress;
@@ -32,8 +32,8 @@ public class ActivationFormSip extends ActivationForm{
         this.sbcPort = sbcPort;
     }
 
-    public ActivationFormSip(String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort) {
-        super(customerID, customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker);
+    public ActivationFormSip(String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort , String firstName) {
+        super(customerID, customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker,firstName);
         this.wanAddress = wanAddress;
         this.lanAddress = lanAddress;
         this.ipAddress = ipAddress;
@@ -45,6 +45,16 @@ public class ActivationFormSip extends ActivationForm{
         this.signalAddress = signalAddress;
         this.mediaAddress = mediaAddress;
         this.sbcPort = sbcPort;
+    }
+
+    @Override
+    public String getFirstName() {
+        return super.getFirstName();
+    }
+
+    @Override
+    public void setFirstName(String firstName) {
+        super.setFirstName(firstName);
     }
 
     @Override

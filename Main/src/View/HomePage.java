@@ -47,6 +47,43 @@ public class HomePage extends JFrame {
                 cal.refresh();
             }
         });
+        cal.setPersonTableListener(new PersonTableListener(){
+            @Override
+            public void rowDelete(int row)
+            {
+                try {
+                    controller.connect();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                System.out.println(controller.getSipActivation().size());
+                controller.removeActivation(row);
+                controller.disconnect();
+            }
+
+            @Override
+            public void addExpertUser(int row, String firstName) {
+                try {
+                    controller.connect();
+                    controller.loadTheActivationSip();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    controller.updateExpertUserName(row, firstName);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                controller.disconnect();
+            }
+
+            @Override
+            public void fireChanges() {
+                cal.refresh();
+            }
+        });
+
+
 
         //-- Creation of UpperMenu --//
         upperMenu = new UpperMenu();
@@ -65,4 +102,8 @@ public class HomePage extends JFrame {
         controller.disconnect();
     }
 
+    private void updateTable () {
+
+
+    }
 }

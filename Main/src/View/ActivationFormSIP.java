@@ -197,8 +197,8 @@ public class ActivationFormSIP extends JDialog {
         DefaultComboBoxModel signalAddressCb = new DefaultComboBoxModel();
         signalAddressCb.addElement("נא לבחור");
         signalAddressCb.addElement("212.199.157.154");
-        signalAddressCb.addElement("80.179.220.138");
-        signalAddressCb.addElement("212.199.220.156");
+        signalAddressCb.addElement("80.179.122.138");
+        signalAddressCb.addElement("212.199.156.202");
         signalAddressCb.addElement("212.199.220.21");
         signalAddress.setPreferredSize(dim);
         signalAddress.setModel(signalAddressCb);
@@ -207,10 +207,10 @@ public class ActivationFormSIP extends JDialog {
         mediaAddress = new JComboBox();
         DefaultComboBoxModel mediaAddressCb = new DefaultComboBoxModel();
         mediaAddressCb.addElement("נא לבחור");
-        mediaAddressCb.addElement("212.199.157.154");
-        mediaAddressCb.addElement("80.179.220.138");
-        mediaAddressCb.addElement("212.199.220.156");
-        mediaAddressCb.addElement("212.199.220.21");
+        mediaAddressCb.addElement("212.199.157.155");
+        mediaAddressCb.addElement("80.179.122.137");
+        mediaAddressCb.addElement("212.199.156.201");
+        mediaAddressCb.addElement("212.199.220.22");
         mediaAddress.setPreferredSize(dim);
         mediaAddress.setModel(mediaAddressCb);
         mediaAddress.setSelectedIndex(0);
@@ -315,6 +315,7 @@ public class ActivationFormSIP extends JDialog {
                 String signalAddressEv;
                 String mediaAddressEv;
                 int sbcPortEv;
+                String firstName;
                 //-- Date --//
                 try {
                     dateLabelFormatter.valueToString((Date)datePicker.getModel().getValue());
@@ -338,12 +339,21 @@ public class ActivationFormSIP extends JDialog {
                         customerTechPhoneNumberEv = customerTechPhoneNumber.getText();
                         typeOfCallsEv = (String)typeOfCalls.getSelectedItem();
                         pbxTypeEv = pbxType.getText();
+
                         identificationTypeEv = (String)identificationType.getSelectedItem();
+
                         snbNumberEv = snbNumber.getText();
                         numberRangeEv = numberRange.getText();
                         areaCodeEv = (String)areaCode.getSelectedItem();
                         emergencyCityEv = emergencyCity.getText();
-                        callOutSideCountryEv = callOutSideCountry.getElements().toString();
+
+                        //-- get Radio from callOutSideCountry --//
+                        String getcallOutSideCountryChoice = callOutSideCountry.getSelection().getActionCommand();
+                        if (getcallOutSideCountryChoice.equals("YES"))
+                            callOutSideCountryEv = "כן";
+                        else
+                            callOutSideCountryEv = "לא";
+
                         crNumberEv = crNumber.getText();
                         trunkNumberEv = trunkNumber.getText();
                         wanAddressEv = wanAddressA.getText() + "." + wanAddressB.getText() + "." + wanAddressC.getText() + "." + wanAddressD.getText();
@@ -351,14 +361,15 @@ public class ActivationFormSIP extends JDialog {
                         ipAddressEv =  ipAddressA.getText() + "." + ipAddressB.getText() + "." + ipAddressC.getText() + "." + ipAddressD.getText();
                         internetUserEv = internetUser.getText();
                         infrastructureEv = infrastructure.getText();
-                        routerTypeEv = routerTypeGroup.getElements().toString();
+                        routerTypeEv = routerTypeTextField.getText();
                         CODECEv = (String)CODEC.getSelectedItem();
                         signalAddressEv = (String)signalAddress.getSelectedItem();
                         mediaAddressEv = (String)mediaAddress.getSelectedItem();
+                        firstName = "";
 
-                        FormEvent ev = new FormEvent(this,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,typeOfCallsEv,pbxTypeEv,identificationTypeEv,
+                        FormEvent ev = new FormEvent(this,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
                                 totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
-                                infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv);
+                                infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName);
                         formListener.formEventOccurred(ev);
                         dispose();
                     }

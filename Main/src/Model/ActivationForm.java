@@ -25,14 +25,15 @@ public abstract class ActivationForm  {
     protected String crNumber;
     protected String trunkNumber;
     protected String datePicker;
+    protected String firstName;
 
-    public ActivationForm(int id ,String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker) {
-        this(customerID,customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker);
+    public ActivationForm(int id ,String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker,String firstName) {
+        this(customerID,customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,firstName);
         this.id = id;
 
     }
     //-- Without id For Saving --//
-    public ActivationForm(String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker) {
+    public ActivationForm(String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker,String firstName) {
         this.customerID = customerID;
         this.customerName = customerName;
         this.contactName = contactName;
@@ -52,12 +53,21 @@ public abstract class ActivationForm  {
         this.crNumber = crNumber;
         this.trunkNumber = trunkNumber;
         this.datePicker = datePicker;
+        this.firstName = firstName;
         this.id = count;
         count ++;
     }
 
     public int getId() {
         return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getCustomerID() {

@@ -3,6 +3,7 @@ package Controller;
 import Model.ActivationFormSip;
 import Model.DataBase;
 import Model.Login;
+import Model.Users;
 import View.FormEvent;
 import java.sql.SQLException;
 import java.util.List;
@@ -17,7 +18,12 @@ public class Controller {
     public List<ActivationFormSip> getSipActivation() {
         return db.getSipActivation();
     }
-
+    public List<Users>getUsername(){
+        return db.getUserNames();
+    }
+    public List<Users> SingleUser(String name) throws SQLException {
+        return db.getSingleUser(name) ;
+    }
     public void addActivationSip(FormEvent ev)
     {
         String customerID = ev.getCustomerID();
@@ -50,20 +56,23 @@ public class Controller {
         String signalAddress = ev.getSignalAddress();
         String mediaAddress = ev.getMediaAddress();
         int sbcPort = ev.getSbcPort();
+        String firstNAme = ev.getFirstName();
 
         ActivationFormSip activationFormSip= new ActivationFormSip(customerID, customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,
-            numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort);
+            numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme);
         db.addActivationSip(activationFormSip);
     }
-/*    public void removePerson(int row)
+    public void removeActivation(int row)
     {
-        db.removePerson(row);
-    }*/
-
+        db.removeActivation(row);
+    }
+    public void updateExpertUserName(int row,String firstName) throws SQLException {
+        db.updateUserExpertFirstName(row, firstName);
+    }
     public void save() throws SQLException {
         db.saveActivaionSip();
     }
-    public void loadTheUsers() throws SQLException {
+    public void loadUsers() throws SQLException {
         db.loadUsers();
     }
     public void loadTheActivationSip() throws SQLException {

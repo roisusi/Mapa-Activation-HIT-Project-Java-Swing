@@ -49,14 +49,14 @@ public class HomePageMenu extends JPanel {
             throwables.printStackTrace();
         }
 
-/*        //-- Login Popup Dialog --//
+        //-- Login Popup Dialog --//
         loginUI.setVisible(true);
         loginUI.setGetUserLoggedListener(new GetUserLoggedListener() {
             @Override
             public void getUser(String User) {
                 userName = new JLabel("Hello, " + User);
             }
-        });*/
+        });
 
         //-- Create The Borders --//
         Border outerBorder = BorderFactory.createEmptyBorder(100,10,300,10);
@@ -78,9 +78,9 @@ public class HomePageMenu extends JPanel {
         gc.gridx=0;
         gc.anchor = GridBagConstraints.FIRST_LINE_START;
         gc.insets = new Insets(0,30,0,30); // make space from label to field text
-/*        userName.setFont(new Font("Arial",Font.PLAIN,36));
+        userName.setFont(new Font("Arial",Font.PLAIN,36));
         userName.setForeground(Color.BLUE);
-        add(userName,gc);*/
+        add(userName,gc);
 
         //-- 2St Row -- //
         gc.gridy++;

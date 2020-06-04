@@ -1,41 +1,48 @@
 package View;
 
-import Model.ActivationForm;
 import Model.ActivationFormSip;
+import Model.Users;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
 public class CalanderPanelModel extends AbstractTableModel {
-    private List<ActivationFormSip> db;
-    private String[] colName = {"Expert Name","Project Manager","Customer Name","Date"};
+    private List<ActivationFormSip> dbSip;
+    private List<Users> users;
+    private String[] colName = {"מומחה","מנהל פרוייקט","שם הלקוח","תאריך","סוג הפעלה"};
     public CalanderPanelModel() {
     }
     public void setData(List<ActivationFormSip> db)
     {
-        this.db = db;
+        this.dbSip = db;
+    }
+    public void setDataUsers(List<Users> db)
+    {
+        this.users = db;
     }
     @Override
     public int getRowCount() {
-        return db.size();
+        return dbSip.size();
     }
 
     @Override
     public int getColumnCount() {
-        return 4;
+        return 5;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        ActivationFormSip sip = db.get(rowIndex);
+        ActivationFormSip sip = dbSip.get(rowIndex);
         switch (columnIndex){
             case 0:
-                return sip.getAreaCode();
+                return sip.getFirstName();
             case 1:
-                return sip.getCustomerTechName();
+                return sip.getIdentificationType();
             case 2:
                 return sip.getCustomerName();
             case 3:
+                return sip.getDatePicker();
+            case 4:
                 return sip.getDatePicker();
         }
         return null;
