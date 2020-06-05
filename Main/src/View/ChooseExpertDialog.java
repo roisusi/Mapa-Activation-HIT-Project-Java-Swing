@@ -19,7 +19,7 @@ public class ChooseExpertDialog extends JDialog {
     private String getSelectedName;
     private List<Users> users;
     private UserSetListener userSetListener;
-    private PersonTableListener personTableListener;
+    private CalenderTableListener calenderTableListener;
     private int rowFromCalender;
 
     public ChooseExpertDialog(JFrame parent,int rowFromCalender) {
@@ -43,25 +43,9 @@ public class ChooseExpertDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 users = new LinkedList<Users>();
                 getSelectedName = (String)expertModel.getElementAt(expertName.getSelectedIndex());
-                try {
-                    controller.connect();
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-                try {
-
-                    users = (controller.SingleUser(getSelectedName));
-                    if (users.size() != 0){
-                        String FirstName = users.get(0).getFirstName();
-                        userSetListener.setUserListener(rowFromCalender,FirstName);
-                    }
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-                userSetListener.fireChanges();
+                userSetListener.setUserListener(rowFromCalender,getSelectedName);
                 dispose();
             }
-
         });
         setLayout(new BorderLayout());
         add(expertName,BorderLayout.CENTER);

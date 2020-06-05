@@ -24,15 +24,8 @@ public class DataBase {
     public void addActivationSip(ActivationFormSip sipAct) {
         sipActivation.add(sipAct);
     }
-    public void removeActivation(int row) {
-        ActivationForm activationForm = sipActivation.get(row);
-        int id = activationForm.getId();
-        try {
-            deleteActivation(id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        sipActivation.remove(row);
+    public void addUserNameToActivation(int row, String firstName){
+        sipActivation.get(row).setFirstName(firstName);
     }
     public List<Login> getUsers() {
         return Collections.unmodifiableList(users);//prevent for other to change the list when they get REF , just get it
@@ -116,42 +109,7 @@ public class DataBase {
         selectStatment.close();
         return singleActivationFormSip;
     }
-    public void connect() throws Exception {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            new Exception("Driver Not Found");
-        }
-        //String connectionUrl = "jdbc:mysql://localhost:3306/swingtest?autoReconnect=true&useSSL=false";
-        String connectionUrl = "jdbc:mysql://mysql-9407-0.cloudclusters.net:9407/swingtest?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf8";
-        con = DriverManager.getConnection(connectionUrl, "Roi", "prnm4400$");
-        //System.out.println("Connected to : " + con);
-    }
-    public void disconnect() {
-        if (con != null) {
-            try {
-                con.close();
-            } catch (SQLException throwables) {
-                System.out.println("Connection Closed");
-            }
-        }
-    }
-    public void deleteActivation(int id) throws SQLException {
 
-        String selectSql = "select id from Activation_SIP where id=?";
-        PreparedStatement checkStmt = con.prepareStatement(selectSql);
-
-        String deleteSql = "delete from Activation_SIP where id=?";
-        PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
-
-        checkStmt.setInt(1, id);
-        ResultSet checkResult = checkStmt.executeQuery();
-        checkResult.next();
-        deleteStmt.setInt(1, id);
-        deleteStmt.executeUpdate();
-
-        deleteStmt.close();
-    }
     public void updateUserExpertFirstName(int row , String firstName) throws SQLException {
         ActivationFormSip activationFormSip = sipActivation.get(row);
         String updateSql = "update Activation_SIP set FirstName=? where id=?";
@@ -250,6 +208,7 @@ public class DataBase {
         updateStmt.close();
         checkStmt.close();
     }
+
     public void saveActivaionSip() throws SQLException {
         String checkSql = "select count(*) as count from Activation_SIP where id=?";
         PreparedStatement checkStmt = con.prepareStatement(checkSql);
@@ -340,6 +299,7 @@ public class DataBase {
         insertStmt.close();
         checkStmt.close();
     }
+
     public void loadUsers() throws SQLException {
         users.clear();
         int id=0;
@@ -433,5 +393,53 @@ public class DataBase {
             sipActivation.add(activation);
         }
         selectStatment.close();
+    }
+
+    public void removeActivation(int row) {
+        ActivationForm activationForm = sipActivation.get(row);
+        int id = activationForm.getId();
+        try {
+            deleteActivation(id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        sipActivation.remove(row);
+    }
+    public void deleteActivation(int id) throws SQLException {
+
+        String selectSql = "select id from Activation_SIP where id=?";
+        PreparedStatement checkStmt = con.prepareStatement(selectSql);
+
+        String deleteSql = "delete from Activation_SIP where id=?";
+        PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
+
+        checkStmt.setInt(1, id);
+        ResultSet checkResult = checkStmt.executeQuery();
+        checkResult.next();
+        deleteStmt.setInt(1, id);
+        deleteStmt.executeUpdate();
+
+        deleteStmt.close();
+    }
+
+    public void connect() throws Exception {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            new Exception("Driver Not Found");
+        }
+        //String connectionUrl = "jdbc:mysql://localhost:3306/swingtest?autoReconnect=true&useSSL=false";
+        String connectionUrl = "jdbc:mysql://mysql-9407-0.cloudclusters.net:9407/swingtest?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf8";
+        con = DriverManager.getConnection(connectionUrl, "Roi", "prnm4400$");
+        //System.out.println("Connected to : " + con);
+    }
+    public void disconnect() {
+        if (con != null) {
+            try {
+                con.close();
+            } catch (SQLException throwables) {
+                System.out.println("Connection Closed");
+            }
+        }
     }
 }

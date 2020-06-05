@@ -116,6 +116,16 @@ public class HomePageMenu extends JPanel {
         activationFormSIPDialog.setFormListener(new FormListener() {
             @Override
             public void formEventOccurred(FormEvent e) {
+                try {
+                    controller.connect();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+/*                try {
+                    controller.loadTheActivationSip();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }*/
                 getDataFromSipListener.setActivation(controller.getSipActivation());
                 controller.addActivationSip(e);
                 try {
@@ -123,6 +133,7 @@ public class HomePageMenu extends JPanel {
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
+                controller.disconnect();
             }
         });
 
@@ -132,6 +143,7 @@ public class HomePageMenu extends JPanel {
                 System.out.println(controller.getSipActivation().size());
             }
         });
+        //controller.disconnect();
     }
     public void setDataToCalender(getDataFromSipListener getDataFromSipListener){
         this.getDataFromSipListener = getDataFromSipListener;

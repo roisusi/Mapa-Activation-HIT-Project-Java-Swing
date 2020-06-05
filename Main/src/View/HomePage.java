@@ -28,7 +28,6 @@ public class HomePage extends JFrame {
 
         //-- Creation of Right side --//
         cal = new HomePageCalenderMenu();
-        cal.setData(controller.getSipActivation());
         try {
             controller.connect();
         } catch (Exception e) {
@@ -39,7 +38,9 @@ public class HomePage extends JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        cal.setData(controller.getSipActivation());
         cal.refresh();
+
         menu.setDataToCalender(new getDataFromSipListener() {
             @Override
             public void setActivation(List<ActivationFormSip> e) {
@@ -47,7 +48,7 @@ public class HomePage extends JFrame {
                 cal.refresh();
             }
         });
-        cal.setPersonTableListener(new PersonTableListener(){
+        cal.setCalenderTableListener(new CalenderTableListener(){
             @Override
             public void rowDelete(int row)
             {
@@ -58,28 +59,13 @@ public class HomePage extends JFrame {
                 }
                 System.out.println(controller.getSipActivation().size());
                 controller.removeActivation(row);
+                cal.setData(controller.getSipActivation());
                 controller.disconnect();
             }
-
             @Override
             public void addExpertUser(int row, String firstName) {
-                try {
-                    controller.connect();
-                    controller.loadTheActivationSip();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                try {
-                    controller.updateExpertUserName(row, firstName);
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-                controller.disconnect();
-            }
-
-            @Override
-            public void fireChanges() {
-                cal.refresh();
+                controller.updateExpertUserName(row,firstName);
+                cal.setData(controller.getSipActivation());
             }
         });
 

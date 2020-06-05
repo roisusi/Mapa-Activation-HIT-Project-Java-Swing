@@ -1,8 +1,6 @@
 package View;
 
-import Controller.Controller;
 import Model.ActivationFormSip;
-import Model.Users;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -17,7 +15,7 @@ public class HomePageCalenderMenu extends JPanel{
     private JTable table;
     private CalanderPanelModel tableModel;
     private JPopupMenu popupMenu;
-    private PersonTableListener personTableListener;
+    private CalenderTableListener calenderTableListener;
     private ChooseExpertDialog expert;
 
     public HomePageCalenderMenu() {
@@ -28,10 +26,8 @@ public class HomePageCalenderMenu extends JPanel{
         popupMenu = new JPopupMenu();
         JMenuItem removeItem = new JMenuItem("מחק שורה");
         JMenuItem setExpertItem = new JMenuItem("שייך מומחה להפעלה");
-        JMenuItem refres = new JMenuItem("רענן");
         popupMenu.add(removeItem);
         popupMenu.add(setExpertItem);
-        popupMenu.add(refres);
 
 
         //-- Create The Borders --//
@@ -48,7 +44,6 @@ public class HomePageCalenderMenu extends JPanel{
 
                 if(e.getButton() == MouseEvent.BUTTON3)
                     popupMenu.show(table,e.getX(),e.getY());
-
             }
         });
 
@@ -57,9 +52,9 @@ public class HomePageCalenderMenu extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 int row = table.getSelectedRow();
-                if(personTableListener != null)
+                if(calenderTableListener != null)
                 {
-                    personTableListener.rowDelete(row);
+                    calenderTableListener.rowDelete(row);
                 }
                 tableModel.fireTableRowsDeleted(row,row);//tell him more efficent that what exact row deleted
             }
@@ -73,23 +68,11 @@ public class HomePageCalenderMenu extends JPanel{
                 expert.setUserListener(new UserSetListener() {
                     @Override
                     public void setUserListener(int row, String firstName) {
-                        personTableListener.addExpertUser(row,firstName);
-                    }
-
-                    @Override
-                    public void fireChanges() {
-                        personTableListener.fireChanges();
-                        tableModel.fireTableRowsUpdated(row,row);
+                        calenderTableListener.addExpertUser(row,firstName);
+                        tableModel.fireTableRowsUpdated(row,row);//tell him more efficent that what exact row deleted
                     }
                 });
                 expert.setVisible(true);
-            }
-        });
-
-        refres.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                tableModel.fireTableDataChanged();//tell him more efficent that what exact row deleted
             }
         });
 
@@ -106,7 +89,7 @@ public class HomePageCalenderMenu extends JPanel{
     {
         tableModel.fireTableDataChanged();
     }
-    public void setPersonTableListener(PersonTableListener personTableListener){
-        this.personTableListener = personTableListener;
+    public void setCalenderTableListener(CalenderTableListener calenderTableListener){
+        this.calenderTableListener = calenderTableListener;
     }
 }

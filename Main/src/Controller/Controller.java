@@ -66,8 +66,8 @@ public class Controller {
     {
         db.removeActivation(row);
     }
-    public void updateExpertUserName(int row,String firstName) throws SQLException {
-        db.updateUserExpertFirstName(row, firstName);
+    public void updateExpertUserName(int row,String firstName){
+        db.addUserNameToActivation(row, firstName);
     }
     public void save() throws SQLException {
         db.saveActivaionSip();
