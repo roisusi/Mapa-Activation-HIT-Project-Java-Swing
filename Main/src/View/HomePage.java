@@ -15,8 +15,6 @@ public class HomePage extends JFrame {
     private HomePageMenu menu;
     private UpperMenu upperMenu;
     private Controller controller;
-    private DataBase db = new DataBase();
-    private getDataFromSipListener getDataFromSipListener;
 
     public HomePage() {
         super("Mapa Activation");
@@ -38,13 +36,15 @@ public class HomePage extends JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println("Home Page Create Calender I got Applications : " + controller.getSipActivation().size());
         cal.setData(controller.getSipActivation());
         cal.refresh();
 
         menu.setDataToCalender(new getDataFromSipListener() {
             @Override
-            public void setActivation(List<ActivationFormSip> e) {
-                cal.setData(e);
+            public void setActivation(FormEvent e) {
+                controller.addActivationSip(e);
+                System.out.println("Home Page Create menu set data I got Applications : " + controller.getSipActivation().size());
                 cal.refresh();
             }
         });
@@ -57,19 +57,18 @@ public class HomePage extends JFrame {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                System.out.println(controller.getSipActivation().size());
                 controller.removeActivation(row);
                 cal.setData(controller.getSipActivation());
+                System.out.println("Home Page setCalenderTableListener I got Applications : " + controller.getSipActivation().size());
                 controller.disconnect();
             }
             @Override
             public void addExpertUser(int row, String firstName) {
                 controller.updateExpertUserName(row,firstName);
+                System.out.println("Home Page addExpertUser I got Applications : " + controller.getSipActivation().size());
                 cal.setData(controller.getSipActivation());
             }
         });
-
-
 
         //-- Creation of UpperMenu --//
         upperMenu = new UpperMenu();
@@ -86,10 +85,5 @@ public class HomePage extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //when i press X it will close
         setVisible(true); //show Frame
         controller.disconnect();
-    }
-
-    private void updateTable () {
-
-
     }
 }

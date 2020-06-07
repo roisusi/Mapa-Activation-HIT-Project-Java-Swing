@@ -38,16 +38,18 @@ public class HomePageMenu extends JPanel {
         parent = new JFrame();
         loginUI = new LoginUI(parent);
         controller = new Controller();
-        try {
+/*        try {
             controller.connect();
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
             controller.loadTheActivationSip();
+            System.out.println("Home Page Menu Logging I got Applications : " + controller.getSipActivation().size());
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        }
+        }*/
 
         //-- Login Popup Dialog --//
         loginUI.setVisible(true);
@@ -69,7 +71,7 @@ public class HomePageMenu extends JPanel {
         //Grid Bag Layout - new way to set layouts
         setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
-        gc.fill = GridBagConstraints.NONE; //if the component isnt the same size as the frame , it resize it. NONE make it non resize
+        gc.fill = GridBagConstraints.NONE;
 
         //-- 1St Row --/
         gc.gridy=0;
@@ -105,6 +107,8 @@ public class HomePageMenu extends JPanel {
         gc.anchor = GridBagConstraints.LINE_START;
         add(manageUsers,gc);
 
+
+        // -- the Creation of New Activation Sip -- //
         createForm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -114,25 +118,17 @@ public class HomePageMenu extends JPanel {
 
         });
         activationFormSIPDialog.setFormListener(new FormListener() {
+            // ---- this Listener gets from Child Dialog the event of creating Actication Sip                         ---- //
+            // ---- after the creation it adds the event to the DataBase, it send it to HomePagee to show it on Table ----//
             @Override
             public void formEventOccurred(FormEvent e) {
-                try {
+               try {
                     controller.connect();
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
-/*                try {
-                    controller.loadTheActivationSip();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }*/
-                getDataFromSipListener.setActivation(controller.getSipActivation());
-                controller.addActivationSip(e);
-                try {
-                    controller.save();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
+                getDataFromSipListener.setActivation(e);
+                System.out.println("Home Page Menu activationFormSIPDialog Listener I got Applications : " + controller.getSipActivation().size());
                 controller.disconnect();
             }
         });
@@ -143,7 +139,6 @@ public class HomePageMenu extends JPanel {
                 System.out.println(controller.getSipActivation().size());
             }
         });
-        //controller.disconnect();
     }
     public void setDataToCalender(getDataFromSipListener getDataFromSipListener){
         this.getDataFromSipListener = getDataFromSipListener;

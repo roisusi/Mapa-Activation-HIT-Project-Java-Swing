@@ -19,7 +19,6 @@ public class ChooseExpertDialog extends JDialog {
     private String getSelectedName;
     private List<Users> users;
     private UserSetListener userSetListener;
-    private CalenderTableListener calenderTableListener;
     private int rowFromCalender;
 
     public ChooseExpertDialog(JFrame parent,int rowFromCalender) {
@@ -27,8 +26,10 @@ public class ChooseExpertDialog extends JDialog {
 
         //--Set listBox--//
         expertName = new JList();
+
         //inorder to set data we need to configure model list
         DefaultListModel expertModel = new DefaultListModel();
+
         //ageModel.addElement("Under 18"); the new way is to add my own index
         expertModel.addElement("רועי");
         expertModel.addElement("נעם");
@@ -38,12 +39,14 @@ public class ChooseExpertDialog extends JDialog {
         expertName.setBorder(BorderFactory.createEtchedBorder()); // create just frame border
         expertName.setSelectedIndex(1);//set default index selected as 1 allways
 
+        //-- Choosing Expert from JList to be added to Activation --//
         chooseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 users = new LinkedList<Users>();
                 getSelectedName = (String)expertModel.getElementAt(expertName.getSelectedIndex());
-                userSetListener.setUserListener(rowFromCalender,getSelectedName);
+                userSetListener.setUserListener(rowFromCalender,getSelectedName);// news where to add the name (Row)
+                System.out.println("ChooseExpert I got Applications : " + controller.getSipActivation().size());
                 dispose();
             }
         });
@@ -51,8 +54,6 @@ public class ChooseExpertDialog extends JDialog {
         add(expertName,BorderLayout.CENTER);
         add(name,BorderLayout.EAST);
         add(chooseButton,BorderLayout.EAST);
-
-
 
         setModal(true);
         setSize(200, 100); // Size the Frame

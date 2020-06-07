@@ -1,9 +1,8 @@
 package View;
 
-import Model.ActivationFormSip;
+import java.text.Normalizer;
+import java.util.EventListener;
 
-import java.util.List;
-
-public interface getDataFromSipListener {
-    public void setActivation(List<ActivationFormSip> e);
+public interface getDataFromSipListener extends EventListener {
+    public void setActivation(FormEvent e);
 }

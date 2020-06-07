@@ -61,6 +61,7 @@ public class ActivationFormSIP extends JDialog {
 
     private JLabel welcom;
     private JButton addToSchedule;
+    private getDataFromSipListener getDataFromSipListener;
 
     //-- Labels --//
     private JLabel customerIDLabel = new JLabel("מספר לקוח : ");
@@ -98,7 +99,6 @@ public class ActivationFormSIP extends JDialog {
 
 
     private String datePickerEv;
-
 
     public ActivationFormSIP(JPanel parent) {
         JPanel mainPanel = new JPanel();
@@ -1156,4 +1156,9 @@ public class ActivationFormSIP extends JDialog {
         add(buttonsPanel,BorderLayout.SOUTH);
 
     }
+
+    public void setDataToCalender(getDataFromSipListener getDataFromSipListener){
+        this.getDataFromSipListener = getDataFromSipListener;
+    }
+
 }
