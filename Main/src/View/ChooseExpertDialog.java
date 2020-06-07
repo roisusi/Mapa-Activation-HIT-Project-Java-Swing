@@ -30,7 +30,6 @@ public class ChooseExpertDialog extends JDialog {
         //inorder to set data we need to configure model list
         DefaultListModel expertModel = new DefaultListModel();
 
-        //ageModel.addElement("Under 18"); the new way is to add my own index
         expertModel.addElement("רועי");
         expertModel.addElement("נעם");
         expertModel.addElement("אסף");

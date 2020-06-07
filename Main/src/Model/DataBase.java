@@ -1,17 +1,13 @@
 package Model;
 
-import View.ActivationFormSIP;
-
 import java.sql.*;
 import java.util.*;
-import java.util.Date;
 
 public class DataBase {
     private List<Users> userNames;
     private List<Login> users;
     private List<ActivationFormSip> sipActivation;
     private ActivationFormSip singleActivationFormSip;
-    private List<Users> singleUser;
     private Connection con;
 
 
@@ -19,45 +15,23 @@ public class DataBase {
         this.users = new LinkedList<Login>();
         this.userNames = new LinkedList<Users>();
         this.sipActivation = new LinkedList<ActivationFormSip>();
-        this.singleUser = new LinkedList<Users>();
     }
-    public void addActivationSip(ActivationFormSip sipAct) {
+    public void addActivationSipToList(ActivationFormSip sipAct) {
         sipActivation.add(sipAct);
     }
-    public void addUserNameToActivation(int row, String firstName){
+    public void addFirstNameToActivationList(int row, String firstName){
         sipActivation.get(row).setFirstName(firstName);
     }
-    public List<Login> getUsers() {
+
+    public List<Login> getLoginUsersFromList() {
         return Collections.unmodifiableList(users);//prevent for other to change the list when they get REF , just get it
     }
-    public List<ActivationFormSip> getSipActivation(){
+    public List<ActivationFormSip> getActivationSipFromList(){
         return Collections.unmodifiableList(sipActivation);
         //return sipActivation;
     }
-    public List<Users> getUserNames(){
+    public List<Users> getUserNamesFromList(){
         return Collections.unmodifiableList(userNames);
-    }
-    public List<Users> getSingleUser(String User) throws SQLException {
-        singleUser.clear();
-        String selectSql2 = "select id,FirstName,LastName,Email,PhoneNumber,Type,UserNameId from Users where FirstName="+"'"+User+"'";
-        Statement selectStatment2 = con.createStatement();
-
-        ResultSet results2 = selectStatment2.executeQuery(selectSql2);
-
-        while (results2.next()) {
-            int id = results2.getInt("id");
-            String firstName = results2.getString("FirstName");
-            String lastName = results2.getString("LastName");
-            String email = results2.getString("Email");
-            String phoneNumber = results2.getString("PhoneNumber");
-            String usersType = results2.getString("Type");
-            int userNameId = results2.getInt("UserNameId");
-
-            singleUser.add(new Users(id,firstName,lastName,email,phoneNumber,UsersType.Expert,userNameId));
-
-        }
-        selectStatment2.close();
-        return singleUser;
     }
     public ActivationFormSip getSingleActivationSip(int row) throws SQLException {
         String selectSql = "select id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
@@ -121,7 +95,7 @@ public class DataBase {
         updateStmt.executeUpdate();
         updateStmt.close();
     }
-    public void updateActivaionSip() throws SQLException {
+    public void updateActivationSip() throws SQLException {
 
         String checkSql = "select count(*) as count from Activation_SIP where id=?";
         PreparedStatement checkStmt = con.prepareStatement(checkSql);
@@ -209,7 +183,7 @@ public class DataBase {
         checkStmt.close();
     }
 
-    public void saveActivaionSip() throws SQLException {
+    public void insertingActivationSipToDataBase() throws SQLException {
         String checkSql = "select count(*) as count from Activation_SIP where id=?";
         PreparedStatement checkStmt = con.prepareStatement(checkSql);
 
@@ -300,7 +274,7 @@ public class DataBase {
         checkStmt.close();
     }
 
-    public void loadUsers() throws SQLException {
+    public void loadUsersFromDataBaseToList() throws SQLException {
         users.clear();
         int id=0;
         String selectSql = "select id,Username,Password from SystemUsers";
@@ -342,7 +316,7 @@ public class DataBase {
         }
         selectStatment2.close();
     }
-    public void loadCalenderSipActivation() throws SQLException {
+    public void loadCalenderSipActivationToList() throws SQLException {
         sipActivation.clear();
         String selectSql = "select id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
                 "SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,Date,WanAddress,LanAddress,IPpbx,InternetUser,Infrastructure," +
@@ -395,17 +369,17 @@ public class DataBase {
         selectStatment.close();
     }
 
-    public void removeActivation(int row) {
+    public void removeActivationFromList(int row) {
         ActivationForm activationForm = sipActivation.get(row);
         int id = activationForm.getId();
         try {
-            deleteActivation(id);
+            deleteActivationFromDataBase(id);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         sipActivation.remove(row);
     }
-    public void deleteActivation(int id) throws SQLException {
+    public void deleteActivationFromDataBase(int id) throws SQLException {
 
         String selectSql = "select id from Activation_SIP where id=?";
         PreparedStatement checkStmt = con.prepareStatement(selectSql);

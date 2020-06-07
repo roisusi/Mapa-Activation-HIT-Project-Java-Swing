@@ -13,19 +13,16 @@ public class Controller {
     Login login;
 
     public List<Login> getUsers() {
-        return db.getUsers();
+        return db.getLoginUsersFromList();
     }
     public List<ActivationFormSip> getSipActivation() {
-        return db.getSipActivation();
+        return db.getActivationSipFromList();
     }
     public List<Users>getUsername(){
-        return db.getUserNames();
+        return db.getUserNamesFromList();
     }
-    public List<Users> SingleUser(String name) throws SQLException {
-        return db.getSingleUser(name) ;
-    }
-    public void addActivationSip(FormEvent ev)
-    {
+
+    public void addActivationSip(FormEvent ev) {
         String customerID = ev.getCustomerID();
         String customerName = ev.getCustomerName();
         String contactName = ev.getContactName();
@@ -60,24 +57,32 @@ public class Controller {
 
         ActivationFormSip activationFormSip= new ActivationFormSip(customerID, customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,
             numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme);
-        db.addActivationSip(activationFormSip);
+        db.addActivationSipToList(activationFormSip);
     }
+    public void addFirstNameToActivationList(int row, String firstName){
+        db.addFirstNameToActivationList(row, firstName);
+    }
+
+    public void updateUserExpertFirstName(int row , String firstName) throws SQLException {
+        db.updateUserExpertFirstName(row, firstName);
+    }
+
     public void removeActivation(int row)
     {
-        db.removeActivation(row);
+        db.removeActivationFromList(row);
     }
-    public void updateExpertUserName(int row,String firstName){
-        db.addUserNameToActivation(row, firstName);
+
+    public void insertingActivationSipToDataBase() throws SQLException {
+        db.insertingActivationSipToDataBase();
     }
-    public void save() throws SQLException {
-        db.saveActivaionSip();
+
+    public void loadUsersFromDataBaseToList() throws SQLException {
+        db.loadUsersFromDataBaseToList();
     }
-    public void loadUsers() throws SQLException {
-        db.loadUsers();
+    public void loadCalenderSipActivationToList() throws SQLException {
+        db.loadCalenderSipActivationToList();
     }
-    public void loadTheActivationSip() throws SQLException {
-        db.loadCalenderSipActivation();
-    }
+
     public void disconnect(){
         db.disconnect();
     }

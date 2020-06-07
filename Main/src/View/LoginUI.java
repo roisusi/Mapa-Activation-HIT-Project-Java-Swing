@@ -39,7 +39,7 @@ public class LoginUI extends JDialog {
             e.printStackTrace();
         }
         try {
-            controller.loadUsers();
+            controller.loadUsersFromDataBaseToList();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

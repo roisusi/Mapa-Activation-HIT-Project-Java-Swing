@@ -2,13 +2,10 @@ package View;
 
 
 import Controller.Controller;
-import Model.ActivationFormSip;
-import Model.DataBase;
 
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
-import java.util.List;
 
 public class HomePage extends JFrame {
     private HomePageCalenderMenu cal;
@@ -32,7 +29,7 @@ public class HomePage extends JFrame {
             e.printStackTrace();
         }
         try {
-            controller.loadTheActivationSip();
+            controller.loadCalenderSipActivationToList();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -44,11 +41,23 @@ public class HomePage extends JFrame {
             @Override
             public void setActivation(FormEvent e) {
                 controller.addActivationSip(e);
+                try {
+                    controller.connect();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                try {
+                    controller.insertingActivationSipToDataBase();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
                 System.out.println("Home Page Create menu set data I got Applications : " + controller.getSipActivation().size());
                 cal.refresh();
+                controller.disconnect();
             }
         });
         cal.setCalenderTableListener(new CalenderTableListener(){
+            //-- Remove right click mouse activation --//
             @Override
             public void rowDelete(int row)
             {
@@ -62,11 +71,23 @@ public class HomePage extends JFrame {
                 System.out.println("Home Page setCalenderTableListener I got Applications : " + controller.getSipActivation().size());
                 controller.disconnect();
             }
+            //-- Set right click mouse first name to activation --//
             @Override
             public void addExpertUser(int row, String firstName) {
-                controller.updateExpertUserName(row,firstName);
+                controller.addFirstNameToActivationList(row,firstName);
                 System.out.println("Home Page addExpertUser I got Applications : " + controller.getSipActivation().size());
+                try {
+                    controller.connect();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    controller.updateUserExpertFirstName(row, firstName);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
                 cal.setData(controller.getSipActivation());
+                controller.disconnect();
             }
         });
 

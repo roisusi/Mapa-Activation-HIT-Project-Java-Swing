@@ -38,20 +38,8 @@ public class HomePageMenu extends JPanel {
         parent = new JFrame();
         loginUI = new LoginUI(parent);
         controller = new Controller();
-/*        try {
-            controller.connect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            controller.loadTheActivationSip();
-            System.out.println("Home Page Menu Logging I got Applications : " + controller.getSipActivation().size());
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }*/
-
-        //-- Login Popup Dialog --//
+        //-- Login -> get the logged user that logged --//
         loginUI.setVisible(true);
         loginUI.setGetUserLoggedListener(new GetUserLoggedListener() {
             @Override
@@ -122,14 +110,7 @@ public class HomePageMenu extends JPanel {
             // ---- after the creation it adds the event to the DataBase, it send it to HomePagee to show it on Table ----//
             @Override
             public void formEventOccurred(FormEvent e) {
-               try {
-                    controller.connect();
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
                 getDataFromSipListener.setActivation(e);
-                System.out.println("Home Page Menu activationFormSIPDialog Listener I got Applications : " + controller.getSipActivation().size());
-                controller.disconnect();
             }
         });
 
