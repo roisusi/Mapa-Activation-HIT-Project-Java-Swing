@@ -1,7 +1,6 @@
 package View;
 
 import Controller.Controller;
-import Model.Login;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -9,17 +8,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.List;
 
 public class LoginUI extends JDialog {
-    private List<Login> loginDB;
     private Controller controller;
     private JTextField userField;
     private JPasswordField passwordField;
     private JButton OKButton;
     private JButton cancelButton;
-    private GetUserLoggedListener getUserLoggedListener;
-    private String getUsername;
+    private UserLoggedListener userLoggedListener;
 
     public LoginUI() {
     }
@@ -33,18 +29,6 @@ public class LoginUI extends JDialog {
         controller = new Controller();
 
 
-        try {
-            controller.connect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            controller.loadUsersFromDataBaseToList();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        getUsers();
-
         //-- Password --//
         passwordField.setEchoChar('*');//instead of circles we get ****
 
@@ -53,14 +37,29 @@ public class LoginUI extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // this is is used to store Temp data not for DB
+                try {
+                    controller.connect();
+                } catch (Exception ev) {
+                    ev.printStackTrace();
+                }
+                try {
+                    controller.loadUsersFromDataBaseToList();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
                 String user = userField.getText();
                 char[] pass = passwordField.getPassword();
                 boolean flag = false;
-                for (Login login : loginDB) {
-                    if (login.getUserName().equals(user) && login.getPassword().equals(new String(pass))){
+                for (int i = 0 ; i < controller.getUsers().size() ; i ++) {
+                    if (controller.getUsers().get(i).getUserName().equals(user) && controller.getUsers().get(i).getPassword().equals(new String(pass))){
                         JOptionPane.showMessageDialog(LoginUI.this,"Login Success","Login",JOptionPane.INFORMATION_MESSAGE);
                         flag = true;
-                        getUsername = user;
+                        try {
+                            controller.loadLoggedUser(controller.getUsers().get(i).getId());
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                        }
+                        userLoggedListener.setUserFirstNameLogged(controller.getUserFirstNameLogged().getFirstName());
                         dispose();
                     }
                 }
@@ -69,8 +68,7 @@ public class LoginUI extends JDialog {
             }
 
         });
-
-
+        controller.disconnect();
         // -- Action to Cancel Button -- //
         cancelButton.addActionListener(new ActionListener() {
             @Override
@@ -83,17 +81,10 @@ public class LoginUI extends JDialog {
         setSize(400,300);
         setLocationRelativeTo(parent);
     }
-    public void setGetUserLoggedListener(GetUserLoggedListener listener)
+    public void setUserLoggedListener(UserLoggedListener listener)
     {
-        this.getUserLoggedListener = listener;
-        getUserLoggedListener.getUser(getUsername);
+        this.userLoggedListener = listener;
     }
-
-    private void getUsers(){
-        controller.getUsers();
-        loginDB = controller.getUsers();
-    }
-
     private void layoutControl (){
         JPanel controlPanel = new JPanel();
         JPanel buttonsPanel = new JPanel();

@@ -1,8 +1,6 @@
 package Model;
 
-import java.util.Date;
-
-public class ActivationFormSip extends ActivationForm{
+public class ActivationFormSip extends ActivationForm {
     private String wanAddress;
     private String lanAddress;
     private String ipAddress;
@@ -14,11 +12,12 @@ public class ActivationFormSip extends ActivationForm{
     private String signalAddress;
     private String mediaAddress;
     private int sbcPort;
+    private String connectionType;
 
-    public ActivationFormSip(int id,String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber,
-                             String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress,String lanAddress
-                                , String ipAddress, String internetUser, String infrastructure,String routerType,String CODEC,int totalCalls,String signalAddress, String mediaAddress,int sbcPort, String firstName) {
-        super(id ,customerID,customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker,firstName);
+    public ActivationFormSip(int id, String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber,
+                             String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress
+            , String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType, String projectManagerFirstName,String activationType) {
+        super(id, customerID, customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker, firstName, projectManagerFirstName,activationType);
         this.wanAddress = wanAddress;
         this.lanAddress = lanAddress;
         this.ipAddress = ipAddress;
@@ -30,10 +29,11 @@ public class ActivationFormSip extends ActivationForm{
         this.signalAddress = signalAddress;
         this.mediaAddress = mediaAddress;
         this.sbcPort = sbcPort;
+        this.connectionType = connectionType;
     }
 
-    public ActivationFormSip(String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort , String firstName) {
-        super(customerID, customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker,firstName);
+    public ActivationFormSip(String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType, String projectManagerFirstName,String activationType) {
+        super(customerID, customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker, firstName, projectManagerFirstName,activationType);
         this.wanAddress = wanAddress;
         this.lanAddress = lanAddress;
         this.ipAddress = ipAddress;
@@ -45,6 +45,18 @@ public class ActivationFormSip extends ActivationForm{
         this.signalAddress = signalAddress;
         this.mediaAddress = mediaAddress;
         this.sbcPort = sbcPort;
+        this.connectionType = connectionType;
+    }
+
+
+    @Override
+    public String getActivationType() {
+        return super.getActivationType();
+    }
+
+    @Override
+    public String getProjectManagerFirstName() {
+        return super.getProjectManagerFirstName();
     }
 
     @Override
@@ -200,4 +212,9 @@ public class ActivationFormSip extends ActivationForm{
     public int getSbcPort() {
         return sbcPort;
     }
+
+    public String getConnectionType() {
+        return connectionType;
+    }
+
 }

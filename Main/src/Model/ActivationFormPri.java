@@ -5,13 +5,13 @@ import java.util.Date;
 public class ActivationFormPri extends ActivationForm{
     private String codeLine;
 
-    public ActivationFormPri(int id,String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String codeLine,String firstName) {
-        super(id ,customerID, customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker,firstName);
+    public ActivationFormPri(int id,String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String codeLine,String firstName,String projectManagerFirstName,String activationType) {
+        super(id ,customerID, customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker,firstName,projectManagerFirstName,activationType);
         this.codeLine = codeLine;
     }
 
-    public ActivationFormPri(String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker,String firstName ,String codeLine) {
-        super(customerID, customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker ,firstName);
+    public ActivationFormPri(String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker,String firstName ,String codeLine,String projectManagerFirstName,String activationType) {
+        super(customerID, customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker ,firstName,projectManagerFirstName,activationType);
         this.codeLine = codeLine;
     }
 
@@ -28,6 +28,7 @@ public class ActivationFormPri extends ActivationForm{
     public String getCodeLine() {
         return codeLine;
     }
+
 
     @Override
     public int getId() {
@@ -127,5 +128,15 @@ public class ActivationFormPri extends ActivationForm{
     @Override
     public String getDatePicker() {
         return super.getDatePicker();
+    }
+
+    @Override
+    public String getProjectManagerFirstName() {
+        return super.getProjectManagerFirstName();
+    }
+
+    @Override
+    public String getActivationType() {
+        return super.getActivationType();
     }
 }

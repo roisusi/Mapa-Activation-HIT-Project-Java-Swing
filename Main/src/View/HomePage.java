@@ -91,6 +91,8 @@ public class HomePage extends JFrame {
             }
         });
 
+
+
         //-- Creation of UpperMenu --//
         upperMenu = new UpperMenu();
 

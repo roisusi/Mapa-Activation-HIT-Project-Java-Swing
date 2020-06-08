@@ -1,5 +1,7 @@
 package View;
 
+import Model.ActivationType;
+
 import java.util.EventObject;
 
 public class FormEvent extends EventObject {
@@ -34,12 +36,14 @@ public class FormEvent extends EventObject {
     private String mediaAddress;
     private int sbcPort;
     private String firstName;
+    private String connectionType;
+    private String projectManagerFirstName;
 
     public FormEvent(Object source) {
         super(source);
     }
 
-    public FormEvent(Object source,String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName) {
+    public FormEvent(Object source, String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType, String projectManagerFirstName) {
         super(source);
         this.customerID = customerID;
         this.customerName = customerName;
@@ -72,129 +76,107 @@ public class FormEvent extends EventObject {
         this.mediaAddress = mediaAddress;
         this.sbcPort = sbcPort;
         this.firstName = firstName;
+        this.connectionType = connectionType;
+        this.projectManagerFirstName = projectManagerFirstName;
     }
 
     public String getFirstName() {
         return firstName;
     }
-
+    public String getConnectionType() {
+        return connectionType;
+    }
     public String getCustomerID() {
         return customerID;
     }
-
     public String getCustomerName() {
         return customerName;
     }
-
     public String getContactName() {
         return contactName;
     }
-
     public String getCustomerPhoneNumber() {
         return customerPhoneNumber;
     }
-
     public String getCustomerEmail() {
         return customerEmail;
     }
-
     public String getCustomerTechName() {
         return customerTechName;
     }
-
     public String getCustomerTechPhoneNumber() {
         return customerTechPhoneNumber;
     }
-
     public String getPbxType() {
         return pbxType;
     }
-
     public String getTypeOfCalls() {
         return typeOfCalls;
     }
-
     public String getIdentificationType() {
         return identificationType;
     }
-
     public int getTotalNumbers() {
         return totalNumbers;
     }
-
     public String getSnbNumber() {
         return snbNumber;
     }
-
     public String getNumberRange() {
         return numberRange;
     }
-
     public String getAreaCode() {
         return areaCode;
     }
-
     public String getEmergencyCity() {
         return emergencyCity;
     }
-
     public String getCallOutSideCountry() {
         return callOutSideCountry;
     }
-
     public String getCrNumber() {
         return crNumber;
     }
-
     public String getTrunkNumber() {
         return trunkNumber;
     }
-
     public String getDatePicker() {
         return datePicker;
     }
-
     public String getWanAddress() {
         return wanAddress;
     }
-
     public String getLanAddress() {
         return lanAddress;
     }
-
     public String getIpAddress() {
         return ipAddress;
     }
-
     public String getInternetUser() {
         return internetUser;
     }
-
     public String getInfrastructure() {
         return infrastructure;
     }
-
     public String getRouterType() {
         return routerType;
     }
-
     public String getCODEC() {
         return CODEC;
     }
-
     public int getTotalCalls() {
         return totalCalls;
     }
-
     public String getSignalAddress() {
         return signalAddress;
     }
-
     public String getMediaAddress() {
         return mediaAddress;
     }
-
     public int getSbcPort() {
         return sbcPort;
+    }
+    public String getProjectManagerFirstName() {
+        return projectManagerFirstName;
     }
 }

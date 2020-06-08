@@ -1,5 +1,6 @@
 package View;
 
+import Controller.Controller;
 import com.mysql.jdbc.StringUtils;
 import org.jdatepicker.JDatePanel;
 import org.jdatepicker.JDatePicker;
@@ -8,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.UnknownServiceException;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -58,10 +60,8 @@ public class ActivationFormSIP extends JDialog {
     protected JSpinner sbcPort;
     protected JDatePicker datePicker;
     private FormListener formListener;
-
     private JLabel welcom;
     private JButton addToSchedule;
-    private getDataFromSipListener getDataFromSipListener;
 
     //-- Labels --//
     private JLabel customerIDLabel = new JLabel("מספר לקוח : ");
@@ -99,6 +99,10 @@ public class ActivationFormSIP extends JDialog {
 
 
     private String datePickerEv;
+    private UserLoggedListener userLoggedListener;
+    private LoginUI loginUI;
+
+
 
     public ActivationFormSIP(JPanel parent) {
         JPanel mainPanel = new JPanel();
@@ -282,6 +286,14 @@ public class ActivationFormSIP extends JDialog {
         datePickerEv="";
         DateLabelFormatter dateLabelFormatter = new DateLabelFormatter();
 
+        JFrame parent1 = new JFrame();
+        loginUI = new LoginUI(parent1);
+        loginUI.setUserLoggedListener(new UserLoggedListener() {
+            @Override
+            public void setUserFirstNameLogged(String User) {
+                System.out.println("SIP : " + User);
+            }
+        });
 
         addToSchedule.addActionListener(new ActionListener() {
             @Override
@@ -316,6 +328,8 @@ public class ActivationFormSIP extends JDialog {
                 String mediaAddressEv;
                 int sbcPortEv;
                 String firstName;
+                String connectionTypeEv;
+                String projectManagerEv;
                 //-- Date --//
                 try {
                     dateLabelFormatter.valueToString((Date)datePicker.getModel().getValue());
@@ -323,6 +337,7 @@ public class ActivationFormSIP extends JDialog {
                 } catch (ParseException parseException) {
                     parseException.printStackTrace();
                 }
+
 
                 if (checkEmptyCells()) {
                     if (CheckInputDigits() && CheckIP())
@@ -341,6 +356,7 @@ public class ActivationFormSIP extends JDialog {
                         pbxTypeEv = pbxType.getText();
 
                         identificationTypeEv = (String)identificationType.getSelectedItem();
+                        connectionTypeEv = (String)connectionType.getSelectedItem();
 
                         snbNumberEv = snbNumber.getText();
                         numberRangeEv = numberRange.getText();
@@ -366,10 +382,11 @@ public class ActivationFormSIP extends JDialog {
                         signalAddressEv = (String)signalAddress.getSelectedItem();
                         mediaAddressEv = (String)mediaAddress.getSelectedItem();
                         firstName = "";
+                        projectManagerEv = HomePageMenu.SessionId.getUserName();
 
                         FormEvent ev = new FormEvent(this,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
                                 totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
-                                infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName);
+                                infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv);
                         formListener.formEventOccurred(ev);
                         dispose();
                     }
@@ -385,6 +402,7 @@ public class ActivationFormSIP extends JDialog {
                 else
                     JOptionPane.showMessageDialog(ActivationFormSIP.this,"נא השלם את הנתונים באדום","Error",JOptionPane.ERROR_MESSAGE);
             }
+
         });
 
 
@@ -1156,9 +1174,4 @@ public class ActivationFormSIP extends JDialog {
         add(buttonsPanel,BorderLayout.SOUTH);
 
     }
-
-    public void setDataToCalender(getDataFromSipListener getDataFromSipListener){
-        this.getDataFromSipListener = getDataFromSipListener;
-    }
-
 }

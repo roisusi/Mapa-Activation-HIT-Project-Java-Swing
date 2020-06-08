@@ -7,15 +7,24 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 public class HomePageMenu extends JPanel {
+
+    public static class SessionId{
+        private static String userName;
+
+        public static String setUserName(String userName){
+            return SessionId.userName = userName;
+        }
+        public static String getUserName(){
+            return SessionId.userName;
+        }
+    }
 
     private JButton createForm;
     private JButton editForm;
     private JButton reports;
     private JButton manageUsers;
-    private JLabel welcomUser;
     private LoginUI loginUI;
     private JLabel userName;
     private JFrame parent;
@@ -40,13 +49,15 @@ public class HomePageMenu extends JPanel {
         controller = new Controller();
 
         //-- Login -> get the logged user that logged --//
-        loginUI.setVisible(true);
-        loginUI.setGetUserLoggedListener(new GetUserLoggedListener() {
+        loginUI.setUserLoggedListener(new UserLoggedListener() {
             @Override
-            public void getUser(String User) {
-                userName = new JLabel("Hello, " + User);
+            public void setUserFirstNameLogged(String User) {
+                userName = new JLabel("שלום, " + User);
+                SessionId.setUserName(User);
             }
         });
+        loginUI.setVisible(true);
+
 
         //-- Create The Borders --//
         Border outerBorder = BorderFactory.createEmptyBorder(100,10,300,10);
@@ -65,8 +76,8 @@ public class HomePageMenu extends JPanel {
         gc.gridy=0;
         gc.weightx=1;
         gc.weighty=1;
-        gc.gridx=0;
-        gc.anchor = GridBagConstraints.FIRST_LINE_START;
+        gc.gridx=1;
+        gc.anchor = GridBagConstraints.FIRST_LINE_END;
         gc.insets = new Insets(0,30,0,30); // make space from label to field text
         userName.setFont(new Font("Arial",Font.PLAIN,36));
         userName.setForeground(Color.BLUE);
@@ -105,9 +116,10 @@ public class HomePageMenu extends JPanel {
             }
 
         });
+
         activationFormSIPDialog.setFormListener(new FormListener() {
-            // ---- this Listener gets from Child Dialog the event of creating Actication Sip                         ---- //
-            // ---- after the creation it adds the event to the DataBase, it send it to HomePagee to show it on Table ----//
+            // ---- this Listener gets from Child Dialog the event of creating Activation Sip                         ---- //
+            // ---- after the creation it adds the event to the DataBase, it send it to HomePage to show it on Table ----//
             @Override
             public void formEventOccurred(FormEvent e) {
                 getDataFromSipListener.setActivation(e);

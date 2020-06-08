@@ -1,16 +1,14 @@
 package Controller;
 
-import Model.ActivationFormSip;
-import Model.DataBase;
-import Model.Login;
-import Model.Users;
+import Model.*;
 import View.FormEvent;
+import View.UserLoggedListener;
+
 import java.sql.SQLException;
 import java.util.List;
 
 public class Controller {
     DataBase db = new DataBase();
-    Login login;
 
     public List<Login> getUsers() {
         return db.getLoginUsersFromList();
@@ -18,8 +16,8 @@ public class Controller {
     public List<ActivationFormSip> getSipActivation() {
         return db.getActivationSipFromList();
     }
-    public List<Users>getUsername(){
-        return db.getUserNamesFromList();
+    public Users getUserFirstNameLogged(){
+        return db.getUserFirstNameLogged();
     }
 
     public void addActivationSip(FormEvent ev) {
@@ -54,9 +52,13 @@ public class Controller {
         String mediaAddress = ev.getMediaAddress();
         int sbcPort = ev.getSbcPort();
         String firstNAme = ev.getFirstName();
+        String connectionType = ev.getConnectionType();
+        String projectManagerFirstName= ev.getProjectManagerFirstName();
+        String activationType;
+        activationType = ActivationType.Sip.toString();
 
         ActivationFormSip activationFormSip= new ActivationFormSip(customerID, customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,
-            numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme);
+            numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType);
         db.addActivationSipToList(activationFormSip);
     }
     public void addFirstNameToActivationList(int row, String firstName){
@@ -76,6 +78,9 @@ public class Controller {
         db.insertingActivationSipToDataBase();
     }
 
+    public void loadLoggedUser(int id) throws SQLException {
+        db.loadLoggedUser(id);
+    }
     public void loadUsersFromDataBaseToList() throws SQLException {
         db.loadUsersFromDataBaseToList();
     }

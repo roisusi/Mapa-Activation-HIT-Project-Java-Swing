@@ -7,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class ChooseExpertDialog extends JDialog {
     private Controller controller = new Controller();
     private String getSelectedName;
     private List<Users> users;
-    private UserSetListener userSetListener;
+    private UserSetExpertListener userSetExpertListener;
     private int rowFromCalender;
 
     public ChooseExpertDialog(JFrame parent,int rowFromCalender) {
@@ -44,7 +43,7 @@ public class ChooseExpertDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 users = new LinkedList<Users>();
                 getSelectedName = (String)expertModel.getElementAt(expertName.getSelectedIndex());
-                userSetListener.setUserListener(rowFromCalender,getSelectedName);// news where to add the name (Row)
+                userSetExpertListener.UserSetExpertListener(rowFromCalender,getSelectedName);// news where to add the name (Row)
                 System.out.println("ChooseExpert I got Applications : " + controller.getSipActivation().size());
                 dispose();
             }
@@ -59,7 +58,7 @@ public class ChooseExpertDialog extends JDialog {
         setLocationRelativeTo(parent);
     }
 
-    public void setUserListener(UserSetListener userSetListener){
-        this.userSetListener = userSetListener;
+    public void setUserListener(UserSetExpertListener userSetExpertListener){
+        this.userSetExpertListener = userSetExpertListener;
     }
 }

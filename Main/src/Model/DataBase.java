@@ -8,6 +8,7 @@ public class DataBase {
     private List<Login> users;
     private List<ActivationFormSip> sipActivation;
     private ActivationFormSip singleActivationFormSip;
+    private Users loggedUser;
     private Connection con;
 
 
@@ -30,13 +31,14 @@ public class DataBase {
         return Collections.unmodifiableList(sipActivation);
         //return sipActivation;
     }
-    public List<Users> getUserNamesFromList(){
-        return Collections.unmodifiableList(userNames);
+    public Users getUserFirstNameLogged(){
+        return loggedUser;
     }
+
     public ActivationFormSip getSingleActivationSip(int row) throws SQLException {
         String selectSql = "select id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
                 "SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,Date,WanAddress,LanAddress,IPpbx,InternetUser,Infrastructure," +
-                "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,FirstName from Activation_SIP where ";
+                "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,FirstName,ActivationType from Activation_SIP where ";
         Statement selectStatment = con.createStatement();
 
         ResultSet results = selectStatment.executeQuery(selectSql);
@@ -73,12 +75,15 @@ public class DataBase {
             String MediaIP = results.getString("MediaIP");
             int port = results.getInt("SBCport");
             String firstName = results.getString("FirstName");
+            String connectionType = results.getString("ConnectionType");
+            String projectManagerFirstName = results.getString("ProjectManagerFirstName");
+            String activationType = results.getString("ActivationType");
 
 
 
             singleActivationFormSip= new ActivationFormSip(id,CustomerID,CustomerName,contactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,
                     TypeOfCalls,IdenteficationType,TotalNumbers,SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,date,WanAddress,LanAddress,IPpbx,InternetUser,
-                    Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName);
+                    Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName,connectionType,projectManagerFirstName,activationType);
 
         selectStatment.close();
         return singleActivationFormSip;
@@ -86,7 +91,7 @@ public class DataBase {
 
     public void updateUserExpertFirstName(int row , String firstName) throws SQLException {
         ActivationFormSip activationFormSip = sipActivation.get(row);
-        String updateSql = "update Activation_SIP set FirstName=? where id=?";
+        String updateSql = "update Activation_SIP set ExpertFirstName=? where id=?";
         PreparedStatement updateStmt = con.prepareStatement(updateSql);
         System.out.println("Updating people with ID " + activationFormSip.getId());
         int col = 1;
@@ -102,7 +107,7 @@ public class DataBase {
 
         String updateSql = "update Activation_SIP set CustomerID=?,CustomerName=?,ContactName=?,CustomerPhoneNumber=?,CustomerEmail=?,TechnicanName=?,TechnicanPhone=?,SwitchType=?,Infrastructure=?," +
                 "TotalNumbers=?,TypeOfCalls=?,IdenteficationType=?,SNBnumber=?,NumberRange=?,InternetUser=?,AreaCode=?,EmergancyCity=?,CallOutCountry=?,CRnumber=?,TrunkNumber=?,RouterType=?,Codec=?," +
-                "WanAddress=?,LanAddress=?,IPpbx=?,SignalIP=?,MediaIP=?,SBCport=?,Date=?,TotalCalls=? where id=?";
+                "WanAddress=?,LanAddress=?,IPpbx=?,SignalIP=?,MediaIP=?,SBCport=?,Date=?,TotalCalls=?,ConnectionType=? where id=?";
 
         PreparedStatement updateStmt = con.prepareStatement(updateSql);
         for (ActivationFormSip activationFormSip : sipActivation) {
@@ -137,6 +142,7 @@ public class DataBase {
             int sbcPort = activationFormSip.getSbcPort();
             String datePicker = activationFormSip.getDatePicker();
             int totalCalls = activationFormSip.getTotalCalls();
+            String connectionType = activationFormSip.getConnectionType();
 
             checkStmt.setInt(1, id);
             ResultSet checkResult = checkStmt.executeQuery();
@@ -176,6 +182,7 @@ public class DataBase {
             updateStmt.setString(col++, datePicker);
             updateStmt.setInt(col++, totalCalls);
             updateStmt.setInt(col++, id);
+            updateStmt.setString(col++, connectionType);
         }
 
         updateStmt.executeUpdate();
@@ -189,7 +196,7 @@ public class DataBase {
 
         String insertSql = "insert into Activation_SIP (CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,Infrastructure," +
                 "TotalNumbers,TypeOfCalls,IdenteficationType,SNBnumber,NumberRange,InternetUser,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,RouterType,Codec," +
-                "WanAddress,LanAddress,IPpbx,SignalIP,MediaIP,SBCport,Date,TotalCalls) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                "WanAddress,LanAddress,IPpbx,SignalIP,MediaIP,SBCport,Date,TotalCalls,ConnectionType,ActivationType,ExpertFirstName,ProjectManagerFirstName) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement insertStmt = con.prepareStatement(insertSql);
 
         for (ActivationFormSip activationFormSip : sipActivation) {
@@ -224,6 +231,10 @@ public class DataBase {
             int sbcPort = activationFormSip.getSbcPort();
             String datePicker = activationFormSip.getDatePicker();
             int totalCalls = activationFormSip.getTotalCalls();
+            String connectionType = activationFormSip.getConnectionType();
+            String activationType = ActivationType.Sip.toString();
+            String expertFirstName = activationFormSip.getFirstName();
+            String projectManagerFirstName = activationFormSip.getProjectManagerFirstName();
 
             checkStmt.setInt(1, id);
             ResultSet checkResult = checkStmt.executeQuery();
@@ -264,6 +275,10 @@ public class DataBase {
                 insertStmt.setInt(col++, sbcPort);
                 insertStmt.setString(col++, datePicker);
                 insertStmt.setInt(col++, totalCalls);
+                insertStmt.setString(col++, connectionType);
+                insertStmt.setString(col++, activationType);
+                insertStmt.setString(col++, expertFirstName);
+                insertStmt.setString(col++, projectManagerFirstName);
 
                 insertStmt.executeUpdate();
 
@@ -274,24 +289,7 @@ public class DataBase {
         checkStmt.close();
     }
 
-    public void loadUsersFromDataBaseToList() throws SQLException {
-        users.clear();
-        int id=0;
-        String selectSql = "select id,Username,Password from SystemUsers";
-        Statement selectStatment = con.createStatement();
-
-        ResultSet results = selectStatment.executeQuery(selectSql);
-        while (results.next()) {
-            id = results.getInt("id");
-            String userName = results.getString("Username");
-            String password = results.getString("Password");
-
-            Login user = new Login(id,userName, password);
-            users.add(user);
-        }
-        selectStatment.close();
-
-        userNames.clear();
+    public void loadLoggedUser(int id) throws SQLException {
         String selectSql2 = "select id,FirstName,LastName,Email,PhoneNumber,Type,UserNameId from Users where UserNameId in (select id from SystemUsers where id="+id+")";
         Statement selectStatment2 = con.createStatement();
 
@@ -309,18 +307,34 @@ public class DataBase {
             switch (usersType)
             {
                 case "Expert":
-                    Users usersNames = new Users(id,firstName,lastName,email,phoneNumber,UsersType.Expert,userNameId);
-                    userNames.add(usersNames);
+                    loggedUser = new Users(id,firstName,lastName,email,phoneNumber,UsersType.Expert,userNameId);
                     break;
             }
         }
         selectStatment2.close();
     }
+    public void loadUsersFromDataBaseToList() throws SQLException {
+        users.clear();
+        int id=0;
+        String selectSql = "select id,Username,Password from SystemUsers";
+        Statement selectStatment = con.createStatement();
+
+        ResultSet results = selectStatment.executeQuery(selectSql);
+        while (results.next()) {
+            id = results.getInt("id");
+            String userName = results.getString("Username");
+            String password = results.getString("Password");
+
+            Login user = new Login(id,userName, password);
+            users.add(user);
+        }
+        selectStatment.close();
+    }
     public void loadCalenderSipActivationToList() throws SQLException {
         sipActivation.clear();
         String selectSql = "select id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
                 "SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,Date,WanAddress,LanAddress,IPpbx,InternetUser,Infrastructure," +
-                "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,FirstName from Activation_SIP order by Date";
+                "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,ExpertFirstName,ConnectionType,ProjectManagerFirstName,ActivationType from Activation_SIP order by Date";
         Statement selectStatment = con.createStatement();
 
         ResultSet results = selectStatment.executeQuery(selectSql);
@@ -357,13 +371,16 @@ public class DataBase {
             String SignalIP = results.getString("SignalIP");
             String MediaIP = results.getString("MediaIP");
             int port = results.getInt("SBCport");
-            String firstName = results.getString("FirstName");
+            String firstName = results.getString("ExpertFirstName");
+            String connectionType = results.getString("ConnectionType");
+            String projectManagerFirstName = results.getString("ProjectManagerFirstName");
+            String activationType = results.getString("ActivationType");
 
 
 
             ActivationFormSip activation = new ActivationFormSip(id,CustomerID,CustomerName,contactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,
                     TypeOfCalls,IdenteficationType,TotalNumbers,SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,date,WanAddress,LanAddress,IPpbx,InternetUser,
-                    Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName);
+                    Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName,connectionType,projectManagerFirstName,activationType);
             sipActivation.add(activation);
         }
         selectStatment.close();

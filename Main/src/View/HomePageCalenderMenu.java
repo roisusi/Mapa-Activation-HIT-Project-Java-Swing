@@ -52,7 +52,9 @@ public class HomePageCalenderMenu extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 int row = table.getSelectedRow();
-                if(calenderTableListener != null)
+                int action = JOptionPane.showConfirmDialog(parent, "האם ברצונך למחוק ?", "Confirm", JOptionPane.OK_OPTION,/*Change Icon*/JOptionPane.INFORMATION_MESSAGE);
+
+                if(calenderTableListener != null && action==JOptionPane.OK_OPTION)
                 {
                     calenderTableListener.rowDelete(row);
                 }
@@ -66,9 +68,9 @@ public class HomePageCalenderMenu extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 int row = table.getSelectedRow();
                 expert = new ChooseExpertDialog(parent,row);
-                expert.setUserListener(new UserSetListener() {
+                expert.setUserListener(new UserSetExpertListener() {
                     @Override
-                    public void setUserListener(int row, String firstName) {
+                    public void UserSetExpertListener(int row, String firstName) {
                         calenderTableListener.addExpertUser(row,firstName);
                         tableModel.fireTableRowsUpdated(row,row);//tell him more efficent that what exact row deleted
                     }
