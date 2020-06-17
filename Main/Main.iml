@@ -7,8 +7,5 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="jdatepicker" level="application" />
-    <orderEntry type="library" name="mysqlConnector" level="application" />
-    <orderEntry type="library" name="mysql-connector-java-5.1.49-bin" level="application" />
   </component>
 </module>
