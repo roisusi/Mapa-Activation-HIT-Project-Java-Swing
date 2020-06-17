@@ -1,86 +1,33 @@
 package View;
 
-import Model.Users;
-import Controller.Controller;
-import Model.UsersType;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 public class HomePageMenu extends JPanel {
-
-    public static class SessionId{
-        private static String userName;
-        private static String isApproved;
-
-        public static String setUserName(String userName){
-            return SessionId.userName = userName;
-        }
-        public static String getUserName(){
-            return SessionId.userName;
-        }
-        public static String isApproved(String isApproved){
-            return SessionId.isApproved = isApproved;
-        }
-        public static String isApproved(){
-            return SessionId.isApproved;
-        }
-    }
 
     private JButton createForm;
     private JButton editForm;
     private JButton reports;
     private JButton manageUsers;
-    private LoginUI loginUI;
-    private JLabel userName;
-    private JFrame parent;
-    private ActivationFormSIP activationFormSIPDialog;
-    private Users user;
-    private ManageUsers manageUsersForm;
-    private Controller controller;
-    private getDataFromSipListener getDataFromSipListener;
+    ActivationFormSIP activationFormSIPDialog;
 
     public HomePageMenu() {
 
         // -- The 4 Buttons --//
-        createForm = new JButton("צור הפעלת SIP");
+        createForm = new JButton("Create Activation");
         createForm.setPreferredSize(new Dimension(200,50));
-        editForm = new JButton("ערוך הפעלה");
+        editForm = new JButton("Edit Activation");
         editForm.setPreferredSize(new Dimension(200,50));
-        reports = new JButton("דוחות");
+        reports = new JButton("Reports");
         reports.setPreferredSize(new Dimension(200,50));
-        manageUsers = new JButton("ניהול משתמשים");
+        manageUsers = new JButton("Manage Users");
         manageUsers.setPreferredSize(new Dimension(200,50));
 
-        parent = new JFrame();
-        loginUI = new LoginUI(parent);
-        controller = new Controller();
-
-        //-- Login -> get the logged user that logged --//
-        loginUI.setUserLoggedListener(new UserLoggedListener() {
-            @Override
-            public void setUserFirstNameLogged(String User) {
-                userName = new JLabel("שלום, " + User);
-                SessionId.setUserName(User);
-            }
-        });
-        loginUI.setVisible(true);
-
-        try {
-            controller.connect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        user = controller.getUserFirstNameLogged();
-        controller.disconnect();
-
         //-- Create The Borders --//
-        Border outerBorder = BorderFactory.createEmptyBorder(100,10,300,10);
+        Border outerBorder = BorderFactory.createEmptyBorder(200,10,200,10);
         Border innerBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black),"Menu Option"); //adds Label to the border
         setBorder(BorderFactory.createCompoundBorder(innerBorder,outerBorder)); //for 2 borders
 
@@ -90,21 +37,10 @@ public class HomePageMenu extends JPanel {
         //Grid Bag Layout - new way to set layouts
         setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
-        gc.fill = GridBagConstraints.NONE;
+        gc.fill = GridBagConstraints.NONE; //if the component isnt the same size as the frame , it resize it. NONE make it non resize
 
-        //-- 1St Row --/
+        //-- 1St Row -- //
         gc.gridy=0;
-        gc.weightx=1;
-        gc.weighty=1;
-        gc.gridx=1;
-        gc.anchor = GridBagConstraints.FIRST_LINE_END;
-        gc.insets = new Insets(0,30,0,30); // make space from label to field text
-        userName.setFont(new Font("Arial",Font.PLAIN,36));
-        userName.setForeground(Color.BLUE);
-        add(userName,gc);
-
-        //-- 2St Row -- //
-        gc.gridy++;
         gc.weightx=1;
         gc.weighty=0.1;
         gc.gridx=0;
@@ -115,7 +51,7 @@ public class HomePageMenu extends JPanel {
         gc.anchor = GridBagConstraints.FIRST_LINE_START;
         add(editForm,gc);
 
-        //-- 3St Row -- //
+        //-- 2St Row -- //
         gc.gridy++;
         gc.weightx=1;
         gc.weighty=2;
@@ -126,8 +62,6 @@ public class HomePageMenu extends JPanel {
         gc.anchor = GridBagConstraints.LINE_START;
         add(manageUsers,gc);
 
-
-        // -- the Creation of New Activation Sip -- //
         createForm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e)
@@ -137,38 +71,6 @@ public class HomePageMenu extends JPanel {
 
         });
 
-        // -- the Creation of Manage Users Form -- //
-        manageUsers.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                if(user.getUsersType().equals(UsersType.ProjectManager)) {
-                    manageUsersForm = new ManageUsers();
-                    manageUsersForm.setVisible(true);
-                }
-
-                else
-                    JOptionPane.showMessageDialog(HomePageMenu.this,"למשתמש זה אין הרשאות לניהול משתמשים","Error",JOptionPane.ERROR_MESSAGE);
-            }
-        });
-
-        activationFormSIPDialog.setFormListener(new FormListener() {
-            // ---- this Listener gets from Child Dialog the event of creating Activation Sip                         ---- //
-            // ---- after the creation it adds the event to the DataBase, it send it to HomePage to show it on Table ----//
-            @Override
-            public void formEventOccurred(FormEvent e) {
-                getDataFromSipListener.setActivation(e);
-            }
-        });
-
-        editForm.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(controller.getSipActivation().size());
-            }
-        });
     }
-    public void setDataToCalender(getDataFromSipListener getDataFromSipListener){
-        this.getDataFromSipListener = getDataFromSipListener;
-    }
+
 }
