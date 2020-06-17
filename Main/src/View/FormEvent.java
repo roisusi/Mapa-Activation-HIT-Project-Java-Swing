@@ -78,6 +78,7 @@ public class FormEvent extends EventObject {
         this.firstName = firstName;
         this.connectionType = connectionType;
         this.projectManagerFirstName = projectManagerFirstName;
+
     }
 
     public String getFirstName() {

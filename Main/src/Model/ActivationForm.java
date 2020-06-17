@@ -3,9 +3,6 @@ package Model;
 import java.util.Date;
 
 public abstract class ActivationForm  {
-
-    protected int id;
-    protected static int count=1;
     protected String customerID;
     protected String customerName;
     protected String contactName;
@@ -30,11 +27,11 @@ public abstract class ActivationForm  {
     protected String activationType;
 
 
-    public ActivationForm(int id ,String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker,String firstName,String projectManagerFirstName,String activationType) {
+/*    public ActivationForm(int id ,String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker,String firstName,String projectManagerFirstName,String activationType) {
         this(customerID,customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,firstName,projectManagerFirstName,activationType);
         this.id = id;
 
-    }
+    }*/
     //-- Without id For Saving --//
     public ActivationForm(String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker,String firstName, String projectManagerFirstName,String activationType) {
         this.customerID = customerID;
@@ -59,12 +56,6 @@ public abstract class ActivationForm  {
         this.firstName = firstName;
         this.projectManagerFirstName = projectManagerFirstName;
         this.activationType = activationType;
-        this.id = count;
-        count ++;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getActivationType() {

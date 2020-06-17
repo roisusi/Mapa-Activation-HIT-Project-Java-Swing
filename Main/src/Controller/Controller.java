@@ -58,15 +58,22 @@ public class Controller {
         activationType = ActivationType.Sip.toString();
 
         ActivationFormSip activationFormSip= new ActivationFormSip(customerID, customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,
-            numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType);
+            numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType,"לא");
         db.addActivationSipToList(activationFormSip);
     }
     public void addFirstNameToActivationList(int row, String firstName){
         db.addFirstNameToActivationList(row, firstName);
     }
+    public void addStatusToActivationList(String status, int row){
+        db.addFirstNameToActivationList(status, row);
+    }
+
 
     public void updateUserExpertFirstName(int row , String firstName) throws SQLException {
         db.updateUserExpertFirstName(row, firstName);
+    }
+    public void updateStatus(String status,int row) throws SQLException {
+        db.updateStatus(status,row);
     }
 
     public void removeActivation(int row)

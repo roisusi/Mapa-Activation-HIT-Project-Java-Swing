@@ -13,7 +13,7 @@ import java.util.List;
 
 public class HomePageCalenderMenu extends JPanel{
     private JTable table;
-    private CalanderPanelModel tableModel;
+    private CalenderPanelModel tableModel;
     private JPopupMenu popupMenu;
     private CalenderTableListener calenderTableListener;
     private ChooseExpertDialog expert;
@@ -21,20 +21,21 @@ public class HomePageCalenderMenu extends JPanel{
     public HomePageCalenderMenu() {
 
         JFrame parent = new JFrame();
-        tableModel = new CalanderPanelModel();
+        tableModel = new CalenderPanelModel();
         table = new JTable(tableModel);
         popupMenu = new JPopupMenu();
         JMenuItem removeItem = new JMenuItem("מחק שורה");
         JMenuItem setExpertItem = new JMenuItem("שייך מומחה להפעלה");
+        JMenuItem setApproved = new JMenuItem("אשר הפעלה");
         popupMenu.add(removeItem);
         popupMenu.add(setExpertItem);
+        popupMenu.add(setApproved);
 
 
         //-- Create The Borders --//
         Border outerBorder = BorderFactory.createEmptyBorder(20,30,300,30);
         Border innerBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black),"Calander Option"); //adds Label to the border
         setBorder(BorderFactory.createCompoundBorder(innerBorder,outerBorder)); //for 2 borders
-
         //-- table event to mouse click --//
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -79,7 +80,18 @@ public class HomePageCalenderMenu extends JPanel{
             }
         });
 
+        setApproved.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = table.getSelectedRow();
+                calenderTableListener.setStatus("כן",row);
+                tableModel.fireTableRowsUpdated(row,row);//tell him more efficent that what exact row deleted
+            }
+        });
+
         //-- Graphic Option --//
+        MyTableCellRender myTableCellRender = new MyTableCellRender();
+        table.setDefaultRenderer(Object.class,myTableCellRender);
         setLayout(new BorderLayout());
         add(new JScrollPane(table), BorderLayout.CENTER);
 
@@ -92,7 +104,11 @@ public class HomePageCalenderMenu extends JPanel{
     {
         tableModel.fireTableDataChanged();
     }
+
     public void setCalenderTableListener(CalenderTableListener calenderTableListener){
         this.calenderTableListener = calenderTableListener;
     }
+
 }
+
+

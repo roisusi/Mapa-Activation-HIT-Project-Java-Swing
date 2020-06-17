@@ -330,6 +330,8 @@ public class ActivationFormSIP extends JDialog {
                 String firstName;
                 String connectionTypeEv;
                 String projectManagerEv;
+                String statusEv;
+
                 //-- Date --//
                 try {
                     dateLabelFormatter.valueToString((Date)datePicker.getModel().getValue());

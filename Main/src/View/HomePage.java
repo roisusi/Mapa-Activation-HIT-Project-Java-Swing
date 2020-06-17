@@ -89,6 +89,24 @@ public class HomePage extends JFrame {
                 cal.setData(controller.getSipActivation());
                 controller.disconnect();
             }
+
+            @Override
+            public void setStatus(String status,int row) {
+                controller.addStatusToActivationList(status,row);
+                try {
+                    controller.connect();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    controller.updateStatus(status,row);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                cal.setData(controller.getSipActivation());
+                System.out.println("Status is : "+controller.getSipActivation().get(row).getStatus());
+                controller.disconnect();
+            }
         });
 
 
