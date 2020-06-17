@@ -10,14 +10,24 @@ import java.util.List;
 public class Controller {
     DataBase db = new DataBase();
 
-    public List<Login> getUsers() {
-        return db.getLoginUsersFromList();
-    }
+    public List<Login> getUsers() { return db.getLoginUsersFromList(); }
+
+    public List<Users> getSystemUsers() { return db.getUsersFromList(); }
+
     public List<ActivationFormSip> getSipActivation() {
         return db.getActivationSipFromList();
     }
+
     public Users getUserFirstNameLogged(){
         return db.getUserFirstNameLogged();
+    }
+
+    public boolean isUserAlreadyExists(Users user) {
+        return db.isUserAlreadyExists(user);
+    }
+
+    public boolean isLoginUserAlreadyExists(Login login) {
+        return db.isLoginUserAlreadyExists(login);
     }
 
     public void addActivationSip(FormEvent ev) {
@@ -61,6 +71,13 @@ public class Controller {
             numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType);
         db.addActivationSipToList(activationFormSip);
     }
+
+    public void addSystemUser(Users user)
+    {
+        Users systemUser = new Users(user);
+        db.addUserToList(systemUser);
+    }
+
     public void addFirstNameToActivationList(int row, String firstName){
         db.addFirstNameToActivationList(row, firstName);
     }
@@ -74,16 +91,35 @@ public class Controller {
         db.removeActivationFromList(row);
     }
 
+    public void removeUser(int row)
+    {
+        db.removeUserFromList(row);
+    }
+
     public void insertingActivationSipToDataBase() throws SQLException {
         db.insertingActivationSipToDataBase();
+    }
+
+    public void insertingUserToDataBase(Users user, int id) throws SQLException {
+        db.insertingUserToDataBase(user, id);
+    }
+
+    public void insertingLoginUserToDataBase(Login login) throws SQLException {
+        db.insertingLoginUserToDataBase(login);
     }
 
     public void loadLoggedUser(int id) throws SQLException {
         db.loadLoggedUser(id);
     }
+
     public void loadUsersFromDataBaseToList() throws SQLException {
         db.loadUsersFromDataBaseToList();
     }
+
+    public void loadSystemUsersFromDataBaseToList() throws SQLException {
+        db.loadSystemUsersFromDataBaseToList();
+    }
+
     public void loadCalenderSipActivationToList() throws SQLException {
         db.loadCalenderSipActivationToList();
     }
@@ -91,7 +127,6 @@ public class Controller {
     public void disconnect(){
         db.disconnect();
     }
-    public void connect () throws Exception {
-        db.connect();
-    }
+
+    public void connect () throws Exception { db.connect(); }
 }

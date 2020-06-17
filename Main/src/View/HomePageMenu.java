@@ -1,12 +1,15 @@
 package View;
 
+import Model.Users;
 import Controller.Controller;
+import Model.UsersType;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class HomePageMenu extends JPanel {
 
@@ -28,7 +31,9 @@ public class HomePageMenu extends JPanel {
     private LoginUI loginUI;
     private JLabel userName;
     private JFrame parent;
-    ActivationFormSIP activationFormSIPDialog;
+    private ActivationFormSIP activationFormSIPDialog;
+    private Users user;
+    private ManageUsers manageUsersForm;
     private Controller controller;
     private getDataFromSipListener getDataFromSipListener;
 
@@ -58,6 +63,14 @@ public class HomePageMenu extends JPanel {
         });
         loginUI.setVisible(true);
 
+        try {
+            controller.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        user = controller.getUserFirstNameLogged();
+        controller.disconnect();
 
         //-- Create The Borders --//
         Border outerBorder = BorderFactory.createEmptyBorder(100,10,300,10);
@@ -115,6 +128,21 @@ public class HomePageMenu extends JPanel {
                 activationFormSIPDialog.setVisible(true);
             }
 
+        });
+
+        // -- the Creation of Manage Users Form -- //
+        manageUsers.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if(user.getUsersType().equals(UsersType.ProjectManager)) {
+                    manageUsersForm = new ManageUsers();
+                    manageUsersForm.setVisible(true);
+                }
+
+                else
+                    JOptionPane.showMessageDialog(HomePageMenu.this,"למשתמש זה אין הרשאות לניהול משתמשים","Error",JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         activationFormSIPDialog.setFormListener(new FormListener() {

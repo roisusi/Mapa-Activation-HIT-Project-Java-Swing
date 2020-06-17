@@ -60,7 +60,7 @@ public class ActivationFormSIP extends JDialog {
     protected JSpinner sbcPort;
     protected JDatePicker datePicker;
     private FormListener formListener;
-    private JLabel welcom;
+    private JLabel welcome;
     private JButton addToSchedule;
 
     //-- Labels --//
@@ -129,7 +129,7 @@ public class ActivationFormSIP extends JDialog {
         emergencyCity = new JTextField(15);
         crNumber = new JTextField(15);
         trunkNumber = new JTextField(15);
-        welcom = new JLabel("טופס הפעלת SIP");
+        welcome = new JLabel("טופס הפעלת SIP");
 
         //-- Spinner --//
         sbcPort = new JSpinner();
@@ -416,6 +416,7 @@ public class ActivationFormSIP extends JDialog {
     {
         this.formListener = listener;
     }
+
     private boolean CheckIP(){
         boolean allGood = true;
             Integer wanA = Integer.parseInt(wanAddressA.getText());
@@ -1162,8 +1163,8 @@ public class ActivationFormSIP extends JDialog {
         //-- Title Panel Top --//
         formPanelTop.setLayout(new FlowLayout(FlowLayout.CENTER));
         formPanelTop.setBorder(BorderFactory.createLineBorder(Color.black));
-        welcom.setFont(new Font("Arial",Font.PLAIN,36));
-        formPanelTop.add(welcom);
+        welcome.setFont(new Font("Arial",Font.PLAIN,36));
+        formPanelTop.add(welcome);
 
 
         // Add sub panels //
