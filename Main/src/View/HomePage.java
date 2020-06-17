@@ -1,6 +1,5 @@
 package View;
 
-
 import Controller.Controller;
 
 import javax.swing.*;
@@ -33,6 +32,7 @@ public class HomePage extends JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         System.out.println("Home Page Create Calender I got Applications : " + controller.getSipActivation().size());
         cal.setData(controller.getSipActivation());
         cal.refresh();
@@ -56,6 +56,7 @@ public class HomePage extends JFrame {
                 controller.disconnect();
             }
         });
+
         cal.setCalenderTableListener(new CalenderTableListener(){
             //-- Remove right click mouse activation --//
             @Override
@@ -71,6 +72,7 @@ public class HomePage extends JFrame {
                 System.out.println("Home Page setCalenderTableListener I got Applications : " + controller.getSipActivation().size());
                 controller.disconnect();
             }
+
             //-- Set right click mouse first name to activation --//
             @Override
             public void addExpertUser(int row, String firstName) {
@@ -109,10 +111,8 @@ public class HomePage extends JFrame {
             }
         });
 
-
-
         //-- Creation of UpperMenu --//
-        upperMenu = new UpperMenu();
+        upperMenu = new UpperMenu("Welcome to Mapa Activation");
 
         //-- adding --//
         add(menu,BorderLayout.WEST);
