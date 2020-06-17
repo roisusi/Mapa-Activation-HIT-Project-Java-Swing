@@ -85,6 +85,7 @@ public class LoginUI extends JDialog {
     {
         this.userLoggedListener = listener;
     }
+
     private void layoutControl (){
         JPanel controlPanel = new JPanel();
         JPanel buttonsPanel = new JPanel();
