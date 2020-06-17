@@ -5,7 +5,9 @@ public class Login {
     private String userName;
     private String password;
 
-    public Login() {
+    public Login(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
     }
 
     public Login(int id ,String userName, String password) {
@@ -17,6 +19,8 @@ public class Login {
     public int getId() {
         return id;
     }
+
+    public void setId(int id) { this.id = id; }
 
     public String getUserName() {
         return userName;

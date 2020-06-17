@@ -4,44 +4,72 @@ import java.sql.*;
 import java.util.*;
 
 public class DataBase {
-    private List<Users> userNames;
+    private List<Users> systemUsers;
     private List<Login> users;
     private List<ActivationFormSip> sipActivation;
     private ActivationFormSip singleActivationFormSip;
-    private Users loggedUser;
+    private static Users loggedUser;
     private Connection con;
 
 
     public DataBase() {
         this.users = new LinkedList<Login>();
-        this.userNames = new LinkedList<Users>();
+        this.systemUsers = new LinkedList<Users>();
         this.sipActivation = new LinkedList<ActivationFormSip>();
     }
     public void addActivationSipToList(ActivationFormSip sipAct) {
         sipActivation.add(sipAct);
     }
+
+    public void addUserToList(Users user) {
+        systemUsers.add(user);
+    }
+
     public void addFirstNameToActivationList(int row, String firstName){
         sipActivation.get(row).setFirstName(firstName);
     }
-    public void addFirstNameToActivationList(String status,int row){
-        sipActivation.get(row).setStatus(status);
-    }
-
 
     public List<Login> getLoginUsersFromList() {
         return Collections.unmodifiableList(users);//prevent for other to change the list when they get REF , just get it
     }
+
+    public List<Users> getUsersFromList() {
+        return Collections.unmodifiableList(systemUsers);
+    }
+
     public List<ActivationFormSip> getActivationSipFromList(){
         return Collections.unmodifiableList(sipActivation);
         //return sipActivation;
     }
+
+    public boolean isUserAlreadyExists(Users user){
+        boolean flag = false;
+
+        for(Users systemUser : systemUsers) {
+            if(systemUser.getFirstName().equals(user.getFirstName()) && systemUser.getLastName().equals(user.getLastName()))
+                flag = true;
+        }
+        return flag;
+    }
+
+    public boolean isLoginUserAlreadyExists(Login login){
+        boolean flag = false;
+
+        for(Login user : users) {
+            if(user.getUserName().equals(login.getUserName()))
+                flag = true;
+        }
+        return flag;
+    }
+
     public Users getUserFirstNameLogged(){
         return loggedUser;
     }
+
     public ActivationFormSip getSingleActivationSip(int row) throws SQLException {
         String selectSql = "select id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
                 "SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,Date,WanAddress,LanAddress,IPpbx,InternetUser,Infrastructure," +
-                "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,FirstName,ActivationType,Status from Activation_SIP where ";
+                "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,FirstName,ActivationType from Activation_SIP where ";
         Statement selectStatment = con.createStatement();
 
         ResultSet results = selectStatment.executeQuery(selectSql);
@@ -81,11 +109,12 @@ public class DataBase {
             String connectionType = results.getString("ConnectionType");
             String projectManagerFirstName = results.getString("ProjectManagerFirstName");
             String activationType = results.getString("ActivationType");
-            String status = results.getString("Status");
+
+
 
             singleActivationFormSip= new ActivationFormSip(id,CustomerID,CustomerName,contactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,
                     TypeOfCalls,IdenteficationType,TotalNumbers,SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,date,WanAddress,LanAddress,IPpbx,InternetUser,
-                    Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName,connectionType,projectManagerFirstName,activationType,status);
+                    Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName,connectionType,projectManagerFirstName,activationType);
 
         selectStatment.close();
         return singleActivationFormSip;
@@ -95,24 +124,13 @@ public class DataBase {
         ActivationFormSip activationFormSip = sipActivation.get(row);
         String updateSql = "update Activation_SIP set ExpertFirstName=? where id=?";
         PreparedStatement updateStmt = con.prepareStatement(updateSql);
-        System.out.println("Updating people with ID " + activationFormSip.getId());
         int col = 1;
         updateStmt.setString(col++, firstName);
         updateStmt.setInt(col++, activationFormSip.getId());
         updateStmt.executeUpdate();
         updateStmt.close();
     }
-    public void updateStatus(String status,int row) throws SQLException {
-        ActivationFormSip activationFormSip = sipActivation.get(row);
-        String updateSql = "update Activation_SIP set Status=? where id=?";
-        PreparedStatement updateStmt = con.prepareStatement(updateSql);
-        System.out.println("Updating people with ID " + activationFormSip.getId());
-        int col = 1;
-        updateStmt.setString(col++, status);
-        updateStmt.setInt(col++, activationFormSip.getId());
-        updateStmt.executeUpdate();
-        updateStmt.close();
-    }
+
     public void updateActivationSip() throws SQLException {
 
         String checkSql = "select count(*) as count from Activation_SIP where id=?";
@@ -203,13 +221,92 @@ public class DataBase {
         checkStmt.close();
     }
 
+    public void insertingUserToDataBase(Users user, int userNameId) throws SQLException {
+        int lastMinId = 0;
+        String checkSql = "select count(*) as count from Users where id = ?;";
+        PreparedStatement checkStatement = con.prepareStatement(checkSql);
+
+        String insertSql = "insert into Users (id, FirstName, LastName, Email, PhoneNumber, Type, UserNameId) values (?, ?, ?, ?, ?, ?, ?);";
+        PreparedStatement insertStatement = con.prepareStatement(insertSql);
+
+        for (Users systemUser: systemUsers) {
+            int id = systemUser.getId();
+
+            if(id - lastMinId > 1) {
+                lastMinId++;
+                id = lastMinId;
+                user.setUserNameId(userNameId);
+                user.setId(id);
+
+                checkStatement.setInt(1, id);
+                ResultSet checkResult = checkStatement.executeQuery();
+                checkResult.next();
+
+                int count = checkResult.getInt(1);
+
+                if (count == 0) {
+                    insertStatement.setInt(1, user.getId());
+                    insertStatement.setString(2, user.getFirstName());
+                    insertStatement.setString(3, user.getLastName());
+                    insertStatement.setString(4, user.getEmail());
+                    insertStatement.setString(5, user.getPhoneNumber());
+                    insertStatement.setString(6, user.getUsersType().toString());
+                    insertStatement.setInt(7, user.getUserNameId());
+                    insertStatement.executeUpdate();
+                }
+                break;
+            }
+            lastMinId++;
+        }
+
+        insertStatement.close();
+        checkStatement.close();
+    }
+
+    public void insertingLoginUserToDataBase(Login login) throws SQLException {
+        int lastMinId = 0;
+        String checkSql = "select count(*) as count from SystemUsers where id = ?;";
+        PreparedStatement checkStatement = con.prepareStatement(checkSql);
+
+        String insertSql = "insert into SystemUsers (id, Username, Password) values (?, ?, ?);";
+        PreparedStatement insertStatement = con.prepareStatement(insertSql);
+
+        for (Login loginUser: users) {
+            int id = loginUser.getId();
+
+            if(id - lastMinId > 1) {
+                lastMinId++;
+                id = lastMinId;
+                login.setId(id);
+
+                checkStatement.setInt(1, id);
+                ResultSet checkResult = checkStatement.executeQuery();
+                checkResult.next();
+
+                int count = checkResult.getInt(1);
+
+                if (count == 0) {
+                    insertStatement.setInt(1, login.getId());
+                    insertStatement.setString(2, login.getUserName());
+                    insertStatement.setString(3, login.getPassword());
+                    insertStatement.executeUpdate();
+                }
+                break;
+            }
+            lastMinId++;
+        }
+
+        insertStatement.close();
+        checkStatement.close();
+    }
+
     public void insertingActivationSipToDataBase() throws SQLException {
         String checkSql = "select count(*) as count from Activation_SIP where id=?";
         PreparedStatement checkStmt = con.prepareStatement(checkSql);
 
-        String insertSql = "insert into Activation_SIP (id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,Infrastructure," +
+        String insertSql = "insert into Activation_SIP (CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,Infrastructure," +
                 "TotalNumbers,TypeOfCalls,IdenteficationType,SNBnumber,NumberRange,InternetUser,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,RouterType,Codec," +
-                "WanAddress,LanAddress,IPpbx,SignalIP,MediaIP,SBCport,Date,TotalCalls,ConnectionType,ActivationType,ExpertFirstName,ProjectManagerFirstName) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                "WanAddress,LanAddress,IPpbx,SignalIP,MediaIP,SBCport,Date,TotalCalls,ConnectionType,ActivationType,ExpertFirstName,ProjectManagerFirstName) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement insertStmt = con.prepareStatement(insertSql);
 
         for (ActivationFormSip activationFormSip : sipActivation) {
@@ -258,7 +355,6 @@ public class DataBase {
             if (count == 0) {
                 System.out.println("Inserting people with ID " + id);
                 int col = 1;
-                insertStmt.setInt(col++,id);
                 insertStmt.setString(col++, customerID);
                 insertStmt.setString(col++, customerName);
                 insertStmt.setString(col++, contactName);
@@ -304,53 +400,81 @@ public class DataBase {
     }
 
     public void loadLoggedUser(int id) throws SQLException {
-        String selectSql2 = "select id,FirstName,LastName,Email,PhoneNumber,Type,UserNameId from Users where UserNameId in (select id from SystemUsers where id="+id+")";
-        Statement selectStatment2 = con.createStatement();
+        String selectSql = "select id,FirstName,LastName,Email,PhoneNumber,Type,UserNameId from Users where UserNameId in (select id from SystemUsers where id="+id+")";
+        Statement selectStatement = con.createStatement();
 
-        ResultSet results2 = selectStatment2.executeQuery(selectSql2);
+        ResultSet results = selectStatement.executeQuery(selectSql);
 
-        while (results2.next()) {
-            id = results2.getInt("id");
-            String firstName = results2.getString("FirstName");
-            String lastName = results2.getString("LastName");
-            String email = results2.getString("Email");
-            String phoneNumber = results2.getString("PhoneNumber");
-            String usersType = results2.getString("Type");
-            int userNameId = results2.getInt("UserNameId");
-
-/*            switch (usersType)
-            {
-                case "ProjectManager":
-                    loggedUser = new Users(id,firstName,lastName,email,phoneNumber,UsersType.Expert,userNameId);
-                    break;
-            }*/
-            loggedUser = new Users(id,firstName,lastName,email,phoneNumber,UsersType.Expert,userNameId);
-
-        }
-        selectStatment2.close();
-    }
-    public void loadUsersFromDataBaseToList() throws SQLException {
-        users.clear();
-        int id=0;
-        String selectSql = "select id,Username,Password from SystemUsers";
-        Statement selectStatment = con.createStatement();
-
-        ResultSet results = selectStatment.executeQuery(selectSql);
         while (results.next()) {
             id = results.getInt("id");
+            String firstName = results.getString("FirstName");
+            String lastName = results.getString("LastName");
+            String email = results.getString("Email");
+            String phoneNumber = results.getString("PhoneNumber");
+            String usersType = results.getString("Type");
+            int userNameId = results.getInt("UserNameId");
+
+            switch (usersType)
+            {
+                case "PrimaryManager":
+                    loggedUser = new Users(id,firstName,lastName,email,phoneNumber,UsersType.PrimaryManager,userNameId);
+                    break;
+
+                case "ProjectManager":
+                    loggedUser = new Users(id,firstName,lastName,email,phoneNumber,UsersType.ProjectManager,userNameId);
+                    break;
+
+                case "Expert":
+                    loggedUser = new Users(id,firstName,lastName,email,phoneNumber,UsersType.Expert,userNameId);
+                    break;
+            }
+        }
+        selectStatement.close();
+    }
+
+    public void loadUsersFromDataBaseToList() throws SQLException {
+        users.clear();
+        String selectSql = "select id,Username,Password from SystemUsers";
+        Statement selectStatement = con.createStatement();
+        ResultSet results = selectStatement.executeQuery(selectSql);
+
+        while (results.next()) {
+            int id = results.getInt("id");
             String userName = results.getString("Username");
             String password = results.getString("Password");
 
             Login user = new Login(id,userName, password);
             users.add(user);
         }
-        selectStatment.close();
+        selectStatement.close();
     }
+
+    public void loadSystemUsersFromDataBaseToList() throws SQLException {
+        systemUsers.clear();
+        String selectSql = "select * from Users";
+        Statement selectStatement = con.createStatement();
+        ResultSet results = selectStatement.executeQuery(selectSql);
+
+        while (results.next()) {
+            int id = results.getInt("id");
+            String firstName = results.getString("FirstName");
+            String lastName = results.getString("LastName");
+            String email = results.getString("Email");
+            String phoneNumber = results.getString("PhoneNumber");
+            UsersType type = UsersType.valueOf(results.getString("Type"));
+            int userNameId = results.getInt("UserNameId");
+
+            Users user = new Users(id, firstName, lastName, email, phoneNumber, type, userNameId);
+            systemUsers.add(user);
+        }
+        selectStatement.close();
+    }
+
     public void loadCalenderSipActivationToList() throws SQLException {
         sipActivation.clear();
         String selectSql = "select id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
                 "SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,Date,WanAddress,LanAddress,IPpbx,InternetUser,Infrastructure," +
-                "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,ExpertFirstName,ConnectionType,ProjectManagerFirstName,ActivationType,Status from Activation_SIP order by id";
+                "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,ExpertFirstName,ConnectionType,ProjectManagerFirstName,ActivationType from Activation_SIP order by Date";
         Statement selectStatment = con.createStatement();
 
         ResultSet results = selectStatment.executeQuery(selectSql);
@@ -391,19 +515,20 @@ public class DataBase {
             String connectionType = results.getString("ConnectionType");
             String projectManagerFirstName = results.getString("ProjectManagerFirstName");
             String activationType = results.getString("ActivationType");
-            String status = results.getString("Status");
+
+
 
             ActivationFormSip activation = new ActivationFormSip(id,CustomerID,CustomerName,contactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,
                     TypeOfCalls,IdenteficationType,TotalNumbers,SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,date,WanAddress,LanAddress,IPpbx,InternetUser,
-                    Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName,connectionType,projectManagerFirstName,activationType,status);
+                    Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName,connectionType,projectManagerFirstName,activationType);
             sipActivation.add(activation);
         }
         selectStatment.close();
     }
 
     public void removeActivationFromList(int row) {
-        ActivationFormSip activationFormSip = sipActivation.get(row);
-        int id = activationFormSip.getId();
+        ActivationForm activationForm = sipActivation.get(row);
+        int id = activationForm.getId();
         try {
             deleteActivationFromDataBase(id);
         } catch (SQLException throwables) {
@@ -411,6 +536,20 @@ public class DataBase {
         }
         sipActivation.remove(row);
     }
+
+    public void removeUserFromList(int row) {
+        Users user = systemUsers.get(row);
+        int id = user.getId();
+        int userNameId = user.getUserNameId();
+        try {
+            deleteUserFromDataBase(id);
+            deleteLoginUserFromDataBase(userNameId);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        systemUsers.remove(row);
+    }
+
     public void deleteActivationFromDataBase(int id) throws SQLException {
 
         String selectSql = "select id from Activation_SIP where id=?";
@@ -421,6 +560,40 @@ public class DataBase {
 
         checkStmt.setInt(1, id);
         ResultSet checkResult = checkStmt.executeQuery();
+        checkResult.next();
+        deleteStmt.setInt(1, id);
+        deleteStmt.executeUpdate();
+
+        deleteStmt.close();
+    }
+
+    public void deleteUserFromDataBase(int id) throws SQLException {
+
+        String selectSql = "select id from Users where id=?";
+        PreparedStatement checkStatement = con.prepareStatement(selectSql);
+
+        String deleteSql = "delete from Users where id=?";
+        PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
+
+        checkStatement.setInt(1, id);
+        ResultSet checkResult = checkStatement.executeQuery();
+        checkResult.next();
+        deleteStmt.setInt(1, id);
+        deleteStmt.executeUpdate();
+
+        deleteStmt.close();
+    }
+
+    public void deleteLoginUserFromDataBase(int id) throws SQLException {
+
+        String selectSql = "select id from SystemUsers where id=?";
+        PreparedStatement checkStatement = con.prepareStatement(selectSql);
+
+        String deleteSql = "delete from SystemUsers where id=?";
+        PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
+
+        checkStatement.setInt(1, id);
+        ResultSet checkResult = checkStatement.executeQuery();
         checkResult.next();
         deleteStmt.setInt(1, id);
         deleteStmt.executeUpdate();
@@ -439,6 +612,7 @@ public class DataBase {
         con = DriverManager.getConnection(connectionUrl, "Roi", "prnm4400$");
         //System.out.println("Connected to : " + con);
     }
+
     public void disconnect() {
         if (con != null) {
             try {
