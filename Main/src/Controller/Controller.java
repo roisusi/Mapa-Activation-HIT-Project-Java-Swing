@@ -10,16 +10,38 @@ import java.util.List;
 public class Controller {
     DataBase db = new DataBase();
 
+<<<<<<< Updated upstream
     public List<Login> getUsers() {
         return db.getLoginUsersFromList();
     }
     public List<ActivationFormSip> getSipActivation() {
         return db.getActivationSipFromList();
     }
+=======
+    public List<Login> getUsers() { return db.getLoginUsersFromList(); }
+
+    public List<Users> getSystemUsers() { return db.getUsersFromList(); }
+
+    public List<ActivationFormSip> getSipActivation() {
+        return db.getActivationSipFromList();
+    }
+
+>>>>>>> Stashed changes
     public Users getUserFirstNameLogged(){
         return db.getUserFirstNameLogged();
     }
 
+<<<<<<< Updated upstream
+=======
+    public boolean isUserAlreadyExists(Users user) {
+        return db.isUserAlreadyExists(user);
+    }
+
+    public boolean isLoginUserAlreadyExists(Login login) {
+        return db.isLoginUserAlreadyExists(login);
+    }
+
+>>>>>>> Stashed changes
     public void addActivationSip(FormEvent ev) {
         String customerID = ev.getCustomerID();
         String customerName = ev.getCustomerName();
@@ -57,10 +79,24 @@ public class Controller {
         String activationType;
         activationType = ActivationType.Sip.toString();
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
         ActivationFormSip activationFormSip= new ActivationFormSip(customerID, customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,
             numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType,"לא");
         db.addActivationSipToList(activationFormSip);
     }
+<<<<<<< Updated upstream
+=======
+
+    public void addSystemUser(Users user)
+    {
+        Users systemUser = new Users(user);
+        db.addUserToList(systemUser);
+    }
+
+>>>>>>> Stashed changes
     public void addFirstNameToActivationList(int row, String firstName){
         db.addFirstNameToActivationList(row, firstName);
     }
@@ -81,16 +117,47 @@ public class Controller {
         db.removeActivationFromList(row);
     }
 
+<<<<<<< Updated upstream
+=======
+    public void removeUser(int row)
+    {
+        db.removeUserFromList(row);
+    }
+
+>>>>>>> Stashed changes
     public void insertingActivationSipToDataBase() throws SQLException {
         db.insertingActivationSipToDataBase();
     }
 
+<<<<<<< Updated upstream
     public void loadLoggedUser(int id) throws SQLException {
         db.loadLoggedUser(id);
     }
     public void loadUsersFromDataBaseToList() throws SQLException {
         db.loadUsersFromDataBaseToList();
     }
+=======
+    public void insertingUserToDataBase(Users user, int id) throws SQLException {
+        db.insertingUserToDataBase(user, id);
+    }
+
+    public void insertingLoginUserToDataBase(Login login) throws SQLException {
+        db.insertingLoginUserToDataBase(login);
+    }
+
+    public void loadLoggedUser(int id) throws SQLException {
+        db.loadLoggedUser(id);
+    }
+
+    public void loadUsersFromDataBaseToList() throws SQLException {
+        db.loadUsersFromDataBaseToList();
+    }
+
+    public void loadSystemUsersFromDataBaseToList() throws SQLException {
+        db.loadSystemUsersFromDataBaseToList();
+    }
+
+>>>>>>> Stashed changes
     public void loadCalenderSipActivationToList() throws SQLException {
         db.loadCalenderSipActivationToList();
     }
@@ -98,7 +165,12 @@ public class Controller {
     public void disconnect(){
         db.disconnect();
     }
+<<<<<<< Updated upstream
     public void connect () throws Exception {
         db.connect();
     }
+=======
+
+    public void connect () throws Exception { db.connect(); }
+>>>>>>> Stashed changes
 }
