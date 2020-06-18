@@ -4,6 +4,13 @@ public class Users {
     protected int id;
     protected String firstName;
     protected String lastName;
+<<<<<<< Updated upstream
+    protected UsersType usersType;
+    protected String email;
+    protected String phoneNumber;
+    private int userNameId;
+
+=======
     protected String email;
     protected String phoneNumber;
     protected UsersType usersType;
@@ -17,6 +24,7 @@ public class Users {
         this.phoneNumber = phoneNumber;
     }
 
+>>>>>>> Stashed changes
     public Users(int id,String firstName, String lastName, String email,String phoneNumber, UsersType usersType,int userNameId) {
         this.id = id;
         this.firstName = firstName;
@@ -37,16 +45,22 @@ public class Users {
         this.userNameId = other.userNameId;
     }
 
+<<<<<<< Updated upstream
+=======
     public int getId() { return id; }
 
     public void setId(int id) { this.id = id; }
 
+>>>>>>> Stashed changes
     public int getUserNameId() {
         return userNameId;
     }
 
+<<<<<<< Updated upstream
+=======
     public void setUserNameId(int userNameId) { this.userNameId = userNameId; }
 
+>>>>>>> Stashed changes
     public String getFirstName() {
         return firstName;
     }
