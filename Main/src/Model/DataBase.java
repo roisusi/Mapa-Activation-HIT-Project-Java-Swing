@@ -4,35 +4,22 @@ import java.sql.*;
 import java.util.*;
 
 public class DataBase {
-<<<<<<< Updated upstream
     private List<Users> userNames;
     private List<Login> users;
     private List<ActivationFormSip> sipActivation;
     private ActivationFormSip singleActivationFormSip;
     private Users loggedUser;
-=======
-    private List<Users> systemUsers;
-    private List<Login> users;
-    private List<ActivationFormSip> sipActivation;
-    private ActivationFormSip singleActivationFormSip;
-    private static Users loggedUser;
->>>>>>> Stashed changes
     private Connection con;
 
 
     public DataBase() {
         this.users = new LinkedList<Login>();
-<<<<<<< Updated upstream
         this.userNames = new LinkedList<Users>();
-=======
-        this.systemUsers = new LinkedList<Users>();
->>>>>>> Stashed changes
         this.sipActivation = new LinkedList<ActivationFormSip>();
     }
     public void addActivationSipToList(ActivationFormSip sipAct) {
         sipActivation.add(sipAct);
     }
-<<<<<<< Updated upstream
     public void addFirstNameToActivationList(int row, String firstName){
         sipActivation.get(row).setFirstName(firstName);
     }
@@ -40,33 +27,14 @@ public class DataBase {
         sipActivation.get(row).setStatus(status);
     }
 
-=======
-
-    public void addUserToList(Users user) {
-        systemUsers.add(user);
-    }
-
-    public void addFirstNameToActivationList(int row, String firstName){
-        sipActivation.get(row).setFirstName(firstName);
-    }
->>>>>>> Stashed changes
 
     public List<Login> getLoginUsersFromList() {
         return Collections.unmodifiableList(users);//prevent for other to change the list when they get REF , just get it
     }
-<<<<<<< Updated upstream
-=======
-
-    public List<Users> getUsersFromList() {
-        return Collections.unmodifiableList(systemUsers);
-    }
-
->>>>>>> Stashed changes
     public List<ActivationFormSip> getActivationSipFromList(){
         return Collections.unmodifiableList(sipActivation);
         //return sipActivation;
     }
-<<<<<<< Updated upstream
     public Users getUserFirstNameLogged(){
         return loggedUser;
     }
@@ -74,37 +42,6 @@ public class DataBase {
         String selectSql = "select id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
                 "SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,Date,WanAddress,LanAddress,IPpbx,InternetUser,Infrastructure," +
                 "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,FirstName,ActivationType,Status from Activation_SIP where ";
-=======
-
-    public boolean isUserAlreadyExists(Users user){
-        boolean flag = false;
-
-        for(Users systemUser : systemUsers) {
-            if(systemUser.getFirstName().equals(user.getFirstName()) && systemUser.getLastName().equals(user.getLastName()))
-                flag = true;
-        }
-        return flag;
-    }
-
-    public boolean isLoginUserAlreadyExists(Login login){
-        boolean flag = false;
-
-        for(Login user : users) {
-            if(user.getUserName().equals(login.getUserName()))
-                flag = true;
-        }
-        return flag;
-    }
-
-    public Users getUserFirstNameLogged(){
-        return loggedUser;
-    }
-
-    public ActivationFormSip getSingleActivationSip(int row) throws SQLException {
-        String selectSql = "select id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
-                "SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,Date,WanAddress,LanAddress,IPpbx,InternetUser,Infrastructure," +
-                "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,FirstName,ActivationType from Activation_SIP where ";
->>>>>>> Stashed changes
         Statement selectStatment = con.createStatement();
 
         ResultSet results = selectStatment.executeQuery(selectSql);
@@ -144,20 +81,11 @@ public class DataBase {
             String connectionType = results.getString("ConnectionType");
             String projectManagerFirstName = results.getString("ProjectManagerFirstName");
             String activationType = results.getString("ActivationType");
-<<<<<<< Updated upstream
             String status = results.getString("Status");
 
             singleActivationFormSip= new ActivationFormSip(id,CustomerID,CustomerName,contactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,
                     TypeOfCalls,IdenteficationType,TotalNumbers,SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,date,WanAddress,LanAddress,IPpbx,InternetUser,
                     Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName,connectionType,projectManagerFirstName,activationType,status);
-=======
-
-
-
-            singleActivationFormSip= new ActivationFormSip(id,CustomerID,CustomerName,contactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,
-                    TypeOfCalls,IdenteficationType,TotalNumbers,SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,date,WanAddress,LanAddress,IPpbx,InternetUser,
-                    Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName,connectionType,projectManagerFirstName,activationType);
->>>>>>> Stashed changes
 
         selectStatment.close();
         return singleActivationFormSip;
@@ -167,17 +95,13 @@ public class DataBase {
         ActivationFormSip activationFormSip = sipActivation.get(row);
         String updateSql = "update Activation_SIP set ExpertFirstName=? where id=?";
         PreparedStatement updateStmt = con.prepareStatement(updateSql);
-<<<<<<< Updated upstream
         System.out.println("Updating people with ID " + activationFormSip.getId());
-=======
->>>>>>> Stashed changes
         int col = 1;
         updateStmt.setString(col++, firstName);
         updateStmt.setInt(col++, activationFormSip.getId());
         updateStmt.executeUpdate();
         updateStmt.close();
     }
-<<<<<<< Updated upstream
     public void updateStatus(String status,int row) throws SQLException {
         ActivationFormSip activationFormSip = sipActivation.get(row);
         String updateSql = "update Activation_SIP set Status=? where id=?";
@@ -189,9 +113,6 @@ public class DataBase {
         updateStmt.executeUpdate();
         updateStmt.close();
     }
-=======
-
->>>>>>> Stashed changes
     public void updateActivationSip() throws SQLException {
 
         String checkSql = "select count(*) as count from Activation_SIP where id=?";
@@ -282,101 +203,13 @@ public class DataBase {
         checkStmt.close();
     }
 
-<<<<<<< Updated upstream
-=======
-    public void insertingUserToDataBase(Users user, int userNameId) throws SQLException {
-        int lastMinId = 0;
-        String checkSql = "select count(*) as count from Users where id = ?;";
-        PreparedStatement checkStatement = con.prepareStatement(checkSql);
-
-        String insertSql = "insert into Users (id, FirstName, LastName, Email, PhoneNumber, Type, UserNameId) values (?, ?, ?, ?, ?, ?, ?);";
-        PreparedStatement insertStatement = con.prepareStatement(insertSql);
-
-        for (Users systemUser: systemUsers) {
-            int id = systemUser.getId();
-
-            if(id - lastMinId > 1) {
-                lastMinId++;
-                id = lastMinId;
-                user.setUserNameId(userNameId);
-                user.setId(id);
-
-                checkStatement.setInt(1, id);
-                ResultSet checkResult = checkStatement.executeQuery();
-                checkResult.next();
-
-                int count = checkResult.getInt(1);
-
-                if (count == 0) {
-                    insertStatement.setInt(1, user.getId());
-                    insertStatement.setString(2, user.getFirstName());
-                    insertStatement.setString(3, user.getLastName());
-                    insertStatement.setString(4, user.getEmail());
-                    insertStatement.setString(5, user.getPhoneNumber());
-                    insertStatement.setString(6, user.getUsersType().toString());
-                    insertStatement.setInt(7, user.getUserNameId());
-                    insertStatement.executeUpdate();
-                }
-                break;
-            }
-            lastMinId++;
-        }
-
-        insertStatement.close();
-        checkStatement.close();
-    }
-
-    public void insertingLoginUserToDataBase(Login login) throws SQLException {
-        int lastMinId = 0;
-        String checkSql = "select count(*) as count from SystemUsers where id = ?;";
-        PreparedStatement checkStatement = con.prepareStatement(checkSql);
-
-        String insertSql = "insert into SystemUsers (id, Username, Password) values (?, ?, ?);";
-        PreparedStatement insertStatement = con.prepareStatement(insertSql);
-
-        for (Login loginUser: users) {
-            int id = loginUser.getId();
-
-            if(id - lastMinId > 1) {
-                lastMinId++;
-                id = lastMinId;
-                login.setId(id);
-
-                checkStatement.setInt(1, id);
-                ResultSet checkResult = checkStatement.executeQuery();
-                checkResult.next();
-
-                int count = checkResult.getInt(1);
-
-                if (count == 0) {
-                    insertStatement.setInt(1, login.getId());
-                    insertStatement.setString(2, login.getUserName());
-                    insertStatement.setString(3, login.getPassword());
-                    insertStatement.executeUpdate();
-                }
-                break;
-            }
-            lastMinId++;
-        }
-
-        insertStatement.close();
-        checkStatement.close();
-    }
-
->>>>>>> Stashed changes
     public void insertingActivationSipToDataBase() throws SQLException {
         String checkSql = "select count(*) as count from Activation_SIP where id=?";
         PreparedStatement checkStmt = con.prepareStatement(checkSql);
 
-<<<<<<< Updated upstream
         String insertSql = "insert into Activation_SIP (id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,Infrastructure," +
                 "TotalNumbers,TypeOfCalls,IdenteficationType,SNBnumber,NumberRange,InternetUser,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,RouterType,Codec," +
                 "WanAddress,LanAddress,IPpbx,SignalIP,MediaIP,SBCport,Date,TotalCalls,ConnectionType,ActivationType,ExpertFirstName,ProjectManagerFirstName) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-=======
-        String insertSql = "insert into Activation_SIP (CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,Infrastructure," +
-                "TotalNumbers,TypeOfCalls,IdenteficationType,SNBnumber,NumberRange,InternetUser,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,RouterType,Codec," +
-                "WanAddress,LanAddress,IPpbx,SignalIP,MediaIP,SBCport,Date,TotalCalls,ConnectionType,ActivationType,ExpertFirstName,ProjectManagerFirstName) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
->>>>>>> Stashed changes
         PreparedStatement insertStmt = con.prepareStatement(insertSql);
 
         for (ActivationFormSip activationFormSip : sipActivation) {
@@ -425,10 +258,7 @@ public class DataBase {
             if (count == 0) {
                 System.out.println("Inserting people with ID " + id);
                 int col = 1;
-<<<<<<< Updated upstream
                 insertStmt.setInt(col++,id);
-=======
->>>>>>> Stashed changes
                 insertStmt.setString(col++, customerID);
                 insertStmt.setString(col++, customerName);
                 insertStmt.setString(col++, contactName);
@@ -474,7 +304,6 @@ public class DataBase {
     }
 
     public void loadLoggedUser(int id) throws SQLException {
-<<<<<<< Updated upstream
         String selectSql2 = "select id,FirstName,LastName,Email,PhoneNumber,Type,UserNameId from Users where UserNameId in (select id from SystemUsers where id="+id+")";
         Statement selectStatment2 = con.createStatement();
 
@@ -509,92 +338,19 @@ public class DataBase {
         ResultSet results = selectStatment.executeQuery(selectSql);
         while (results.next()) {
             id = results.getInt("id");
-=======
-        String selectSql = "select id,FirstName,LastName,Email,PhoneNumber,Type,UserNameId from Users where UserNameId in (select id from SystemUsers where id="+id+")";
-        Statement selectStatement = con.createStatement();
-
-        ResultSet results = selectStatement.executeQuery(selectSql);
-
-        while (results.next()) {
-            id = results.getInt("id");
-            String firstName = results.getString("FirstName");
-            String lastName = results.getString("LastName");
-            String email = results.getString("Email");
-            String phoneNumber = results.getString("PhoneNumber");
-            String usersType = results.getString("Type");
-            int userNameId = results.getInt("UserNameId");
-
-            switch (usersType)
-            {
-                case "PrimaryManager":
-                    loggedUser = new Users(id,firstName,lastName,email,phoneNumber,UsersType.PrimaryManager,userNameId);
-                    break;
-
-                case "ProjectManager":
-                    loggedUser = new Users(id,firstName,lastName,email,phoneNumber,UsersType.ProjectManager,userNameId);
-                    break;
-
-                case "Expert":
-                    loggedUser = new Users(id,firstName,lastName,email,phoneNumber,UsersType.Expert,userNameId);
-                    break;
-            }
-        }
-        selectStatement.close();
-    }
-
-    public void loadUsersFromDataBaseToList() throws SQLException {
-        users.clear();
-        String selectSql = "select id,Username,Password from SystemUsers";
-        Statement selectStatement = con.createStatement();
-        ResultSet results = selectStatement.executeQuery(selectSql);
-
-        while (results.next()) {
-            int id = results.getInt("id");
->>>>>>> Stashed changes
             String userName = results.getString("Username");
             String password = results.getString("Password");
 
             Login user = new Login(id,userName, password);
             users.add(user);
         }
-<<<<<<< Updated upstream
         selectStatment.close();
     }
-=======
-        selectStatement.close();
-    }
-
-    public void loadSystemUsersFromDataBaseToList() throws SQLException {
-        systemUsers.clear();
-        String selectSql = "select * from Users";
-        Statement selectStatement = con.createStatement();
-        ResultSet results = selectStatement.executeQuery(selectSql);
-
-        while (results.next()) {
-            int id = results.getInt("id");
-            String firstName = results.getString("FirstName");
-            String lastName = results.getString("LastName");
-            String email = results.getString("Email");
-            String phoneNumber = results.getString("PhoneNumber");
-            UsersType type = UsersType.valueOf(results.getString("Type"));
-            int userNameId = results.getInt("UserNameId");
-
-            Users user = new Users(id, firstName, lastName, email, phoneNumber, type, userNameId);
-            systemUsers.add(user);
-        }
-        selectStatement.close();
-    }
-
->>>>>>> Stashed changes
     public void loadCalenderSipActivationToList() throws SQLException {
         sipActivation.clear();
         String selectSql = "select id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
                 "SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,Date,WanAddress,LanAddress,IPpbx,InternetUser,Infrastructure," +
-<<<<<<< Updated upstream
                 "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,ExpertFirstName,ConnectionType,ProjectManagerFirstName,ActivationType,Status from Activation_SIP order by id";
-=======
-                "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,ExpertFirstName,ConnectionType,ProjectManagerFirstName,ActivationType from Activation_SIP order by Date";
->>>>>>> Stashed changes
         Statement selectStatment = con.createStatement();
 
         ResultSet results = selectStatment.executeQuery(selectSql);
@@ -635,33 +391,19 @@ public class DataBase {
             String connectionType = results.getString("ConnectionType");
             String projectManagerFirstName = results.getString("ProjectManagerFirstName");
             String activationType = results.getString("ActivationType");
-<<<<<<< Updated upstream
             String status = results.getString("Status");
 
             ActivationFormSip activation = new ActivationFormSip(id,CustomerID,CustomerName,contactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,
                     TypeOfCalls,IdenteficationType,TotalNumbers,SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,date,WanAddress,LanAddress,IPpbx,InternetUser,
                     Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName,connectionType,projectManagerFirstName,activationType,status);
-=======
-
-
-
-            ActivationFormSip activation = new ActivationFormSip(id,CustomerID,CustomerName,contactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,
-                    TypeOfCalls,IdenteficationType,TotalNumbers,SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,date,WanAddress,LanAddress,IPpbx,InternetUser,
-                    Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName,connectionType,projectManagerFirstName,activationType);
->>>>>>> Stashed changes
             sipActivation.add(activation);
         }
         selectStatment.close();
     }
 
     public void removeActivationFromList(int row) {
-<<<<<<< Updated upstream
         ActivationFormSip activationFormSip = sipActivation.get(row);
         int id = activationFormSip.getId();
-=======
-        ActivationForm activationForm = sipActivation.get(row);
-        int id = activationForm.getId();
->>>>>>> Stashed changes
         try {
             deleteActivationFromDataBase(id);
         } catch (SQLException throwables) {
@@ -669,23 +411,6 @@ public class DataBase {
         }
         sipActivation.remove(row);
     }
-<<<<<<< Updated upstream
-=======
-
-    public void removeUserFromList(int row) {
-        Users user = systemUsers.get(row);
-        int id = user.getId();
-        int userNameId = user.getUserNameId();
-        try {
-            deleteUserFromDataBase(id);
-            deleteLoginUserFromDataBase(userNameId);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        systemUsers.remove(row);
-    }
-
->>>>>>> Stashed changes
     public void deleteActivationFromDataBase(int id) throws SQLException {
 
         String selectSql = "select id from Activation_SIP where id=?";
@@ -703,43 +428,6 @@ public class DataBase {
         deleteStmt.close();
     }
 
-<<<<<<< Updated upstream
-=======
-    public void deleteUserFromDataBase(int id) throws SQLException {
-
-        String selectSql = "select id from Users where id=?";
-        PreparedStatement checkStatement = con.prepareStatement(selectSql);
-
-        String deleteSql = "delete from Users where id=?";
-        PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
-
-        checkStatement.setInt(1, id);
-        ResultSet checkResult = checkStatement.executeQuery();
-        checkResult.next();
-        deleteStmt.setInt(1, id);
-        deleteStmt.executeUpdate();
-
-        deleteStmt.close();
-    }
-
-    public void deleteLoginUserFromDataBase(int id) throws SQLException {
-
-        String selectSql = "select id from SystemUsers where id=?";
-        PreparedStatement checkStatement = con.prepareStatement(selectSql);
-
-        String deleteSql = "delete from SystemUsers where id=?";
-        PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
-
-        checkStatement.setInt(1, id);
-        ResultSet checkResult = checkStatement.executeQuery();
-        checkResult.next();
-        deleteStmt.setInt(1, id);
-        deleteStmt.executeUpdate();
-
-        deleteStmt.close();
-    }
-
->>>>>>> Stashed changes
     public void connect() throws Exception {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -751,10 +439,6 @@ public class DataBase {
         con = DriverManager.getConnection(connectionUrl, "Roi", "prnm4400$");
         //System.out.println("Connected to : " + con);
     }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
     public void disconnect() {
         if (con != null) {
             try {
