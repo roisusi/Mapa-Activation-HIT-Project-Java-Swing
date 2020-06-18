@@ -93,7 +93,7 @@ public class ManageUsers extends JFrame {
         setSize(1400, 800); // Size the Frame
         setMinimumSize(new Dimension(400, 500)); //set minimum
         setLocationRelativeTo(null); //Center the Frame
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //when i press X it will close
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //when i press X it will close
         setVisible(true); //show Frame
         controller.disconnect();
     }
