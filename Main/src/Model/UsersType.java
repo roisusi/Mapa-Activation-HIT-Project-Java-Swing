@@ -1,7 +1,7 @@
 package Model;
 
 public enum UsersType {
-    primaryManager,
+    PrimaryManager,
     Expert,
-    projectManager
+    ProjectManager
 }

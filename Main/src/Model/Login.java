@@ -8,6 +8,11 @@ public class Login {
     public Login() {
     }
 
+    public Login(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
+    }
+
     public Login(int id ,String userName, String password) {
         this.id = id;
         this.userName = userName;
@@ -17,6 +22,8 @@ public class Login {
     public int getId() {
         return id;
     }
+
+    public void setId(int id) { this.id = id; }
 
     public String getUserName() {
         return userName;

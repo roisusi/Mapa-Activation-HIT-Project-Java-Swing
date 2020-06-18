@@ -9,6 +9,14 @@ public class Users {
     protected String phoneNumber;
     private int userNameId;
 
+    public Users(String firstName, String lastName, String email,String phoneNumber, UsersType usersType) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.usersType = usersType;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
+
     public Users(int id,String firstName, String lastName, String email,String phoneNumber, UsersType usersType,int userNameId) {
         this.id = id;
         this.firstName = firstName;
@@ -29,9 +37,15 @@ public class Users {
         this.userNameId = other.userNameId;
     }
 
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
+
     public int getUserNameId() {
         return userNameId;
     }
+
+    public void setUserNameId(int userNameId) { this.userNameId = userNameId; }
 
     public String getFirstName() {
         return firstName;

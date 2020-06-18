@@ -4,19 +4,19 @@ import javax.swing.*;
 import java.awt.*;
 
 public class UpperMenu extends JPanel {
-    JLabel welcom;
+    JLabel welcome;
 
-    public UpperMenu() {
+    public UpperMenu(String str) {
         Dimension dim = new Dimension();
         dim.width=500;
         dim.height=50;
 
-        welcom = new JLabel("Welcome to Mapa Activation");
-        welcom.setPreferredSize(dim);
-        welcom.setFont(new Font("Arial",Font.PLAIN,36));
+        welcome = new JLabel(str);
+        welcome.setPreferredSize(dim);
+        welcome.setFont(new Font("Arial",Font.PLAIN,36));
 
 
-        add(welcom,BorderLayout.CENTER);
+        add(welcome,BorderLayout.CENTER);
 
 
         //-- Graphic Option --//

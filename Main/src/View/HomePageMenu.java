@@ -1,6 +1,8 @@
 package View;
 
 import Controller.Controller;
+import Model.Users;
+import Model.UsersType;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -36,6 +38,8 @@ public class HomePageMenu extends JPanel {
     private JLabel userName;
     private JFrame parent;
     ActivationFormSIP activationFormSIPDialog;
+    private Users user;
+    private ManageUsers manageUsersForm;
     private Controller controller;
     private getDataFromSipListener getDataFromSipListener;
 
@@ -65,6 +69,14 @@ public class HomePageMenu extends JPanel {
         });
         loginUI.setVisible(true);
 
+        try {
+            controller.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        user = controller.getUserFirstNameLogged();
+        controller.disconnect();
 
         //-- Create The Borders --//
         Border outerBorder = BorderFactory.createEmptyBorder(100,10,300,10);
@@ -139,7 +151,23 @@ public class HomePageMenu extends JPanel {
                 System.out.println(controller.getSipActivation().size());
             }
         });
+
+        // -- the Creation of Manage Users Form -- //
+        manageUsers.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if(user.getUsersType().equals(UsersType.PrimaryManager)) {
+                    manageUsersForm = new ManageUsers();
+                    manageUsersForm.setVisible(true);
+                }
+
+                else
+                    JOptionPane.showMessageDialog(HomePageMenu.this,"למשתמש זה אין הרשאות לניהול משתמשים","Error",JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
+    
     public void setDataToCalender(getDataFromSipListener getDataFromSipListener){
         this.getDataFromSipListener = getDataFromSipListener;
     }

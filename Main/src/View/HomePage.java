@@ -112,7 +112,7 @@ public class HomePage extends JFrame {
 
 
         //-- Creation of UpperMenu --//
-        upperMenu = new UpperMenu();
+        upperMenu = new UpperMenu("Welcome to Mapa Activation");
 
         //-- adding --//
         add(menu,BorderLayout.WEST);
