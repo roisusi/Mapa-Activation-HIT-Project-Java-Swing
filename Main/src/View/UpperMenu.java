@@ -5,7 +5,6 @@ import java.awt.*;
 
 public class UpperMenu extends JPanel {
     JLabel welcom;
-    Font welcomFont;
 
     public UpperMenu() {
         Dimension dim = new Dimension();
