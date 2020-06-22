@@ -68,15 +68,16 @@ public class ListOfActivationView extends JDialog {
             actModel.addElement(activationFormSips.get(i).getCustomerName());
         }
 
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setViewportView(activations);
-        scrollPane.setPreferredSize(new Dimension(100,100));
-        activations.setLayoutOrientation(JList.VERTICAL);
 
         activations.setModel(actModel);
-        //activations.setPreferredSize(new Dimension(400,100)); // set size of of not it fixed size
+        //activations.setPreferredSize(new Dimension(400,30)); // set size of of not it fixed size
         activations.setBorder(BorderFactory.createEtchedBorder()); // create just frame border
         activations.setSelectedIndex(1);//set default index selected as 1 allways
+
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setViewportView(activations);
+        activations.setLayoutOrientation(JList.VERTICAL);
+        scrollPane.setPreferredSize(new Dimension(400,400));
 
 
         activations.addMouseListener(new MouseAdapter() {
@@ -284,16 +285,27 @@ public class ListOfActivationView extends JDialog {
         GridBagConstraints gcDown = new GridBagConstraints();
         gcDown.fill = GridBagConstraints.NONE;
 
+        int top = 50;
+
         //-- Up Rows --//
         gcUp.weighty=1;
         gcUp.weightx=1;
+
         gcUp.gridy = 0;
         gcUp.gridx = 0;
-        gcUp.insets = new Insets(50,0,0,100);
+        gcUp.insets = new Insets(top,0,0,0);
+        gcUp.anchor = GridBagConstraints.LINE_END;
+        formPanelUp.add(new JLabel("תאריך התחלה"),gcUp);
+        gcUp.gridx++;
+        gcUp.insets = new Insets(top,0,0,0);
         gcUp.anchor = GridBagConstraints.LINE_END;
         formPanelUp.add(fromDate,gcUp);
         gcUp.gridx++;
-        gcUp.insets = new Insets(50,0,0,0);
+        gcUp.insets = new Insets(top,0,0,0);
+        gcUp.anchor = GridBagConstraints.LINE_END;
+        formPanelUp.add(new JLabel("תאריך סיום"),gcUp);
+        gcUp.gridx++;
+        gcUp.insets = new Insets(top,0,0,0);
         gcUp.anchor = GridBagConstraints.LINE_START;
         formPanelUp.add(toDate,gcUp);
 
@@ -302,21 +314,19 @@ public class ListOfActivationView extends JDialog {
         gcDown.weightx=1;
         gcDown.gridy = 0;
         gcDown.gridx = 0;
-        gcDown.insets = new Insets(0,0,0,0);
-        gcDown.anchor = GridBagConstraints.FIRST_LINE_START;
-
-
+        gcDown.insets = new Insets(100,0,0,0);
+        gcDown.anchor = GridBagConstraints.CENTER;
+        formPanelDown.add(scrollPane,gcDown);
 
 
         // Add sub panels //
         setLayout(new BorderLayout());
         add(formPanelUp,BorderLayout.NORTH);
         add(formPanelDown,BorderLayout.CENTER);
-        add(scrollPane, BorderLayout.CENTER);
 
 
         setModal(true);
-        setSize(600, 700); // Size the Frame
+        setSize(600, 500); // Size the Frame
         setLocationRelativeTo(parent);
 
     }
