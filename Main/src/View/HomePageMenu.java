@@ -165,7 +165,7 @@ public class HomePageMenu extends JPanel {
             public void actionPerformed(ActionEvent e)
             {
                 if(user.getUsersType().equals(UsersType.PrimaryManager)) {
-                    manageUsersForm = new ManageUsers();
+                    manageUsersForm = ManageUsers.getInstance();
                     manageUsersForm.setVisible(true);
                 }
 
