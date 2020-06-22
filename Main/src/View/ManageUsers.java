@@ -9,12 +9,13 @@ import java.awt.*;
 import java.sql.SQLException;
 
 public class ManageUsers extends JFrame {
+    private static ManageUsers single_instance = null;
     private ManageUsersTableMenu cal;
     private ManageUsersMenu menu;
     private UpperMenu upperMenu;
     private Controller controller;
 
-    public ManageUsers() {
+    private ManageUsers() {
         super("Manage Users Menu");
         controller = new Controller();
         setLayout(new BorderLayout()); //set BorderLayout
@@ -96,5 +97,11 @@ public class ManageUsers extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //when i press X it will close
         setVisible(true); //show Frame
         controller.disconnect();
+    }
+
+    public static ManageUsers getInstance(){
+        if(single_instance == null)
+            single_instance = new ManageUsers();
+        return single_instance;
     }
 }
