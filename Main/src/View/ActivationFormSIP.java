@@ -14,6 +14,11 @@ import java.text.ParseException;
 import java.util.Date;
 
 public class ActivationFormSIP extends JDialog {
+    private JPanel formPanelTop = new JPanel();
+    private JPanel formPanelLeft = new JPanel();
+    private JPanel formPanelRight = new JPanel();
+    private JPanel buttonsPanel = new JPanel();
+
     protected JTextField customerID;
     protected JTextField customerName;
     protected JTextField contactName;
@@ -62,6 +67,7 @@ public class ActivationFormSIP extends JDialog {
     private FormListener formListener;
     private JLabel welcom;
     private JButton addToSchedule;
+    private JButton editToSchedule;
 
     //-- Labels --//
     private JLabel customerIDLabel = new JLabel("מספר לקוח : ");
@@ -97,14 +103,12 @@ public class ActivationFormSIP extends JDialog {
     private JLabel dateLabel = new JLabel("תאריך : ");
     private JLabel fireWallLabel = new JLabel("נתב בניהולנו ? : ");
 
-
     private String datePickerEv;
-    private UserLoggedListener userLoggedListener;
     private LoginUI loginUI;
+    private int inedxOfButton;
 
 
-
-    public ActivationFormSIP(JPanel parent) {
+    public ActivationFormSIP(JPanel parent,int inedxOfButton) {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createTitledBorder("טופס התקנה"));
@@ -130,6 +134,7 @@ public class ActivationFormSIP extends JDialog {
         crNumber = new JTextField(15);
         trunkNumber = new JTextField(15);
         welcom = new JLabel("טופס הפעלת SIP");
+        this.inedxOfButton = inedxOfButton;
 
         //-- Spinner --//
         sbcPort = new JSpinner();
@@ -259,6 +264,7 @@ public class ActivationFormSIP extends JDialog {
 
         //-- South Buttons --//
         addToSchedule = new JButton("הוסף הפעלה");
+        editToSchedule = new JButton("עדכן הפעלה");
 
 
 
@@ -281,7 +287,7 @@ public class ActivationFormSIP extends JDialog {
 
         // new format to Date //
         UtilDateModel model = new UtilDateModel();
-        JDatePanel datePanel = new JDatePanel(model);
+        //JDatePanel datePanel = new JDatePanel(model);
         datePicker = new JDatePicker(model);
         datePickerEv="";
         DateLabelFormatter dateLabelFormatter = new DateLabelFormatter();
@@ -748,13 +754,9 @@ public class ActivationFormSIP extends JDialog {
 
         return allGood;
     }
-
     //-- Layout control panels --//
     private void FormControl () {
-        JPanel formPanelTop = new JPanel();
-        JPanel formPanelLeft = new JPanel();
-        JPanel formPanelRight = new JPanel();
-        JPanel buttonsPanel = new JPanel();
+
 
         //-- Form Panel --//
         formPanelLeft.setLayout(new GridBagLayout());
@@ -1157,9 +1159,9 @@ public class ActivationFormSIP extends JDialog {
 
 
         //-- Buttons Panel --//
-
+        setAddOrEditBotton(inedxOfButton);
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        buttonsPanel.add(addToSchedule);
+
 
         //-- Title Panel Top --//
         formPanelTop.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -1175,5 +1177,11 @@ public class ActivationFormSIP extends JDialog {
         add(formPanelRight,BorderLayout.EAST);
         add(buttonsPanel,BorderLayout.SOUTH);
 
+    }
+    public void setAddOrEditBotton(int i){
+        if (i==0)
+            buttonsPanel.add(addToSchedule);
+        else
+            buttonsPanel.add(editToSchedule);
     }
 }

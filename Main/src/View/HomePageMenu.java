@@ -9,6 +9,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class HomePageMenu extends JPanel {
 
@@ -74,6 +75,11 @@ public class HomePageMenu extends JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            controller.loadCalenderSipActivationToList();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
         user = controller.getUserFirstNameLogged();
         controller.disconnect();
@@ -84,7 +90,7 @@ public class HomePageMenu extends JPanel {
         setBorder(BorderFactory.createCompoundBorder(innerBorder,outerBorder)); //for 2 borders
 
         //-- Create Form Dialog --//
-        activationFormSIPDialog = new ActivationFormSIP(HomePageMenu.this);
+        activationFormSIPDialog = new ActivationFormSIP(HomePageMenu.this,0);
 
         //Grid Bag Layout - new way to set layouts
         setLayout(new GridBagLayout());
@@ -148,7 +154,8 @@ public class HomePageMenu extends JPanel {
         editForm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(controller.getSipActivation().size());
+                ListOfActivationView listOfActivationView = new ListOfActivationView(parent,controller.getSipActivation());
+                listOfActivationView.setVisible(true);
             }
         });
 

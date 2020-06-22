@@ -2,7 +2,6 @@ package Controller;
 
 import Model.*;
 import View.FormEvent;
-import View.UserLoggedListener;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -13,11 +12,9 @@ public class Controller {
     public List<Login> getUsers() {
         return db.getLoginUsersFromList();
     }
-
     public List<ActivationFormSip> getSipActivation() {
         return db.getActivationSipFromList();
     }
-
     public List<Users> getSystemUsers() { return db.getUsersFromList(); }
 
     public Users getUserFirstNameLogged(){
@@ -87,7 +84,6 @@ public class Controller {
     public void addStatusToActivationList(String status, int row){
         db.addFirstNameToActivationList(status, row);
     }
-
 
     public void updateUserExpertFirstName(int row , String firstName) throws SQLException {
         db.updateUserExpertFirstName(row, firstName);
