@@ -4,8 +4,11 @@ import Model.ActivationFormSip;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.UtilDateModel;
 
+import javax.print.event.PrintJobAttributeListener;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
@@ -19,73 +22,102 @@ public class ListOfActivationView extends JDialog {
     private JDatePicker fromDate;
     private JDatePicker toDate;
     private JPanel formPanelUp;
-    private JPanel formPanelDown;
+    private JPanel formPanelDownLeft;
+    private JPanel formPanelDownRight;
+    private JButton view;
+    private String DateChoose;
+    private List<ActivationFormSip> activationFormSips;
+    private ActivationFormSIP activationFormSIP;
+    private String datePickerEvFrom;
+    private String datePickerEvTo;
+    private JLabel expertName;
+    private JLabel projectManagerName;
+    private JLabel numberOfSuccess;
 
     public ListOfActivationView(JFrame parent, List<ActivationFormSip> activationFormSips) {
         activations = new JList();
         panel = new JPanel();
         formPanelUp = new JPanel();
-        formPanelDown = new JPanel();
+        formPanelDownLeft = new JPanel();
+        formPanelDownRight = new JPanel();
+        view = new JButton("הצג");
+        this.activationFormSips = activationFormSips;
+        activationFormSIP = new ActivationFormSIP(panel,1);
+        expertName = new JLabel();
+        projectManagerName = new JLabel();
 
         // New format to Date From//
         UtilDateModel modelFrom = new UtilDateModel();
         fromDate = new JDatePicker(modelFrom);
-        String datePickerEvFrom="";
+        datePickerEvFrom="";
         DateLabelFormatter dateLabelFormatterFrom = new DateLabelFormatter();
 
         // New format to Date to//
         UtilDateModel modelTo = new UtilDateModel();
         toDate = new JDatePicker(modelTo);
-        toDate = new JDatePicker(modelTo);
-        String datePickerEvTo="";
+        datePickerEvTo="";
         DateLabelFormatter dateLabelFormatterTo = new DateLabelFormatter();
 
+        //-- View Get List from Dates --//
+        view.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //-- Date --//
+                //--From--//
+                try {
+                    dateLabelFormatterFrom.valueToString((Date)fromDate.getModel().getValue());
+                    datePickerEvFrom = dateLabelFormatterFrom.valueToString((Date)fromDate.getModel().getValue());
+                } catch (ParseException parseException) {
+                    parseException.printStackTrace();
+                }
 
-
-        //-- Date --//
-
-        //--From--//
-        try {
-            dateLabelFormatterFrom.valueToString((Date)fromDate.getModel().getValue());
-            datePickerEvFrom = dateLabelFormatterFrom.valueToString((Date)fromDate.getModel().getValue());
-        } catch (ParseException parseException) {
-            parseException.printStackTrace();
-        }
-
-        //--To--//
-        try {
-            dateLabelFormatterTo.valueToString((Date)fromDate.getModel().getValue());
-            datePickerEvTo = dateLabelFormatterTo.valueToString((Date)fromDate.getModel().getValue());
-        } catch (ParseException parseException) {
-            parseException.printStackTrace();
-        }
-
-
-        //inorder to set data we need to configure model list
-        DefaultListModel actModel = new DefaultListModel();
-        int i=0;
-        for (i=0 ; i < activationFormSips.size() ; i++) {
-            actModel.addElement(activationFormSips.get(i).getCustomerName());
-        }
-
-
-        activations.setModel(actModel);
-        //activations.setPreferredSize(new Dimension(400,30)); // set size of of not it fixed size
+                //--To--//
+                try {
+                    dateLabelFormatterTo.valueToString((Date)toDate.getModel().getValue());
+                    datePickerEvTo = dateLabelFormatterTo.valueToString((Date)toDate.getModel().getValue());
+                } catch (ParseException parseException) {
+                    parseException.printStackTrace();
+                }
+                String from =datePickerEvFrom;
+                String to =datePickerEvTo;
+                DefaultListModel actModel = new DefaultListModel();
+                int i=0;
+                if (isBefore(from,to)){
+                    for (i=0 ; i < activationFormSips.size() ; i++) {
+                        DateChoose = activationFormSips.get(i).getDatePicker();
+                        if (isBefore(DateChoose, from) || (isBefore(DateChoose, to))) {
+                            actModel.addElement(activationFormSips.get(i).getCustomerName());
+                            activations.setModel(actModel);
+                        }
+                    }
+                }
+                else
+                    JOptionPane.showMessageDialog(ListOfActivationView.this, "זמן ההתחלה גדול מזמן הסיום", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
         activations.setBorder(BorderFactory.createEtchedBorder()); // create just frame border
         activations.setSelectedIndex(1);//set default index selected as 1 allways
 
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(activations);
         activations.setLayoutOrientation(JList.VERTICAL);
-        scrollPane.setPreferredSize(new Dimension(400,400));
-
+        scrollPane.setPreferredSize(new Dimension(250,200));
 
         activations.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(e.getButton() == MouseEvent.BUTTON1){
-                    ActivationFormSIP activationFormSIP = new ActivationFormSIP(panel,1);
-                    int selectedActivation = activations.getSelectedIndex();
+                int selectedActivation = activations.getSelectedIndex();
+
+                if (e.getButton() == MouseEvent.BUTTON1) //Click Once
+                {
+                    expertName.setText(activationFormSips.get(selectedActivation).getFirstName());
+                    expertName.setForeground(Color.BLUE);
+                    projectManagerName.setText(activationFormSips.get(selectedActivation).getProjectManagerFirstName());
+                    projectManagerName.setForeground(Color.BLUE);
+                    //numberOfSuccess
+                }
+                if(e.getClickCount() == 2) //Double click
+                {
                     activationFormSIP.customerID.setText(activationFormSips.get(selectedActivation).getCustomerID());
                     activationFormSIP.customerName.setText(activationFormSips.get(selectedActivation).getCustomerName());
                     activationFormSIP.contactName.setText(activationFormSips.get(selectedActivation).getContactName());
@@ -237,29 +269,8 @@ public class ListOfActivationView extends JDialog {
 
                     activationFormSIP.emergencyCity.setText(activationFormSips.get(selectedActivation).getEmergencyCity());
 
-                    String date = activationFormSips.get(selectedActivation).getDatePicker();
-                    System.out.println(date);
-
                     //-- DATE --//
-                    String dateStr="";
-                    for(int j=0 ,  i = 0 ;i < activationFormSips.get(selectedActivation).getDatePicker().length() ; i ++ ) {
-                        char a = activationFormSips.get(selectedActivation).getDatePicker().charAt(i);
-                        if (a != '-')
-                            dateStr += a;
-                        if (a == '-') {
-                            j++;
-                            if (j == 1) {
-                                activationFormSIP.datePicker.getModel().setYear(Integer.parseInt(dateStr));
-                                dateStr="";
-                            }
-                            if (j == 2) {
-                                activationFormSIP.datePicker.getModel().setMonth(Integer.parseInt(dateStr)-1);
-                                dateStr="";
-                            }
-                        }
-                    }
-                    activationFormSIP.datePicker.getModel().setDay(Integer.parseInt(dateStr));
-                    activationFormSIP.datePicker.getModel().setSelected(true);
+                    DatePickerEdit(selectedActivation);
 
                     String callOutSideCountry = activationFormSips.get(selectedActivation).getCallOutSideCountry();
                     if (callOutSideCountry.equals("לא"))
@@ -281,55 +292,177 @@ public class ListOfActivationView extends JDialog {
         GridBagConstraints gcUp = new GridBagConstraints();
         gcUp.fill = GridBagConstraints.NONE;
 
-        formPanelDown.setLayout(new GridBagLayout());
-        GridBagConstraints gcDown = new GridBagConstraints();
-        gcDown.fill = GridBagConstraints.NONE;
+        formPanelDownLeft.setLayout(new GridBagLayout());
+        GridBagConstraints gcDownLeft = new GridBagConstraints();
+        gcDownLeft.fill = GridBagConstraints.NONE;
+
+
+        formPanelDownRight.setLayout(new GridBagLayout());
+        GridBagConstraints gcDownRight = new GridBagConstraints();
+        gcDownRight.fill = GridBagConstraints.NONE;
 
         int top = 50;
 
         //-- Up Rows --//
         gcUp.weighty=1;
-        gcUp.weightx=1;
+        gcUp.weightx=2;
 
         gcUp.gridy = 0;
         gcUp.gridx = 0;
-        gcUp.insets = new Insets(top,0,0,0);
-        gcUp.anchor = GridBagConstraints.LINE_END;
-        formPanelUp.add(new JLabel("תאריך התחלה"),gcUp);
+
+        gcUp.insets = new Insets(top,30,top,0);
+        gcUp.anchor = GridBagConstraints.LINE_START;
+        formPanelUp.add(view,gcUp);
         gcUp.gridx++;
-        gcUp.insets = new Insets(top,0,0,0);
+        gcUp.insets = new Insets(top,0,top,0);
+        gcUp.anchor = GridBagConstraints.LINE_END;
+        formPanelUp.add(toDate,gcUp);
+        gcUp.gridx++;
+        gcUp.insets = new Insets(top,0,top,0);
+        gcUp.anchor = GridBagConstraints.LINE_START;
+        formPanelUp.add(new JLabel("תאריך סיום : "),gcUp);
+        gcUp.gridx++;
+        gcUp.insets = new Insets(top,0,top,0);
         gcUp.anchor = GridBagConstraints.LINE_END;
         formPanelUp.add(fromDate,gcUp);
         gcUp.gridx++;
-        gcUp.insets = new Insets(top,0,0,0);
-        gcUp.anchor = GridBagConstraints.LINE_END;
-        formPanelUp.add(new JLabel("תאריך סיום"),gcUp);
-        gcUp.gridx++;
-        gcUp.insets = new Insets(top,0,0,0);
+        gcUp.insets = new Insets(top,0,top,30);
         gcUp.anchor = GridBagConstraints.LINE_START;
-        formPanelUp.add(toDate,gcUp);
+        formPanelUp.add(new JLabel("תאריך התחלה : "),gcUp);
 
-        //-- Down Rows --//
-        gcDown.weighty=1;
-        gcDown.weightx=1;
-        gcDown.gridy = 0;
-        gcDown.gridx = 0;
-        gcDown.insets = new Insets(100,0,0,0);
-        gcDown.anchor = GridBagConstraints.CENTER;
-        formPanelDown.add(scrollPane,gcDown);
 
+        //-- Down Left Rows --//
+        gcDownLeft.weighty=1;
+        gcDownLeft.weightx=1;
+        gcDownLeft.gridy = 0;
+        gcDownLeft.gridx = 0;
+        gcDownLeft.insets = new Insets(0,50,0,50);
+        gcDownLeft.anchor = GridBagConstraints.CENTER;
+        formPanelDownLeft.add(scrollPane,gcDownLeft);
+
+
+        //-- Down Left Rows --//
+        gcDownRight.weighty=1;
+        gcDownRight.weightx=1;
+        gcDownRight.gridx=0;
+        gcDownRight.gridy=0;
+        gcDownRight.insets = new Insets(100,200,0,10);
+        gcDownRight.anchor = GridBagConstraints.FIRST_LINE_END;
+        formPanelDownRight.add(expertName,gcDownRight);
+        gcDownRight.gridx++;
+        gcDownRight.insets = new Insets(100,0,0,10);
+        gcDownRight.anchor = GridBagConstraints.FIRST_LINE_START;
+        formPanelDownRight.add(new JLabel("שם המומחה : "),gcDownRight);
+
+
+        gcDownRight.gridx=0;
+        gcDownRight.gridy++;
+        gcDownRight.insets = new Insets(0,200,100,10);
+        gcDownRight.anchor = GridBagConstraints.FIRST_LINE_END;
+        formPanelDownRight.add(projectManagerName,gcDownRight);
+        gcDownRight.gridx++;
+        gcDownRight.insets = new Insets(0,0,100,10);
+        gcDownRight.anchor = GridBagConstraints.FIRST_LINE_START;
+        formPanelDownRight.add(new JLabel("שם מנהל הפרוייקט : "),gcDownRight);
 
         // Add sub panels //
         setLayout(new BorderLayout());
+        formPanelUp.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray),"בחר תאריך"));
+        formPanelDownLeft.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray),"תוצאות"));
+        //formPanelDownRight.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray),"נתונים"));
         add(formPanelUp,BorderLayout.NORTH);
-        add(formPanelDown,BorderLayout.CENTER);
+        add(formPanelDownLeft,BorderLayout.WEST);
+        add(formPanelDownRight,BorderLayout.EAST);
 
 
         setModal(true);
-        setSize(600, 500); // Size the Frame
+        setSize(700, 500); // Size the Frame
         setLocationRelativeTo(parent);
 
     }
 
+    //-- if str1 before str2 --//
+    private boolean isBefore(String str1,String str2){
+
+        //-- Trims --//
+        char from,to;
+        int day1=0;
+        int day2=0;
+        int month1=0;
+        int month2=0;
+        int year1=0;
+        int year2=0;
+        String tempDate="";
+
+        for(int j=0 ,  i = 0 ;i < str1.length() ; i ++ ) {
+            from = str1.charAt(i);
+            if (from != '-')
+                tempDate += from;
+            if (from == '-') {
+                j++;
+                if (j == 1) {
+                    year1 = Integer.parseInt(tempDate);
+                    tempDate="";
+                }
+                if (j == 2) {
+                    month1 = Integer.parseInt(tempDate);
+                    tempDate="";
+                }
+            }
+        }
+        day1 = Integer.parseInt(tempDate);
+        tempDate="";
+
+        for(int j=0 ,  i = 0 ;i < str2.length() ; i ++ ) {
+            to = str2.charAt(i);
+            if (to != '-')
+                tempDate += to;
+            if (to == '-') {
+                j++;
+                if (j == 1) {
+                    year2 = Integer.parseInt(tempDate);
+                    tempDate="";
+                }
+                if (j == 2) {
+                    month2 = Integer.parseInt(tempDate);
+                    tempDate="";
+                }
+            }
+        }
+        day2 = Integer.parseInt(tempDate);
+        tempDate="";
+
+        //--Check is Before --//
+        if (year1 > year2)
+            return false;
+        else if (year1 == year2 && month1 > month2 )
+            return false;
+            else if (year1 == year2 && month1 == month2 && day1 > day2)
+                return false;
+                else
+                    return true;
+    }
+
+    private void DatePickerEdit(int selectedActivation){
+        String dateStr="";
+        for(int j=0 ,  i = 0 ;i < activationFormSips.get(selectedActivation).getDatePicker().length() ; i ++ ) {
+            char a = activationFormSips.get(selectedActivation).getDatePicker().charAt(i);
+            if (a != '-')
+                dateStr += a;
+            if (a == '-') {
+                j++;
+                if (j == 1) {
+                    activationFormSIP.datePicker.getModel().setYear(Integer.parseInt(dateStr));
+                    dateStr="";
+                }
+                if (j == 2) {
+                    activationFormSIP.datePicker.getModel().setMonth(Integer.parseInt(dateStr)-1);
+                    dateStr="";
+                }
+            }
+        }
+        activationFormSIP.datePicker.getModel().setDay(Integer.parseInt(dateStr));
+        activationFormSIP.datePicker.getModel().setSelected(true);
+    }
 
 }
