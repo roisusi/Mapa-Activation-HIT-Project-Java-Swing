@@ -3,6 +3,7 @@ package Controller;
 import Model.*;
 import View.FormEvent;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -19,6 +20,10 @@ public class Controller {
 
     public Users getUserFirstNameLogged(){
         return db.getUserFirstNameLogged();
+    }
+
+    public Connection getConnection() {
+        return db.getCon();
     }
 
     public boolean isUserAlreadyExists(Users user) {

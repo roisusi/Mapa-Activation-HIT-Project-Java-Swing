@@ -1,6 +1,7 @@
 package View;
 
 import Controller.Controller;
+import Model.Reports;
 import Model.Users;
 import Model.UsersType;
 
@@ -41,6 +42,7 @@ public class HomePageMenu extends JPanel {
     ActivationFormSIP activationFormSIPDialog;
     private Users user;
     private ManageUsers manageUsersForm;
+    private Reports report;
     private Controller controller;
     private getDataFromSipListener getDataFromSipListener;
 
@@ -91,6 +93,7 @@ public class HomePageMenu extends JPanel {
 
         //-- Create Form Dialog --//
         activationFormSIPDialog = new ActivationFormSIP(HomePageMenu.this,0);
+        report = new Reports();
 
         //Grid Bag Layout - new way to set layouts
         setLayout(new GridBagLayout());
@@ -156,6 +159,13 @@ public class HomePageMenu extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 ListOfActivationView listOfActivationView = new ListOfActivationView(parent,controller.getSipActivation());
                 listOfActivationView.setVisible(true);
+            }
+        });
+
+        reports.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                report.generateReport();
             }
         });
 

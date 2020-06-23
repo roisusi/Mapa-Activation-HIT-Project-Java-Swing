@@ -17,6 +17,8 @@ public class DataBase {
         this.sipActivation = new LinkedList<ActivationFormSip>();
     }
 
+    public Connection getCon() { return con; }
+
     public void addActivationSipToList(ActivationFormSip sipAct) {
         sipActivation.add(sipAct);
     }
