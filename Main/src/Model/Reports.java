@@ -1,13 +1,11 @@
 package Model;
 
 import Controller.Controller;
-
-import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
-
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Connection;
 
 public class Reports{
         private Controller controller;
@@ -18,6 +16,7 @@ public class Reports{
 
         public void generateReport()
         {
+            controller = new Controller();
             //System.out.println("Report Generating");
             try {
                     try {
@@ -26,7 +25,7 @@ public class Reports{
                         e.printStackTrace();
                     }
 
-                JasperReport report = JasperCompileManager.compileReport("Main/src/Report/Report_Final.jrxml");
+                JasperReport report = JasperCompileManager.compileReport("C:\\Users\\vinos\\Documents\\GitHub\\Project\\Main\\src\\Report\\Report_Final.jrxml");
                 JasperPrint print = JasperFillManager.fillReport(report,null, controller.getConnection());
                // JasperExportManager.exportReportToPdfFile(print,"C:\\Users\\vinos\\JaspersoftWorkspace\\MyReports\\report1.pdf");
                 JasperViewer.viewReport(print);
