@@ -123,6 +123,55 @@ public class DataBase {
         return flag;
     }
 
+    public void updateSystemUser(Object obj, int row, int column) throws SQLException {
+        String updateSql = null;
+        Users user = systemUsers.get(row);
+
+        switch(column){
+            case 0:
+                updateSql = "update Users set FirstName = ? where id = ?;";
+                break;
+            case 1:
+                updateSql = "update Users set LastName = ? where id = ?;";
+                break;
+            case 2:
+                updateSql = "update Users set Email = ? where id = ?;";
+                break;
+            case 3:
+                updateSql = "update Users set PhoneNumber = ? where id = ?;";
+                break;
+            case 4:
+                updateSql = "update Users set UserType = ? where id = ?;";
+                break;
+        }
+
+        PreparedStatement preparedStatement = con.prepareStatement(updateSql);
+        preparedStatement.setString(1, obj.toString());
+        preparedStatement.setInt(2,  user.getId());
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
+    }
+
+    public void updateLoginUser(Object obj, int row, int column) throws SQLException {
+        String updateSql = null;
+        Login login = users.get(row);
+
+        switch(column){
+            case 5:
+                updateSql = "update SystemUsers set Usersname = ? where id = ?;";
+                break;
+            case 6:
+                updateSql = "update SystemUsers set Password = ? where id = ?;";
+                break;
+        }
+
+        PreparedStatement preparedStatement = con.prepareStatement(updateSql);
+        preparedStatement.setString(1, obj.toString());
+        preparedStatement.setInt(2, login.getId());
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
+    }
+
     public void updateUserExpertFirstName(int row , String firstName) throws SQLException {
         ActivationFormSip activationFormSip = sipActivation.get(row);
         String updateSql = "update Activation_SIP set ExpertFirstName=? where id=?";

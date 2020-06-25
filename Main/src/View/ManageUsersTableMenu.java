@@ -1,15 +1,14 @@
 package View;
 
-import Controller.Controller;
 import Model.Users;
+import Model.Login;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.List;
 
 public class ManageUsersTableMenu extends JPanel {
@@ -17,6 +16,7 @@ public class ManageUsersTableMenu extends JPanel {
     private UsersTableModel tableModel;
     private JPopupMenu popupMenu;
     private UsersTableListener usersTableListener;
+
 
     public ManageUsersTableMenu() {
         JFrame parent = new JFrame();
@@ -26,12 +26,17 @@ public class ManageUsersTableMenu extends JPanel {
         JMenuItem removeItem = new JMenuItem("מחק שורה");
         popupMenu.add(removeItem);
 
+        //--Create Table Cell Change Detector--//
+        table.setCellSelectionEnabled(true);
+        ListSelectionModel cellSelectionModel = table.getSelectionModel();
+        cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
         //-- Create The Borders --//
         Border outerBorder = BorderFactory.createEmptyBorder(20,30,300,30);
-        Border innerBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black),"System Users"); //adds Label to the border
+        Border innerBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black),"משתמשי מערכת"); //adds Label to the border
         setBorder(BorderFactory.createCompoundBorder(innerBorder,outerBorder)); //for 2 borders
 
-        //-- table event to mouse click --//
+        //-- Table Event To Mouse Click --//
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -58,14 +63,27 @@ public class ManageUsersTableMenu extends JPanel {
             }
         });
 
+        //--Table Event To Changed Cell--//
+        cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                String value = null;
+                int row = table.getSelectedRow();
+                int column = table.getSelectedColumn();
+
+                value = (String) table.getValueAt(row, column);
+                table.setValueAt(value, row, column);
+                usersTableListener.rowEdit(value, row, column);
+            }
+        });
+
         //-- Graphic Option --//
         setLayout(new BorderLayout());
         add(new JScrollPane(table), BorderLayout.CENTER);
     }
 
-    public void setData(List<Users> db)
+    public void setData(List<Users> user, List<Login> login)
     {
-        tableModel.setData(db);
+        tableModel.setData(user, login);
     }
 
     public void refresh ()

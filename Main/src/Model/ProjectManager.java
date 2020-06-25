@@ -8,4 +8,16 @@ public class ProjectManager extends Users{
     public ProjectManager(Users other) {
         super(other);
     }
+
+    public boolean getReports() { return true; }
+
+    public boolean deleteForm() { return true; }
+
+    public boolean editForm() { return true; }
+
+    public boolean createForm() { return true; }
+
+    public boolean manageUsers() { return false; }
+
+    public boolean editUsers() { return false; }
 }

@@ -16,7 +16,7 @@ public class ManageUsers extends JFrame {
     private Controller controller;
 
     private ManageUsers() {
-        super("Manage Users Menu");
+        super("ניהול משתמשים");
         controller = new Controller();
         setLayout(new BorderLayout()); //set BorderLayout
 
@@ -41,7 +41,7 @@ public class ManageUsers extends JFrame {
             e.printStackTrace();
         }
 
-        cal.setData(controller.getSystemUsers());
+        cal.setData(controller.getSystemUsers(), controller.getUsers());
         cal.refresh();
 
         menu.setUsersToTable(new getUserFromUsersListener() {
@@ -77,13 +77,33 @@ public class ManageUsers extends JFrame {
                     e.printStackTrace();
                 }
                 controller.removeUser(row);
-                cal.setData(controller.getSystemUsers());
+                cal.setData(controller.getSystemUsers(), controller.getUsers());
+                controller.disconnect();
+            }
+
+            //-- Edit right click mouse activation --//
+            @Override
+            public void rowEdit(Object obj, int row, int column) {
+                try {
+                    controller.connect();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    if(column >= 0 && column <= 4)
+                        controller.updateSystemUser(obj, row, column);
+                    else
+                        controller.updateLoginUser(obj, row, column);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                cal.setData(controller.getSystemUsers(), controller.getUsers());
                 controller.disconnect();
             }
         });
 
         //-- Creation of UpperMenu --//
-        upperMenu = new UpperMenu("Welcome to User Management");
+        upperMenu = new UpperMenu("ברוכים הבאים לניהול משתמשים");
 
         //-- adding --//
         add(menu,BorderLayout.WEST);

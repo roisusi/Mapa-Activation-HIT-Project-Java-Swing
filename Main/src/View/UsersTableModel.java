@@ -1,35 +1,39 @@
 package View;
 
 import Model.Users;
+import Model.Login;
+import Model.UsersType;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
 public class UsersTableModel extends AbstractTableModel {
-    private List<Users> db;
-    private String[] colName = {"First name","Last name","Email","Phone number","Type"};
+    private List<Users> userList;
+    private List<Login> loginList;
+    private String[] colName = {"שם פרטי","שם משפחה","דואר אלקטרוני","טלפון","סוג משתמש", "שם משתמש", "סיסמא"};
 
     public UsersTableModel() {
     }
 
-    public void setData(List<Users> db)
+    public void setData(List<Users> userList, List<Login> loginList)
     {
-        this.db = db;
+        this.userList = userList;
+        this.loginList = loginList;
     }
 
     @Override
-    public int getRowCount() {
-        return db.size();
-    }
+    public int getRowCount() { return userList.size(); }
 
     @Override
     public int getColumnCount() {
-        return 5;
+        return 7;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Users user = db.get(rowIndex);
+        Users user = userList.get(rowIndex);
+        Login login = loginList.get(rowIndex);
+
         switch (columnIndex){
             case 0:
                 return user.getFirstName();
@@ -41,12 +45,53 @@ public class UsersTableModel extends AbstractTableModel {
                 return user.getPhoneNumber();
             case 4:
                 return user.getUsersType();
+            case 5:
+                return login.getUserName();
+            case 6:
+                return login.getPassword();
         }
         return null;
+    }
+
+    @Override
+    public void setValueAt(Object value, int rowIndex, int columnIndex) {
+        //rowData[row][col] = value;
+
+        Users user = userList.get(rowIndex);
+        Login login = loginList.get(rowIndex);
+
+        switch (columnIndex){
+            case 0:
+                user.setFirstName(value.toString());
+                break;
+            case 1:
+                user.setLastName(value.toString());
+                break;
+            case 2:
+                user.setEmail(value.toString());
+                break;
+            case 3:
+                user.setPhoneNumber(value.toString());
+                break;
+            case 4:
+                user.setUsersType(UsersType.valueOf(value.toString()));
+                break;
+            case 5:
+                login.setUserName(value.toString());
+                break;
+            case 6:
+                login.setPassword(value.toString());
+                break;
+        }
     }
 
     @Override
     public String getColumnName(int column) {
         return colName[column];
     }
+
+    @Override
+    public boolean isCellEditable(int row, int column) { return true; }
+
+
 }

@@ -18,12 +18,12 @@ public class ManageUsersMenu extends JPanel {
 
     public ManageUsersMenu() {
         // -- The 2 Buttons --//
-        buttonCreateUser = new JButton("Create User");
+        buttonCreateUser = new JButton("יצירת משתמש חדש");
         buttonCreateUser.setPreferredSize(new Dimension(200,50));
 
         //-- Create The Borders --//
         Border outerBorder = BorderFactory.createEmptyBorder(100,10,300,10);
-        Border innerBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black),"Manage Users Option"); //adds Label to the border
+        Border innerBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black),"תפריט ניהול משתמשים"); //adds Label to the border
         setBorder(BorderFactory.createCompoundBorder(innerBorder,outerBorder)); //for 2 borders
 
         //-- Create Form Dialog --//

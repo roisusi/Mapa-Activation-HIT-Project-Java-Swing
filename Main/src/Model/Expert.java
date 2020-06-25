@@ -8,4 +8,16 @@ public class Expert extends Users{
     public Expert(Users other) {
         super(other);
     }
+
+    public boolean getReports() { return true; }
+
+    public boolean deleteForm() { return true; }
+
+    public boolean editForm() { return true; }
+
+    public boolean createForm() { return false; }
+
+    public boolean manageUsers() { return false; }
+
+    public boolean editUsers() { return false; }
 }

@@ -92,6 +92,14 @@ public class Controller {
         db.updateStatus(status,row);
     }
 
+    public void updateSystemUser(Object obj, int row, int column) throws SQLException {
+        db.updateSystemUser(obj, row, column);
+    }
+
+    public void updateLoginUser(Object obj, int row, int column) throws SQLException {
+        db.updateLoginUser(obj, row, column);
+    }
+
     public void removeActivation(int row)
     {
         db.removeActivationFromList(row);
