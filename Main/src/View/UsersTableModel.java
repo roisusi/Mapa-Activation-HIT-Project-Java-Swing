@@ -32,7 +32,12 @@ public class UsersTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Users user = userList.get(rowIndex);
-        Login login = loginList.get(rowIndex);
+        Login loginUser = null;
+
+        for(Login login: loginList) {
+            if(login.getId() == user.getUserNameId())
+                loginUser = login;
+        }
 
         switch (columnIndex){
             case 0:
@@ -46,9 +51,9 @@ public class UsersTableModel extends AbstractTableModel {
             case 4:
                 return user.getUsersType();
             case 5:
-                return login.getUserName();
+                return loginUser.getUserName();
             case 6:
-                return login.getPassword();
+                return loginUser.getPassword();
         }
         return null;
     }

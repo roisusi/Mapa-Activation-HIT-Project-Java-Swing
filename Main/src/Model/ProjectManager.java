@@ -9,7 +9,7 @@ public class ProjectManager extends Users{
         super(other);
     }
 
-    public boolean getReports() { return true; }
+    public boolean getReports() { return false; }
 
     public boolean deleteForm() { return true; }
 
