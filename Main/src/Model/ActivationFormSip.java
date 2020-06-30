@@ -17,9 +17,13 @@ public class ActivationFormSip extends ActivationForm {
     private String connectionType;
     private String status;
 
+    public ActivationFormSip(String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String firstName, String projectManagerFirstName, String activationType) {
+        super(customerID, customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker, firstName, projectManagerFirstName, activationType);
+    }
+
     public ActivationFormSip(int id, String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber,
                              String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress
-            , String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType, String projectManagerFirstName,String activationType , String status) {
+            , String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType, String projectManagerFirstName, String activationType , String status) {
         this(customerID,  customerName,  contactName,  customerPhoneNumber,  customerEmail,  customerTechName,  customerTechPhoneNumber,  pbxType,  typeOfCalls,  identificationType,  totalNumbers,  snbNumber,  numberRange,  areaCode,  emergencyCity,  callOutSideCountry,  crNumber,  trunkNumber,  datePicker,  wanAddress,  lanAddress,  ipAddress,  internetUser,  infrastructure,  routerType,  CODEC,  totalCalls,  signalAddress,  mediaAddress,  sbcPort,  firstName,  connectionType,  projectManagerFirstName, activationType,status);
         //super(id,customerID, customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker, firstName, projectManagerFirstName,activationType);
 /*        this.wanAddress = wanAddress;
@@ -62,175 +66,299 @@ public class ActivationFormSip extends ActivationForm {
     public String getActivationType() {
         return super.getActivationType();
     }
-
     @Override
     public String getProjectManagerFirstName() {
         return super.getProjectManagerFirstName();
     }
-
     @Override
     public String getFirstName() {
         return super.getFirstName();
     }
-
     @Override
     public void setFirstName(String firstName) {
         super.setFirstName(firstName);
     }
-
     @Override
     public String getCustomerID() {
         return super.getCustomerID();
     }
-
     @Override
     public String getCustomerName() {
         return super.getCustomerName();
     }
-
     @Override
     public String getContactName() {
         return super.getContactName();
     }
-
     @Override
     public String getCustomerPhoneNumber() {
         return super.getCustomerPhoneNumber();
     }
-
     @Override
     public String getCustomerEmail() {
         return super.getCustomerEmail();
     }
-
     @Override
     public String getCustomerTechName() {
         return super.getCustomerTechName();
     }
-
     @Override
     public String getCustomerTechPhoneNumber() {
         return super.getCustomerTechPhoneNumber();
     }
-
     @Override
     public String getPbxType() {
         return super.getPbxType();
     }
-
     @Override
     public String getTypeOfCalls() {
         return super.getTypeOfCalls();
     }
-
     @Override
     public String getIdentificationType() {
         return super.getIdentificationType();
     }
-
     @Override
     public int getTotalNumbers() {
         return super.getTotalNumbers();
     }
-
     @Override
     public String getSnbNumber() {
         return super.getSnbNumber();
     }
-
     @Override
     public String getNumberRange() {
         return super.getNumberRange();
     }
-
     @Override
     public String getAreaCode() {
         return super.getAreaCode();
     }
-
     @Override
     public String getEmergencyCity() {
         return super.getEmergencyCity();
     }
-
     @Override
     public String getCallOutSideCountry() {
         return super.getCallOutSideCountry();
     }
-
     @Override
     public String getCrNumber() {
         return super.getCrNumber();
     }
-
     @Override
     public String getTrunkNumber() {
         return super.getTrunkNumber();
     }
-
     @Override
     public String getDatePicker() {
         return super.getDatePicker();
     }
 
+    @Override
+    public void setCustomerID(String customerID) {
+        super.setCustomerID(customerID);
+    }
+
+    @Override
+    public void setCustomerName(String customerName) {
+        super.setCustomerName(customerName);
+    }
+
+    @Override
+    public void setContactName(String contactName) {
+        super.setContactName(contactName);
+    }
+
+    @Override
+    public void setCustomerPhoneNumber(String customerPhoneNumber) {
+        super.setCustomerPhoneNumber(customerPhoneNumber);
+    }
+
+    @Override
+    public void setCustomerEmail(String customerEmail) {
+        super.setCustomerEmail(customerEmail);
+    }
+
+    @Override
+    public void setCustomerTechName(String customerTechName) {
+        super.setCustomerTechName(customerTechName);
+    }
+
+    @Override
+    public void setCustomerTechPhoneNumber(String customerTechPhoneNumber) {
+        super.setCustomerTechPhoneNumber(customerTechPhoneNumber);
+    }
+
+    @Override
+    public void setPbxType(String pbxType) {
+        super.setPbxType(pbxType);
+    }
+
+    @Override
+    public void setTypeOfCalls(String typeOfCalls) {
+        super.setTypeOfCalls(typeOfCalls);
+    }
+
+    @Override
+    public void setIdentificationType(String identificationType) {
+        super.setIdentificationType(identificationType);
+    }
+
+    @Override
+    public void setTotalNumbers(int totalNumbers) {
+        super.setTotalNumbers(totalNumbers);
+    }
+
+    @Override
+    public void setSnbNumber(String snbNumber) {
+        super.setSnbNumber(snbNumber);
+    }
+
+    @Override
+    public void setNumberRange(String numberRange) {
+        super.setNumberRange(numberRange);
+    }
+
+    @Override
+    public void setAreaCode(String areaCode) {
+        super.setAreaCode(areaCode);
+    }
+
+    @Override
+    public void setEmergencyCity(String emergencyCity) {
+        super.setEmergencyCity(emergencyCity);
+    }
+
+    @Override
+    public void setCallOutSideCountry(String callOutSideCountry) {
+        super.setCallOutSideCountry(callOutSideCountry);
+    }
+
+    @Override
+    public void setCrNumber(String crNumber) {
+        super.setCrNumber(crNumber);
+    }
+
+    @Override
+    public void setTrunkNumber(String trunkNumber) {
+        super.setTrunkNumber(trunkNumber);
+    }
+
+    @Override
+    public void setDatePicker(String datePicker) {
+        super.setDatePicker(datePicker);
+    }
+
+    @Override
+    public void setProjectManagerFirstName(String projectManagerFirstName) {
+        super.setProjectManagerFirstName(projectManagerFirstName);
+    }
+
+    @Override
+    public void setActivationType(String activationType) {
+        super.setActivationType(activationType);
+    }
+
     public int getId() {
         return id;
     }
-
     public String getWanAddress() {
         return wanAddress;
     }
-
     public String getLanAddress() {
         return lanAddress;
     }
-
     public String getIpAddress() {
         return ipAddress;
     }
-
     public String getInternetUser() {
         return internetUser;
     }
-
     public String getInfrastructure() {
         return infrastructure;
     }
-
     public String getRouterType() {
         return routerType;
     }
-
     public String getCODEC() {
         return CODEC;
     }
-
     public int getTotalCalls() {
         return totalCalls;
     }
-
     public String getSignalAddress() {
         return signalAddress;
     }
-
     public String getMediaAddress() {
         return mediaAddress;
     }
-
     public int getSbcPort() {
         return sbcPort;
     }
-
     public String getConnectionType() {
         return connectionType;
     }
-
     public String getStatus(){
         return status;
     }
-
     public void setStatus(String status){
         this.status = status;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public static void setCount(int count) {
+        ActivationFormSip.count = count;
+    }
+
+    public void setWanAddress(String wanAddress) {
+        this.wanAddress = wanAddress;
+    }
+
+    public void setLanAddress(String lanAddress) {
+        this.lanAddress = lanAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    public void setInternetUser(String internetUser) {
+        this.internetUser = internetUser;
+    }
+
+    public void setInfrastructure(String infrastructure) {
+        this.infrastructure = infrastructure;
+    }
+
+    public void setRouterType(String routerType) {
+        this.routerType = routerType;
+    }
+
+    public void setCODEC(String CODEC) {
+        this.CODEC = CODEC;
+    }
+
+    public void setTotalCalls(int totalCalls) {
+        this.totalCalls = totalCalls;
+    }
+
+    public void setSignalAddress(String signalAddress) {
+        this.signalAddress = signalAddress;
+    }
+
+    public void setMediaAddress(String mediaAddress) {
+        this.mediaAddress = mediaAddress;
+    }
+
+    public void setSbcPort(int sbcPort) {
+        this.sbcPort = sbcPort;
+    }
+
+    public void setConnectionType(String connectionType) {
+        this.connectionType = connectionType;
+    }
 }

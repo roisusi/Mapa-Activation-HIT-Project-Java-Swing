@@ -20,15 +20,56 @@ public class DataBase {
     public void addActivationSipToList(ActivationFormSip sipAct) {
         sipActivation.add(sipAct);
     }
-
+    public void updateActivationSipToList(ActivationFormSip sipAct) {
+        int i=0;
+        for (ActivationFormSip activationFormSip : sipActivation ){
+            if (sipAct.getId() == activationFormSip.getId()){
+                sipActivation.get(i).setFirstName(sipAct.getFirstName());
+                sipActivation.get(i).setStatus(sipAct.getStatus());
+                sipActivation.get(i).setActivationType(sipAct.getActivationType());
+                sipActivation.get(i).setAreaCode(sipAct.getAreaCode());
+                sipActivation.get(i).setCallOutSideCountry(sipAct.getCallOutSideCountry());
+                sipActivation.get(i).setCODEC(sipAct.getCODEC());
+                sipActivation.get(i).setConnectionType(sipAct.getConnectionType());
+                sipActivation.get(i).setContactName(sipAct.getContactName());
+                sipActivation.get(i).setCrNumber(sipAct.getCrNumber());
+                sipActivation.get(i).setCustomerEmail(sipAct.getCustomerEmail());
+                sipActivation.get(i).setCustomerID(sipAct.getCustomerID());
+                sipActivation.get(i).setCustomerName(sipAct.getCustomerName());
+                sipActivation.get(i).setCustomerPhoneNumber(sipAct.getCustomerPhoneNumber());
+                sipActivation.get(i).setCustomerTechName(sipAct.getCustomerTechName());
+                sipActivation.get(i).setCustomerTechPhoneNumber(sipAct.getCustomerTechPhoneNumber());
+                sipActivation.get(i).setDatePicker(sipAct.getDatePicker());
+                sipActivation.get(i).setEmergencyCity(sipAct.getEmergencyCity());
+                sipActivation.get(i).setIdentificationType(sipAct.getIdentificationType());
+                sipActivation.get(i).setInfrastructure(sipAct.getInfrastructure());
+                sipActivation.get(i).setInternetUser(sipAct.getInternetUser());
+                sipActivation.get(i).setIpAddress(sipAct.getIpAddress());
+                sipActivation.get(i).setLanAddress(sipAct.getLanAddress());
+                sipActivation.get(i).setMediaAddress(sipAct.getMediaAddress());
+                sipActivation.get(i).setNumberRange(sipAct.getNumberRange());
+                sipActivation.get(i).setPbxType(sipAct.getPbxType());
+                sipActivation.get(i).setProjectManagerFirstName(sipAct.getProjectManagerFirstName());
+                sipActivation.get(i).setRouterType(sipAct.getRouterType());
+                sipActivation.get(i).setSbcPort(sipAct.getSbcPort());
+                sipActivation.get(i).setSignalAddress(sipAct.getSignalAddress());
+                sipActivation.get(i).setSnbNumber(sipAct.getSnbNumber());
+                sipActivation.get(i).setTotalCalls(sipAct.getTotalCalls());
+                sipActivation.get(i).setTotalNumbers(sipAct.getTotalNumbers());
+                sipActivation.get(i).setTrunkNumber(sipAct.getTrunkNumber());
+                sipActivation.get(i).setTypeOfCalls(sipAct.getTypeOfCalls());
+                sipActivation.get(i).setWanAddress(sipAct.getWanAddress());
+                break;
+            }
+            i++;
+        }
+    }
     public void addFirstNameToActivationList(int row, String firstName){
         sipActivation.get(row).setFirstName(firstName);
     }
-
     public void addFirstNameToActivationList(String status,int row){
         sipActivation.get(row).setStatus(status);
     }
-
     public void addUserToList(Users user) {
         systemUsers.add(user);
     }
@@ -36,20 +77,16 @@ public class DataBase {
     public List<Login> getLoginUsersFromList() {
         return Collections.unmodifiableList(users);//prevent for other to change the list when they get REF , just get it
     }
-
     public List<Users> getUsersFromList() {
         return Collections.unmodifiableList(systemUsers);
     }
-
     public List<ActivationFormSip> getActivationSipFromList(){
         return Collections.unmodifiableList(sipActivation);
         //return sipActivation;
     }
-
     public Users getUserFirstNameLogged(){
         return loggedUser;
     }
-
     public ActivationFormSip getSingleActivationSip(int row) throws SQLException {
         String selectSql = "select id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
                 "SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,Date,WanAddress,LanAddress,IPpbx,InternetUser,Infrastructure," +
@@ -112,7 +149,6 @@ public class DataBase {
         }
         return flag;
     }
-
     public boolean isLoginUserAlreadyExists(Login login){
         boolean flag = false;
 
@@ -122,6 +158,7 @@ public class DataBase {
         }
         return flag;
     }
+
 
     public void updateSystemUser(Object obj, int row, int column) throws SQLException {
         String updateSql = null;
@@ -151,7 +188,6 @@ public class DataBase {
         preparedStatement.executeUpdate();
         preparedStatement.close();
     }
-
     public void updateLoginUser(Object obj, int row, int column) throws SQLException {
         String updateSql = null;
         Login login = users.get(row);
@@ -171,7 +207,6 @@ public class DataBase {
         preparedStatement.executeUpdate();
         preparedStatement.close();
     }
-
     public void updateUserExpertFirstName(int row , String firstName) throws SQLException {
         ActivationFormSip activationFormSip = sipActivation.get(row);
         String updateSql = "update Activation_SIP set ExpertFirstName=? where id=?";
@@ -183,7 +218,6 @@ public class DataBase {
         updateStmt.executeUpdate();
         updateStmt.close();
     }
-
     public void updateStatus(String status,int row) throws SQLException {
         ActivationFormSip activationFormSip = sipActivation.get(row);
         String updateSql = "update Activation_SIP set Status=? where id=?";
@@ -195,7 +229,6 @@ public class DataBase {
         updateStmt.executeUpdate();
         updateStmt.close();
     }
-
     public void updateActivationSip() throws SQLException {
 
         String checkSql = "select count(*) as count from Activation_SIP where id=?";
@@ -385,7 +418,6 @@ public class DataBase {
         insertStmt.close();
         checkStmt.close();
     }
-
     public void insertingUserToDataBase(Users user, int userNameId) throws SQLException {
         int lastMinId = 0;
         String checkSql = "select count(*) as count from Users where id = ?;";
@@ -427,7 +459,6 @@ public class DataBase {
         insertStatement.close();
         checkStatement.close();
     }
-
     public void insertingLoginUserToDataBase(Login login) throws SQLException {
         int lastMinId = 0;
         String checkSql = "select count(*) as count from SystemUsers where id = ?;";
@@ -497,7 +528,6 @@ public class DataBase {
         }
         selectStatment2.close();
     }
-
     public void loadUsersFromDataBaseToList() throws SQLException {
         users.clear();
         int id=0;
@@ -515,7 +545,6 @@ public class DataBase {
         }
         selectStatment.close();
     }
-
     public void loadCalenderSipActivationToList() throws SQLException {
         sipActivation.clear();
         String selectSql = "select id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
@@ -570,7 +599,6 @@ public class DataBase {
         }
         selectStatment.close();
     }
-
     public void loadSystemUsersFromDataBaseToList() throws SQLException {
         systemUsers.clear();
         String selectSql = "select * from Users";

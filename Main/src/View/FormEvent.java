@@ -5,6 +5,7 @@ import Model.ActivationType;
 import java.util.EventObject;
 
 public class FormEvent extends EventObject {
+    private int id;
     private String customerID;
     private String customerName;
     private String contactName;
@@ -43,6 +44,44 @@ public class FormEvent extends EventObject {
         super(source);
     }
 
+    public FormEvent(Object source, int id, String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType, String projectManagerFirstName) {
+        super(source);
+        this.id = id;
+        this.customerID = customerID;
+        this.customerName = customerName;
+        this.contactName = contactName;
+        this.customerPhoneNumber = customerPhoneNumber;
+        this.customerEmail = customerEmail;
+        this.customerTechName = customerTechName;
+        this.customerTechPhoneNumber = customerTechPhoneNumber;
+        this.pbxType = pbxType;
+        this.typeOfCalls = typeOfCalls;
+        this.identificationType = identificationType;
+        this.totalNumbers = totalNumbers;
+        this.snbNumber = snbNumber;
+        this.numberRange = numberRange;
+        this.areaCode = areaCode;
+        this.emergencyCity = emergencyCity;
+        this.callOutSideCountry = callOutSideCountry;
+        this.crNumber = crNumber;
+        this.trunkNumber = trunkNumber;
+        this.datePicker = datePicker;
+        this.wanAddress = wanAddress;
+        this.lanAddress = lanAddress;
+        this.ipAddress = ipAddress;
+        this.internetUser = internetUser;
+        this.infrastructure = infrastructure;
+        this.routerType = routerType;
+        this.CODEC = CODEC;
+        this.totalCalls = totalCalls;
+        this.signalAddress = signalAddress;
+        this.mediaAddress = mediaAddress;
+        this.sbcPort = sbcPort;
+        this.firstName = firstName;
+        this.connectionType = connectionType;
+        this.projectManagerFirstName = projectManagerFirstName;
+    }
+
     public FormEvent(Object source, String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType, String projectManagerFirstName) {
         super(source);
         this.customerID = customerID;
@@ -78,9 +117,11 @@ public class FormEvent extends EventObject {
         this.firstName = firstName;
         this.connectionType = connectionType;
         this.projectManagerFirstName = projectManagerFirstName;
-
     }
 
+    public int getId() {
+        return id;
+    }
     public String getFirstName() {
         return firstName;
     }

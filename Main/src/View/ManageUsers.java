@@ -44,7 +44,7 @@ public class ManageUsers extends JFrame {
         cal.setData(controller.getSystemUsers(), controller.getUsers());
         cal.refresh();
 
-        menu.setUsersToTable(new getUserFromUsersListener() {
+        menu.setUsersToTable(new GetUserFromUsersListener() {
             @Override
             public void setUsers(Users user, Login login) throws SQLException {
                 if(controller.isUserAlreadyExists(user) || controller.isLoginUserAlreadyExists(login))

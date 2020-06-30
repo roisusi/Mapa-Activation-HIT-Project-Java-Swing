@@ -2,7 +2,6 @@ package View;
 
 import Model.Users;
 import Model.Login;
-import Controller.Controller;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -14,7 +13,7 @@ import java.sql.SQLException;
 public class ManageUsersMenu extends JPanel {
     private JButton buttonCreateUser;
     private CreateUserForm createUserForm;
-    private getUserFromUsersListener getUserFromUsersListener;
+    private GetUserFromUsersListener getUserFromUsersListener;
 
     public ManageUsersMenu() {
         // -- The 2 Buttons --//
@@ -63,7 +62,7 @@ public class ManageUsersMenu extends JPanel {
         });
     }
 
-    public void setUsersToTable(getUserFromUsersListener getUserFromUsersListener){
+    public void setUsersToTable(GetUserFromUsersListener getUserFromUsersListener){
         this.getUserFromUsersListener = getUserFromUsersListener;
     }
 }

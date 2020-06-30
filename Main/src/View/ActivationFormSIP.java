@@ -106,6 +106,7 @@ public class ActivationFormSIP extends JDialog {
     private String datePickerEv;
     private LoginUI loginUI;
     private int inedxOfButton;
+    private DateLabelFormatter dateLabelFormatter;
 
 
     public ActivationFormSIP(JPanel parent,int inedxOfButton) {
@@ -268,6 +269,19 @@ public class ActivationFormSIP extends JDialog {
 
 
 
+        //-- Date --//
+        // new format to Date //
+        dateLabelFormatter = new DateLabelFormatter();
+        UtilDateModel model = new UtilDateModel();
+        datePicker = new JDatePicker(model);
+        datePickerEv="";
+        try {
+            dateLabelFormatter.valueToString((Date)datePicker.getModel().getValue());
+        } catch (ParseException parseException) {
+            parseException.printStackTrace();
+        }
+
+
         //-------------------------------- Listeners --------------------------------//
 
         //--------- Radio Yes Click ---------//
@@ -284,14 +298,6 @@ public class ActivationFormSIP extends JDialog {
                 routerTypeTextField.setEnabled(false);
             }
         });
-
-        // new format to Date //
-        UtilDateModel model = new UtilDateModel();
-        //JDatePanel datePanel = new JDatePanel(model);
-        datePicker = new JDatePicker(model);
-        datePickerEv="";
-        DateLabelFormatter dateLabelFormatter = new DateLabelFormatter();
-
         JFrame parent1 = new JFrame();
         loginUI = new LoginUI(parent1);
         loginUI.setUserLoggedListener(new UserLoggedListener() {
@@ -300,117 +306,19 @@ public class ActivationFormSIP extends JDialog {
                 System.out.println("SIP : " + User);
             }
         });
-
         addToSchedule.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String customerIDEv;
-                String customerNameEv;
-                String contactNameEv;
-                String customerPhoneNumberEv;
-                String customerEmailEv;
-                String customerTechNameEv;
-                String customerTechPhoneNumberEv;
-                String pbxTypeEv;
-                String typeOfCallsEv;
-                String identificationTypeEv;
-                int totalNumbersEv;
-                String snbNumberEv;
-                String numberRangeEv;
-                String areaCodeEv;
-                String emergencyCityEv;
-                String callOutSideCountryEv;
-                String crNumberEv;
-                String trunkNumberEv;
-                String wanAddressEv;
-                String lanAddressEv;
-                String ipAddressEv;
-                String internetUserEv;
-                String infrastructureEv;
-                String routerTypeEv;
-                String CODECEv;
-                int totalCallsEv;
-                String signalAddressEv;
-                String mediaAddressEv;
-                int sbcPortEv;
-                String firstName;
-                String connectionTypeEv;
-                String projectManagerEv;
-                String statusEv;
-
-                //-- Date --//
-                try {
-                    dateLabelFormatter.valueToString((Date)datePicker.getModel().getValue());
-                    datePickerEv = dateLabelFormatter.valueToString((Date)datePicker.getModel().getValue());
-                } catch (ParseException parseException) {
-                    parseException.printStackTrace();
-                }
-
-
-                if (checkEmptyCells()) {
-                    if (CheckInputDigits() && CheckIP())
-                    {
-                        customerIDEv = customerID.getText();
-                        totalNumbersEv = Integer.parseInt(totalNumbers.getText());
-                        sbcPortEv = Integer.parseInt(sbcPort.getValue().toString());
-                        totalCallsEv = Integer.parseInt(totalCalls.getText());
-                        customerNameEv = customerName.getText();
-                        contactNameEv = contactName.getText();
-                        customerPhoneNumberEv = customerPhoneNumber.getText();
-                        customerEmailEv = customerEmail.getText();
-                        customerTechNameEv = customerTechName.getText();
-                        customerTechPhoneNumberEv = customerTechPhoneNumber.getText();
-                        typeOfCallsEv = (String)typeOfCalls.getSelectedItem();
-                        pbxTypeEv = pbxType.getText();
-
-                        identificationTypeEv = (String)identificationType.getSelectedItem();
-                        connectionTypeEv = (String)connectionType.getSelectedItem();
-
-                        snbNumberEv = snbNumber.getText();
-                        numberRangeEv = numberRange.getText();
-                        areaCodeEv = (String)areaCode.getSelectedItem();
-                        emergencyCityEv = emergencyCity.getText();
-
-                        //-- get Radio from callOutSideCountry --//
-                        String getcallOutSideCountryChoice = callOutSideCountry.getSelection().getActionCommand();
-                        if (getcallOutSideCountryChoice.equals("YES"))
-                            callOutSideCountryEv = "כן";
-                        else
-                            callOutSideCountryEv = "לא";
-
-                        crNumberEv = crNumber.getText();
-                        trunkNumberEv = trunkNumber.getText();
-                        wanAddressEv = wanAddressA.getText() + "." + wanAddressB.getText() + "." + wanAddressC.getText() + "." + wanAddressD.getText();
-                        lanAddressEv = lanAddressA.getText() + "." + lanAddressB.getText() + "." + lanAddressC.getText() + "." + lanAddressD.getText();
-                        ipAddressEv =  ipAddressA.getText() + "." + ipAddressB.getText() + "." + ipAddressC.getText() + "." + ipAddressD.getText();
-                        internetUserEv = internetUser.getText();
-                        infrastructureEv = infrastructure.getText();
-                        routerTypeEv = routerTypeTextField.getText();
-                        CODECEv = (String)CODEC.getSelectedItem();
-                        signalAddressEv = (String)signalAddress.getSelectedItem();
-                        mediaAddressEv = (String)mediaAddress.getSelectedItem();
-                        firstName = "";
-                        projectManagerEv = HomePageMenu.SessionId.getUserName();
-
-                        FormEvent ev = new FormEvent(this,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
-                                totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
-                                infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv);
-                        formListener.formEventOccurred(ev);
-                        dispose();
-                    }
-                    else {
-                        if (CheckInputDigits()) {
-                            if (!CheckIP())
-                                JOptionPane.showMessageDialog(ActivationFormSIP.this, "כתובת IP אינה תקינה", "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                            else
-                                JOptionPane.showMessageDialog(ActivationFormSIP.this, "יש להזין ערך מספרי בלבד", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                else
-                    JOptionPane.showMessageDialog(ActivationFormSIP.this,"נא השלם את הנתונים באדום","Error",JOptionPane.ERROR_MESSAGE);
+                uploadFormToDataBase();
             }
 
+        });
+        editToSchedule.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                uploadFormToDataBase();
+                System.out.println(ActivationsMoves.FormId.getActivationId());
+            }
         });
 
 
@@ -420,8 +328,7 @@ public class ActivationFormSIP extends JDialog {
         //setLocation(300,600); //Center the Frame
         setLocationRelativeTo(parent);
     }
-    public void setFormListener(FormListener listener)
-    {
+    public void setFormListener(FormListener listener) {
         this.formListener = listener;
     }
     private boolean CheckIP(){
@@ -756,7 +663,6 @@ public class ActivationFormSIP extends JDialog {
     }
     //-- Layout control panels --//
     private void FormControl () {
-
 
         //-- Form Panel --//
         formPanelLeft.setLayout(new GridBagLayout());
@@ -1183,5 +1089,118 @@ public class ActivationFormSIP extends JDialog {
             buttonsPanel.add(addToSchedule);
         else
             buttonsPanel.add(editToSchedule);
+    }
+    public void uploadFormToDataBase(){
+        String customerIDEv;
+        String customerNameEv;
+        String contactNameEv;
+        String customerPhoneNumberEv;
+        String customerEmailEv;
+        String customerTechNameEv;
+        String customerTechPhoneNumberEv;
+        String pbxTypeEv;
+        String typeOfCallsEv;
+        String identificationTypeEv;
+        int totalNumbersEv;
+        String snbNumberEv;
+        String numberRangeEv;
+        String areaCodeEv;
+        String emergencyCityEv;
+        String callOutSideCountryEv;
+        String crNumberEv;
+        String trunkNumberEv;
+        String wanAddressEv;
+        String lanAddressEv;
+        String ipAddressEv;
+        String internetUserEv;
+        String infrastructureEv;
+        String routerTypeEv;
+        String CODECEv;
+        int totalCallsEv;
+        String signalAddressEv;
+        String mediaAddressEv;
+        int sbcPortEv;
+        String firstName;
+        String connectionTypeEv;
+        String projectManagerEv;
+        int idSession = ActivationsMoves.FormId.getActivationId();
+
+        try {
+            datePickerEv = dateLabelFormatter.valueToString((Date)datePicker.getModel().getValue());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        if (checkEmptyCells()) {
+            if (CheckInputDigits() && CheckIP())
+            {
+                customerIDEv = customerID.getText();
+                totalNumbersEv = Integer.parseInt(totalNumbers.getText());
+                sbcPortEv = Integer.parseInt(sbcPort.getValue().toString());
+                totalCallsEv = Integer.parseInt(totalCalls.getText());
+                customerNameEv = customerName.getText();
+                contactNameEv = contactName.getText();
+                customerPhoneNumberEv = customerPhoneNumber.getText();
+                customerEmailEv = customerEmail.getText();
+                customerTechNameEv = customerTechName.getText();
+                customerTechPhoneNumberEv = customerTechPhoneNumber.getText();
+                typeOfCallsEv = (String)typeOfCalls.getSelectedItem();
+                pbxTypeEv = pbxType.getText();
+
+                identificationTypeEv = (String)identificationType.getSelectedItem();
+                connectionTypeEv = (String)connectionType.getSelectedItem();
+
+                snbNumberEv = snbNumber.getText();
+                numberRangeEv = numberRange.getText();
+                areaCodeEv = (String)areaCode.getSelectedItem();
+                emergencyCityEv = emergencyCity.getText();
+
+                //-- get Radio from callOutSideCountry --//
+                String getcallOutSideCountryChoice = callOutSideCountry.getSelection().getActionCommand();
+                if (getcallOutSideCountryChoice.equals("YES"))
+                    callOutSideCountryEv = "כן";
+                else
+                    callOutSideCountryEv = "לא";
+
+                crNumberEv = crNumber.getText();
+                trunkNumberEv = trunkNumber.getText();
+                wanAddressEv = wanAddressA.getText() + "." + wanAddressB.getText() + "." + wanAddressC.getText() + "." + wanAddressD.getText();
+                lanAddressEv = lanAddressA.getText() + "." + lanAddressB.getText() + "." + lanAddressC.getText() + "." + lanAddressD.getText();
+                ipAddressEv =  ipAddressA.getText() + "." + ipAddressB.getText() + "." + ipAddressC.getText() + "." + ipAddressD.getText();
+                internetUserEv = internetUser.getText();
+                infrastructureEv = infrastructure.getText();
+                routerTypeEv = routerTypeTextField.getText();
+                CODECEv = (String)CODEC.getSelectedItem();
+                signalAddressEv = (String)signalAddress.getSelectedItem();
+                mediaAddressEv = (String)mediaAddress.getSelectedItem();
+                firstName = "";
+                projectManagerEv = ActivationsMoves.SessionId.getUserName();
+                FormEvent ev;
+                if (inedxOfButton==0){
+                    ev= new FormEvent(this,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
+                        totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
+                        infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv);
+                }
+                else {
+
+                    ev = new FormEvent(this,idSession,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
+                            totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
+                            infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv);
+                }
+                formListener.formEventOccurred(ev);
+                dispose();
+            }
+            else {
+                if (CheckInputDigits()) {
+                    if (!CheckIP())
+                        JOptionPane.showMessageDialog(ActivationFormSIP.this, "כתובת IP אינה תקינה", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                else
+                    JOptionPane.showMessageDialog(ActivationFormSIP.this, "יש להזין ערך מספרי בלבד", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        else
+            JOptionPane.showMessageDialog(ActivationFormSIP.this,"נא השלם את הנתונים באדום","Error",JOptionPane.ERROR_MESSAGE);
     }
 }
