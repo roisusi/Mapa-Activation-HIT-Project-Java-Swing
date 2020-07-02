@@ -77,7 +77,7 @@ public class HomePageMenu extends JPanel {
         //-- Create Form Dialog --//
         activationFormSIPDialog = new ActivationFormSIP(HomePageMenu.this,0);
         //-- Edit Form Dialog --//
-        listOfActivationView = new ListOfActivationView(parent,controller.getSipActivation());
+        listOfActivationView = new ListOfActivationView(parent);//,controller.getSipActivation());
 
 
         //Grid Bag Layout - new way to set layouts

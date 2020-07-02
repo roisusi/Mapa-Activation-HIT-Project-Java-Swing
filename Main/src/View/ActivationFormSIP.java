@@ -1,15 +1,13 @@
 package View;
 
-import Controller.Controller;
+import Model.NumberRanges;
 import com.mysql.jdbc.StringUtils;
-import org.jdatepicker.JDatePanel;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.UtilDateModel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.UnknownServiceException;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -67,7 +65,11 @@ public class ActivationFormSIP extends JDialog {
     private FormListener formListener;
     private JLabel welcom;
     private JButton addToSchedule;
-    private JButton editToSchedule;
+    protected JButton editToSchedule;
+    private JButton failActivation;
+    private JButton rangeNumbers;
+    private JButton activationToFile;
+    private JButton namberRangeButton;
 
     //-- Labels --//
     private JLabel customerIDLabel = new JLabel("מספר לקוח : ");
@@ -103,10 +105,13 @@ public class ActivationFormSIP extends JDialog {
     private JLabel dateLabel = new JLabel("תאריך : ");
     private JLabel fireWallLabel = new JLabel("נתב בניהולנו ? : ");
 
+
     private String datePickerEv;
     private LoginUI loginUI;
     private int inedxOfButton;
     private DateLabelFormatter dateLabelFormatter;
+    private NumberRanges numberRanges;
+    private NumberRangesView numberRangesView;
 
 
     public ActivationFormSIP(JPanel parent,int inedxOfButton) {
@@ -136,6 +141,8 @@ public class ActivationFormSIP extends JDialog {
         trunkNumber = new JTextField(15);
         welcom = new JLabel("טופס הפעלת SIP");
         this.inedxOfButton = inedxOfButton;
+        namberRangeButton = new JButton("הוסף טווחים");
+
 
         //-- Spinner --//
         sbcPort = new JSpinner();
@@ -266,6 +273,9 @@ public class ActivationFormSIP extends JDialog {
         //-- South Buttons --//
         addToSchedule = new JButton("הוסף הפעלה");
         editToSchedule = new JButton("עדכן הפעלה");
+        failActivation = new JButton("הכשל הפעלה");
+        rangeNumbers = new JButton("הוסף מספרים");
+        activationToFile = new JButton("הוצא נתונים");
 
 
 
@@ -318,6 +328,13 @@ public class ActivationFormSIP extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 uploadFormToDataBase();
                 System.out.println(ActivationsMoves.FormId.getActivationId());
+            }
+        });
+        namberRangeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                numberRangesView = new NumberRangesView(mainPanel);
+                numberRangesView.setVisible(true);
             }
         });
 
@@ -675,7 +692,7 @@ public class ActivationFormSIP extends JDialog {
 
         int rightLeftRow = 100;
 
-        //-- Left Rows --//
+        //----------------------------- Left Rows -----------------------------//
         gcLeft.weighty=1;
         gcLeft.weightx=1;
         gcLeft.gridy = 0;
@@ -702,7 +719,7 @@ public class ActivationFormSIP extends JDialog {
         gcLeft.gridx = 0;
         gcLeft.insets = new Insets(0,0,0,0);
         gcLeft.anchor = GridBagConstraints.LINE_END;
-        formPanelLeft.add(numberRange,gcLeft);
+        formPanelLeft.add(namberRangeButton,gcLeft);
         gcLeft.gridx++;
         gcLeft.insets = new Insets(0,0,0,0);
         gcLeft.anchor = GridBagConstraints.LINE_START;
@@ -1065,8 +1082,11 @@ public class ActivationFormSIP extends JDialog {
 
 
         //-- Buttons Panel --//
-        setAddOrEditBotton(inedxOfButton);
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        buttonsPanel.add(activationToFile);
+        buttonsPanel.add(failActivation);
+        buttonsPanel.add(rangeNumbers);
+        setAddOrEditBotton(inedxOfButton);
 
 
         //-- Title Panel Top --//
@@ -1177,16 +1197,26 @@ public class ActivationFormSIP extends JDialog {
                 firstName = "";
                 projectManagerEv = ActivationsMoves.SessionId.getUserName();
                 FormEvent ev;
+
+
                 if (inedxOfButton==0){
+                    //--Create New --//
                     ev= new FormEvent(this,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
                         totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
                         infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv);
+
                 }
                 else {
+                    //--Edited --//
 
                     ev = new FormEvent(this,idSession,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
                             totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
                             infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv);
+
+
+                    numberRanges = new NumberRanges(idSession,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
+                            totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
+                            infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv,"Sip","last",3,4,5);
                 }
                 formListener.formEventOccurred(ev);
                 dispose();

@@ -15,12 +15,13 @@ public class HomePage extends JFrame {
     private HomePageMenu menu;
     private UpperMenu upperMenu;
     private Controller controller;
-    private ListOfActivationView listOfActivationView;
 
     public HomePage() {
         super("Mapa Activation");
+        //Test//
+
+
         controller = new Controller();
-        listOfActivationView = new ListOfActivationView();
         setJMenuBar(createMenubar());
         setLayout(new BorderLayout()); //set BorderLayout
 
@@ -65,7 +66,18 @@ public class HomePage extends JFrame {
             @Override
             public void updateActivation(FormEvent ev) {
                 controller.updateActivationSip(ev);
+                try {
+                    controller.connect();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                try {
+                    controller.updateActivationSipToDataBase(ActivationsMoves.FormId.getActivationId());
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
                 cal.refresh();
+                controller.disconnect();
             }
         });
 

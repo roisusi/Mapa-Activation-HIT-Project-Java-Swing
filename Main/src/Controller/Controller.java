@@ -136,6 +136,9 @@ public class Controller {
         db.updateActivationSipToList(activationFormSip);
 
     }
+    public void updateActivationSipToDataBase(int id) throws SQLException {
+        db.updateActivationSipToDataBase(id);
+    }
 
     public void removeActivation(int row)
     {

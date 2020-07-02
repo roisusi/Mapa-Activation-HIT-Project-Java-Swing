@@ -7,7 +7,6 @@ public class DataBase {
     private List<Users> systemUsers;
     private List<Login> users;
     private List<ActivationFormSip> sipActivation;
-    private ActivationFormSip singleActivationFormSip;
     private static Users loggedUser;
     private Connection con;
 
@@ -20,6 +19,49 @@ public class DataBase {
     public void addActivationSipToList(ActivationFormSip sipAct) {
         sipActivation.add(sipAct);
     }
+    public void addFirstNameToActivationList(int row, String firstName){
+        sipActivation.get(row).setFirstName(firstName);
+    }
+    public void addFirstNameToActivationList(String status,int row){
+        sipActivation.get(row).setStatus(status);
+    }
+    public void addUserToList(Users user) {
+        systemUsers.add(user);
+    }
+
+    public List<Login> getLoginUsersFromList() {
+        return Collections.unmodifiableList(users);//prevent for other to change the list when they get REF , just get it
+    }
+    public List<Users> getUsersFromList() {
+        return Collections.unmodifiableList(systemUsers);
+    }
+    public List<ActivationFormSip> getActivationSipFromList(){
+        return Collections.unmodifiableList(sipActivation);
+        //return sipActivation;
+    }
+    public Users getUserFirstNameLogged(){
+        return loggedUser;
+    }
+
+    public boolean isUserAlreadyExists(Users user){
+        boolean flag = false;
+
+        for(Users systemUser : systemUsers) {
+            if(systemUser.getFirstName().equals(user.getFirstName()) && systemUser.getLastName().equals(user.getLastName()))
+                flag = true;
+        }
+        return flag;
+    }
+    public boolean isLoginUserAlreadyExists(Login login){
+        boolean flag = false;
+
+        for(Login user : users) {
+            if(user.getUserName().equals(login.getUserName()))
+                flag = true;
+        }
+        return flag;
+    }
+
     public void updateActivationSipToList(ActivationFormSip sipAct) {
         int i=0;
         for (ActivationFormSip activationFormSip : sipActivation ){
@@ -64,102 +106,6 @@ public class DataBase {
             i++;
         }
     }
-    public void addFirstNameToActivationList(int row, String firstName){
-        sipActivation.get(row).setFirstName(firstName);
-    }
-    public void addFirstNameToActivationList(String status,int row){
-        sipActivation.get(row).setStatus(status);
-    }
-    public void addUserToList(Users user) {
-        systemUsers.add(user);
-    }
-
-    public List<Login> getLoginUsersFromList() {
-        return Collections.unmodifiableList(users);//prevent for other to change the list when they get REF , just get it
-    }
-    public List<Users> getUsersFromList() {
-        return Collections.unmodifiableList(systemUsers);
-    }
-    public List<ActivationFormSip> getActivationSipFromList(){
-        return Collections.unmodifiableList(sipActivation);
-        //return sipActivation;
-    }
-    public Users getUserFirstNameLogged(){
-        return loggedUser;
-    }
-    public ActivationFormSip getSingleActivationSip(int row) throws SQLException {
-        String selectSql = "select id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
-                "SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,Date,WanAddress,LanAddress,IPpbx,InternetUser,Infrastructure," +
-                "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,FirstName,ActivationType,Status from Activation_SIP where ";
-        Statement selectStatment = con.createStatement();
-
-        ResultSet results = selectStatment.executeQuery(selectSql);
-
-            int id = results.getInt("id");
-            String CustomerID = results.getString("CustomerID");
-            String CustomerName = results.getString("CustomerName");
-            String contactName = results.getString("ContactName");
-            String CustomerPhoneNumber = results.getString("CustomerPhoneNumber");
-            String CustomerEmail = results.getString("CustomerEmail");
-            String TechnicanName = results.getString("TechnicanName");
-            String TechnicanPhone = results.getString("TechnicanPhone");
-            String SwitchType = results.getString("SwitchType");
-            String TypeOfCalls = results.getString("TypeOfCalls");
-            String IdenteficationType = results.getString("IdenteficationType");
-            int TotalNumbers = results.getInt("TotalNumbers");
-            String SNBnumber = results.getString("SNBnumber");
-            String NumberRange = results.getString("NumberRange");
-            String AreaCode = results.getString("AreaCode");
-            String EmergancyCity = results.getString("EmergancyCity");
-            String CallOutCountry = results.getString("CallOutCountry");
-            String CRnumber = results.getString("CRnumber");
-            String TrunkNumber = results.getString("TrunkNumber");
-            String date = results.getString("Date");
-            String WanAddress = results.getString("WanAddress");
-            String LanAddress = results.getString("LanAddress");
-            String IPpbx = results.getString("IPpbx");
-            String InternetUser = results.getString("InternetUser");
-            String Infrastructure = results.getString("Infrastructure");
-            String RouterType = results.getString("RouterType");
-            String Codec = results.getString("Codec");
-            int TotalCalls = results.getInt("TotalCalls");
-            String SignalIP = results.getString("SignalIP");
-            String MediaIP = results.getString("MediaIP");
-            int port = results.getInt("SBCport");
-            String firstName = results.getString("FirstName");
-            String connectionType = results.getString("ConnectionType");
-            String projectManagerFirstName = results.getString("ProjectManagerFirstName");
-            String activationType = results.getString("ActivationType");
-            String status = results.getString("Status");
-
-            singleActivationFormSip= new ActivationFormSip(id,CustomerID,CustomerName,contactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,
-                    TypeOfCalls,IdenteficationType,TotalNumbers,SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,date,WanAddress,LanAddress,IPpbx,InternetUser,
-                    Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName,connectionType,projectManagerFirstName,activationType,status);
-
-        selectStatment.close();
-        return singleActivationFormSip;
-    }
-
-    public boolean isUserAlreadyExists(Users user){
-        boolean flag = false;
-
-        for(Users systemUser : systemUsers) {
-            if(systemUser.getFirstName().equals(user.getFirstName()) && systemUser.getLastName().equals(user.getLastName()))
-                flag = true;
-        }
-        return flag;
-    }
-    public boolean isLoginUserAlreadyExists(Login login){
-        boolean flag = false;
-
-        for(Login user : users) {
-            if(user.getUserName().equals(login.getUserName()))
-                flag = true;
-        }
-        return flag;
-    }
-
-
     public void updateSystemUser(Object obj, int row, int column) throws SQLException {
         String updateSql = null;
         Users user = systemUsers.get(row);
@@ -229,55 +175,58 @@ public class DataBase {
         updateStmt.executeUpdate();
         updateStmt.close();
     }
-    public void updateActivationSip() throws SQLException {
+    public void updateActivationSipToDataBase(int id) throws SQLException {
 
         String checkSql = "select count(*) as count from Activation_SIP where id=?";
         PreparedStatement checkStmt = con.prepareStatement(checkSql);
 
         String updateSql = "update Activation_SIP set CustomerID=?,CustomerName=?,ContactName=?,CustomerPhoneNumber=?,CustomerEmail=?,TechnicanName=?,TechnicanPhone=?,SwitchType=?,Infrastructure=?," +
                 "TotalNumbers=?,TypeOfCalls=?,IdenteficationType=?,SNBnumber=?,NumberRange=?,InternetUser=?,AreaCode=?,EmergancyCity=?,CallOutCountry=?,CRnumber=?,TrunkNumber=?,RouterType=?,Codec=?," +
-                "WanAddress=?,LanAddress=?,IPpbx=?,SignalIP=?,MediaIP=?,SBCport=?,Date=?,TotalCalls=?,ConnectionType=? where id=?";
+                "WanAddress=?,LanAddress=?,IPpbx=?,SignalIP=?,MediaIP=?,SBCport=?,Date=?,TotalCalls=?,ConnectionType=?,ActivationType=?,ExpertFirstName=?,ProjectManagerFirstName=? where id=?";
 
         PreparedStatement updateStmt = con.prepareStatement(updateSql);
         for (ActivationFormSip activationFormSip : sipActivation) {
-            int id = activationFormSip.getId();
-            String customerID = activationFormSip.getCustomerID();
-            String customerName = activationFormSip.getCustomerName();
-            String contactName = activationFormSip.getContactName();
-            String customerPhoneNumber = activationFormSip.getCustomerPhoneNumber();
-            String customerEmail = activationFormSip.getCustomerEmail();
-            String customerTechName = activationFormSip.getCustomerTechName();
-            String customerTechPhoneNumber = activationFormSip.getCustomerTechPhoneNumber();
-            String pbxType = activationFormSip.getPbxType();
-            String infrastructure = activationFormSip.getInfrastructure();
-            int totalNumbers = activationFormSip.getTotalNumbers();
-            String typeOfCalls = activationFormSip.getTypeOfCalls();
-            String identificationType = activationFormSip.getIdentificationType();
-            String snbNumber = activationFormSip.getSnbNumber();
-            String numberRange = activationFormSip.getNumberRange();
-            String internetUser = activationFormSip.getInternetUser();
-            String areaCode = activationFormSip.getAreaCode();
-            String emergencyCity = activationFormSip.getEmergencyCity();
-            String callOutSideCountry = activationFormSip.getCallOutSideCountry();
-            String crNumber = activationFormSip.getCrNumber();
-            String trunkNumber = activationFormSip.getTrunkNumber();
-            String routerType = activationFormSip.getRouterType();
-            String CODEC = activationFormSip.getCODEC();
-            String wanAddress = activationFormSip.getWanAddress();
-            String lanAddress = activationFormSip.getLanAddress();
-            String ipAddress = activationFormSip.getIpAddress();
-            String signalAddress = activationFormSip.getSignalAddress();
-            String mediaAddress = activationFormSip.getMediaAddress();
-            int sbcPort = activationFormSip.getSbcPort();
-            String datePicker = activationFormSip.getDatePicker();
-            int totalCalls = activationFormSip.getTotalCalls();
-            String connectionType = activationFormSip.getConnectionType();
+            if (activationFormSip.getId() == id) {
+                String customerID = activationFormSip.getCustomerID();
+                String customerName = activationFormSip.getCustomerName();
+                String contactName = activationFormSip.getContactName();
+                String customerPhoneNumber = activationFormSip.getCustomerPhoneNumber();
+                String customerEmail = activationFormSip.getCustomerEmail();
+                String customerTechName = activationFormSip.getCustomerTechName();
+                String customerTechPhoneNumber = activationFormSip.getCustomerTechPhoneNumber();
+                String pbxType = activationFormSip.getPbxType();
+                String infrastructure = activationFormSip.getInfrastructure();
+                int totalNumbers = activationFormSip.getTotalNumbers();
+                String typeOfCalls = activationFormSip.getTypeOfCalls();
+                String identificationType = activationFormSip.getIdentificationType();
+                String snbNumber = activationFormSip.getSnbNumber();
+                String numberRange = activationFormSip.getNumberRange();
+                String internetUser = activationFormSip.getInternetUser();
+                String areaCode = activationFormSip.getAreaCode();
+                String emergencyCity = activationFormSip.getEmergencyCity();
+                String callOutSideCountry = activationFormSip.getCallOutSideCountry();
+                String crNumber = activationFormSip.getCrNumber();
+                String trunkNumber = activationFormSip.getTrunkNumber();
+                String routerType = activationFormSip.getRouterType();
+                String CODEC = activationFormSip.getCODEC();
+                String wanAddress = activationFormSip.getWanAddress();
+                String lanAddress = activationFormSip.getLanAddress();
+                String ipAddress = activationFormSip.getIpAddress();
+                String signalAddress = activationFormSip.getSignalAddress();
+                String mediaAddress = activationFormSip.getMediaAddress();
+                int sbcPort = activationFormSip.getSbcPort();
+                String datePicker = activationFormSip.getDatePicker();
+                int totalCalls = activationFormSip.getTotalCalls();
+                String connectionType = activationFormSip.getConnectionType();
+                String activationType = activationFormSip.getActivationType();
+                String expertFirstName = activationFormSip.getFirstName();
+                String projectManagerFirstName = activationFormSip.getProjectManagerFirstName();
+
 
             checkStmt.setInt(1, id);
             ResultSet checkResult = checkStmt.executeQuery();
             checkResult.next();
 
-            int count = checkResult.getInt(1);
             System.out.println("Updating people with ID " + id);
             int col = 1;
             updateStmt.setString(col++, customerID);
@@ -310,11 +259,16 @@ public class DataBase {
             updateStmt.setInt(col++, sbcPort);
             updateStmt.setString(col++, datePicker);
             updateStmt.setInt(col++, totalCalls);
-            updateStmt.setInt(col++, id);
             updateStmt.setString(col++, connectionType);
+            updateStmt.setString(col++, activationType);
+            updateStmt.setString(col++, expertFirstName);
+            updateStmt.setString(col++, projectManagerFirstName);
+            updateStmt.setInt(col++, id);
+            updateStmt.executeUpdate();
+
+            }
         }
 
-        updateStmt.executeUpdate();
         updateStmt.close();
         checkStmt.close();
     }
@@ -413,7 +367,6 @@ public class DataBase {
                 insertStmt.executeUpdate();
 
             }
-            //System.out.println("count for person with ID " + id + " is " + count);
         }
         insertStmt.close();
         checkStmt.close();
@@ -630,7 +583,6 @@ public class DataBase {
         }
         sipActivation.remove(row);
     }
-
     public void removeUserFromList(int row) {
         Users user = systemUsers.get(row);
         int id = user.getId();
@@ -660,7 +612,6 @@ public class DataBase {
 
         deleteStmt.close();
     }
-
     public void deleteUserFromDataBase(int id) throws SQLException {
 
         String selectSql = "select id from Users where id=?";
@@ -677,7 +628,6 @@ public class DataBase {
 
         deleteStmt.close();
     }
-
     public void deleteLoginUserFromDataBase(int id) throws SQLException {
 
         String selectSql = "select id from SystemUsers where id=?";
@@ -706,7 +656,6 @@ public class DataBase {
         con = DriverManager.getConnection(connectionUrl, "Roi", "prnm4400$");
         //System.out.println("Connected to : " + con);
     }
-
     public void disconnect() {
         if (con != null) {
             try {

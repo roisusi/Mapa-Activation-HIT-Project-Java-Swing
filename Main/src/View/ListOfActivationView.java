@@ -2,6 +2,7 @@ package View;
 
 import Controller.Controller;
 import Model.ActivationFormSip;
+import Model.ListOfActivation;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.UtilDateModel;
 
@@ -11,9 +12,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class ListOfActivationView extends JDialog {
 
@@ -34,24 +40,26 @@ public class ListOfActivationView extends JDialog {
     private JLabel projectManagerName;
     private JLabel numberOfSuccess;
     private  GetDataFromSipListener getDataFromSipListener;
-    DefaultListModel actModel;
+    private DefaultListModel actModel;
+    private List<Integer> activationsIdArrayList;
 
     private int currentId;
 
-    public ListOfActivationView() {
-    }
-
-    public ListOfActivationView(JFrame parent, List<ActivationFormSip> activationFormSips) {
+    public ListOfActivationView(JFrame parent){//, List<ActivationFormSip> activationFormSips) {
         activations = new JList();
         panel = new JPanel();
         formPanelUp = new JPanel();
         formPanelDownLeft = new JPanel();
         formPanelDownRight = new JPanel();
         view = new JButton("הצג");
-        this.activationFormSips = activationFormSips;
+        activationFormSips = new LinkedList<>();
         activationFormSIP = new ActivationFormSIP(panel,1);
         expertName = new JLabel();
         projectManagerName = new JLabel();
+        activationsIdArrayList = new LinkedList<>();
+
+
+
 
 
         // New format to Date From//
@@ -70,6 +78,7 @@ public class ListOfActivationView extends JDialog {
         view.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                activationFormSips = ActivationsMoves.LoadActivationFromList.getActivationSip();
                 int i = 0,flag=0;
                 actModel = new DefaultListModel();
                 actModel.removeAllElements();
@@ -92,13 +101,13 @@ public class ListOfActivationView extends JDialog {
                 String from = datePickerEvFrom;
                 String to = datePickerEvTo;
                 if (!from.isEmpty() && !to.isEmpty()) {
-
-
+                    activationsIdArrayList.clear();
                     if (isBefore(from, to)) {
                         for (i = 0; i < activationFormSips.size(); i++) {
                             DateChoose = activationFormSips.get(i).getDatePicker();
                             if (isBefore(from,to,DateChoose )) {
                                 actModel.addElement(activationFormSips.get(i).getCustomerName());
+                                activationsIdArrayList.add(activationFormSips.get(i).getId());
                                 activations.setModel(actModel);
                                 flag =1 ;
                             }
@@ -114,6 +123,7 @@ public class ListOfActivationView extends JDialog {
                 if (flag==0) {
                     actModel.removeAllElements();
                     activations.setModel(actModel);
+
                 }
             }
         });
@@ -125,13 +135,17 @@ public class ListOfActivationView extends JDialog {
         activations.setLayoutOrientation(JList.VERTICAL);
         scrollPane.setPreferredSize(new Dimension(250,200));
 
-
         activations.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (activations.getModel().getSize() != 0) {
-                    int selectedActivation = activations.getSelectedIndex();
-
+                    int selectedActivation,index;
+                    for (index = 0; index < activationFormSips.size(); index++) {
+                        if (activationsIdArrayList.get(activations.getSelectedIndex()) == activationFormSips.get(index).getId()) {
+                            break;
+                        }
+                    }
+                    selectedActivation = index;
                     if (e.getButton() == MouseEvent.BUTTON1) //Click Once
                     {
                         expertName.setText(activationFormSips.get(selectedActivation).getFirstName());
@@ -314,7 +328,9 @@ public class ListOfActivationView extends JDialog {
                                 getDataFromSipListener.updateActivation(ev);
                             }
                         });
+                        System.out.println(ActivationsMoves.FormId.getActivationId());
                         activationFormSIP.setVisible(true);
+
                     }
                 }
             }
@@ -473,75 +489,31 @@ public class ListOfActivationView extends JDialog {
     //-- if str1 <= str3 <= str2 --//
     private boolean isBefore(String str1,String str2,String str3){
 
-        //-- Trims --//
-        char from,to,currentDate;
-        int day1=0,day2=0,day3=0;
-        int month1=0,month2=0,month3=0;
-        int year1=0,year2=0,year3=0;
-        String tempDate="";
-
-        for(int j=0 ,  i = 0 ;i < str1.length() ; i ++ ) {
-            from = str1.charAt(i);
-            if (from != '-')
-                tempDate += from;
-            if (from == '-') {
-                j++;
-                if (j == 1) {
-                    year1 = Integer.parseInt(tempDate);
-                    tempDate="";
-                }
-                if (j == 2) {
-                    month1 = Integer.parseInt(tempDate);
-                    tempDate="";
-                }
-            }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date firstDate = null;
+        try {
+            firstDate = sdf.parse(str1);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        day1 = Integer.parseInt(tempDate);
-        tempDate="";
-
-        for(int j=0 ,  i = 0 ;i < str2.length() ; i ++ ) {
-            to = str2.charAt(i);
-            if (to != '-')
-                tempDate += to;
-            if (to == '-') {
-                j++;
-                if (j == 1) {
-                    year2 = Integer.parseInt(tempDate);
-                    tempDate="";
-                }
-                if (j == 2) {
-                    month2 = Integer.parseInt(tempDate);
-                    tempDate="";
-                }
-            }
+        Date secondDate = null;
+        try {
+            secondDate = sdf.parse(str2);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        day2 = Integer.parseInt(tempDate);
-        tempDate="";
-
-        for(int j=0 ,  i = 0 ;i < str3.length() ; i ++ ) {
-            currentDate = str3.charAt(i);
-            if (currentDate != '-')
-                tempDate += currentDate;
-            if (currentDate == '-') {
-                j++;
-                if (j == 1) {
-                    year3 = Integer.parseInt(tempDate);
-                    tempDate="";
-                }
-                if (j == 2) {
-                    month3 = Integer.parseInt(tempDate);
-                    tempDate="";
-                }
-            }
+        Date thirdDate = null;
+        try {
+            thirdDate = sdf.parse(str3);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        day3 = Integer.parseInt(tempDate);
-        tempDate="";
 
-        //--Check is Before --//
-        if (year1 <= year3 && year2 >= year3 && month1 <= month3 && month2 >= month3 && day1 <= day3 && day2 >= day3)
+        int first = firstDate.compareTo(thirdDate);
+        int second = secondDate.compareTo(thirdDate);
+        if ((first == 0 || first < 0) && (second == 0 || second >0))
             return true;
-        else
-            return false;
+        return false;
     }
     private void DatePickerEdit(int selectedActivation){
         String dateStr="";

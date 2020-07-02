@@ -1,5 +1,12 @@
 package View;
 
+import Controller.Controller;
+import Model.ActivationFormSip;
+
+import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
+
 public class ActivationsMoves {
 
     public static class SessionId{
@@ -31,6 +38,28 @@ public class ActivationsMoves {
         }
         public static void setActivationId(int activationId) {
             FormId.activationId = activationId;
+        }
+    }
+
+    public static class LoadActivationFromList{
+        private static List<ActivationFormSip> activationFormSips;
+        private static Controller controller;
+
+        public static List<ActivationFormSip> getActivationSip(){
+            controller = new Controller();
+            try {
+                controller.connect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                controller.loadCalenderSipActivationToList();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            activationFormSips = controller.getSipActivation();
+            controller.disconnect();
+            return activationFormSips;
         }
     }
 }
