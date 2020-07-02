@@ -13,23 +13,7 @@ import java.sql.SQLException;
 
 public class HomePageMenu extends JPanel {
 
-    public static class SessionId{
-        private static String userName;
-        private static String isApproved;
 
-        public static String setUserName(String userName){
-            return SessionId.userName = userName;
-        }
-        public static String getUserName(){
-            return SessionId.userName;
-        }
-        public static String isApproved(String isApproved){
-            return SessionId.isApproved = isApproved;
-        }
-        public static String isApproved(){
-            return SessionId.isApproved;
-        }
-    }
 
     private JButton createForm;
     private JButton editForm;
@@ -42,7 +26,8 @@ public class HomePageMenu extends JPanel {
     private Users user;
     private ManageUsers manageUsersForm;
     private Controller controller;
-    private getDataFromSipListener getDataFromSipListener;
+    private GetDataFromSipListener getDataFromSipListener;
+    private ListOfActivationView listOfActivationView;
 
     public HomePageMenu() {
 
@@ -65,7 +50,7 @@ public class HomePageMenu extends JPanel {
             @Override
             public void setUserFirstNameLogged(String User) {
                 userName = new JLabel("שלום, " + User);
-                SessionId.setUserName(User);
+                ActivationsMoves.SessionId.setUserName(User);
             }
         });
         loginUI.setVisible(true);
@@ -91,6 +76,9 @@ public class HomePageMenu extends JPanel {
 
         //-- Create Form Dialog --//
         activationFormSIPDialog = new ActivationFormSIP(HomePageMenu.this,0);
+        //-- Edit Form Dialog --//
+        listOfActivationView = new ListOfActivationView(parent,controller.getSipActivation());
+
 
         //Grid Bag Layout - new way to set layouts
         setLayout(new GridBagLayout());
@@ -142,20 +130,32 @@ public class HomePageMenu extends JPanel {
 
         });
 
+        editForm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listOfActivationView.setVisible(true);
+            }
+        });
+
         activationFormSIPDialog.setFormListener(new FormListener() {
             // ---- this Listener gets from Child Dialog the event of creating Activation Sip                         ---- //
             // ---- after the creation it adds the event to the DataBase, it send it to HomePage to show it on Table ----//
             @Override
             public void formEventOccurred(FormEvent e) {
-                getDataFromSipListener.setActivation(e);
+                getDataFromSipListener.addActivation(e);
             }
         });
 
-        editForm.addActionListener(new ActionListener() {
+        //-- Move Data From Edit to Calender --//
+        listOfActivationView.setDataFromSipListener(new GetDataFromSipListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                ListOfActivationView listOfActivationView = new ListOfActivationView(parent,controller.getSipActivation());
-                listOfActivationView.setVisible(true);
+            public void addActivation(FormEvent e) {
+            //Leave Empty
+            }
+
+            @Override
+            public void updateActivation(FormEvent e) {
+                getDataFromSipListener.updateActivation(e);
             }
         });
 
@@ -168,14 +168,12 @@ public class HomePageMenu extends JPanel {
                     manageUsersForm = ManageUsers.getInstance();
                     manageUsersForm.setVisible(true);
                 }
-
                 else
                     JOptionPane.showMessageDialog(HomePageMenu.this,"למשתמש זה אין הרשאות לניהול משתמשים","Error",JOptionPane.ERROR_MESSAGE);
             }
         });
     }
-    
-    public void setDataToCalender(getDataFromSipListener getDataFromSipListener){
+    public void setDataToCalender(GetDataFromSipListener getDataFromSipListener){
         this.getDataFromSipListener = getDataFromSipListener;
     }
 }

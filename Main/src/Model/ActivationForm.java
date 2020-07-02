@@ -32,6 +32,10 @@ public abstract class ActivationForm  {
         this.id = id;
 
     }*/
+
+    public ActivationForm() {
+    }
+
     //-- Without id For Saving --//
     public ActivationForm(String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker,String firstName, String projectManagerFirstName,String activationType) {
         this.customerID = customerID;
@@ -148,5 +152,89 @@ public abstract class ActivationForm  {
 
     public String getDatePicker() {
         return datePicker;
+    }
+
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+    public void setCustomerPhoneNumber(String customerPhoneNumber) {
+        this.customerPhoneNumber = customerPhoneNumber;
+    }
+
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
+    }
+
+    public void setCustomerTechName(String customerTechName) {
+        this.customerTechName = customerTechName;
+    }
+
+    public void setCustomerTechPhoneNumber(String customerTechPhoneNumber) {
+        this.customerTechPhoneNumber = customerTechPhoneNumber;
+    }
+
+    public void setPbxType(String pbxType) {
+        this.pbxType = pbxType;
+    }
+
+    public void setTypeOfCalls(String typeOfCalls) {
+        this.typeOfCalls = typeOfCalls;
+    }
+
+    public void setIdentificationType(String identificationType) {
+        this.identificationType = identificationType;
+    }
+
+    public void setTotalNumbers(int totalNumbers) {
+        this.totalNumbers = totalNumbers;
+    }
+
+    public void setSnbNumber(String snbNumber) {
+        this.snbNumber = snbNumber;
+    }
+
+    public void setNumberRange(String numberRange) {
+        this.numberRange = numberRange;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
+    }
+
+    public void setEmergencyCity(String emergencyCity) {
+        this.emergencyCity = emergencyCity;
+    }
+
+    public void setCallOutSideCountry(String callOutSideCountry) {
+        this.callOutSideCountry = callOutSideCountry;
+    }
+
+    public void setCrNumber(String crNumber) {
+        this.crNumber = crNumber;
+    }
+
+    public void setTrunkNumber(String trunkNumber) {
+        this.trunkNumber = trunkNumber;
+    }
+
+    public void setDatePicker(String datePicker) {
+        this.datePicker = datePicker;
+    }
+
+    public void setProjectManagerFirstName(String projectManagerFirstName) {
+        this.projectManagerFirstName = projectManagerFirstName;
+    }
+
+    public void setActivationType(String activationType) {
+        this.activationType = activationType;
     }
 }
