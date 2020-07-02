@@ -20,16 +20,21 @@ public class Controller {
     public Users getUserFirstNameLogged(){
         return db.getUserFirstNameLogged();
     }
+    public Login getLoginUser() { return db.getLoginUser(); }
 
     public boolean isUserAlreadyExists(Users user) {
         return db.isUserAlreadyExists(user);
     }
+
     public boolean isLoginUserAlreadyExists(Login login) {
         return db.isLoginUserAlreadyExists(login);
     }
 
+    public boolean loginUserAuthentication(String username, String password) throws SQLException {
+        return db.loginUserAuthentication(username, password);
+    };
+
     public void addSystemUser(Users user) {
-        //Users systemUser = new Users(user);
         db.addUserToList(user);
     }
     public void addActivationSip(FormEvent ev) {

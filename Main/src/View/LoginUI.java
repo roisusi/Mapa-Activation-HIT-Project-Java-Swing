@@ -36,38 +36,39 @@ public class LoginUI extends JDialog {
         OKButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // this is is used to store Temp data not for DB
+                String username = userField.getText();
+                String password = new String(passwordField.getPassword());
+
+                // this is is used for check username and password on DB
                 try {
                     controller.connect();
                 } catch (Exception ev) {
                     ev.printStackTrace();
                 }
+
                 try {
-                    controller.loadUsersFromDataBaseToList();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-                String user = userField.getText();
-                char[] pass = passwordField.getPassword();
-                boolean flag = false;
-                for (int i = 0 ; i < controller.getUsers().size() ; i ++) {
-                    if (controller.getUsers().get(i).getUserName().equals(user) && controller.getUsers().get(i).getPassword().equals(new String(pass))){
+                    if(controller.loginUserAuthentication(username, password))
+                    {
                         JOptionPane.showMessageDialog(LoginUI.this,"Login Success","Login",JOptionPane.INFORMATION_MESSAGE);
-                        flag = true;
                         try {
-                            controller.loadLoggedUser(controller.getUsers().get(i).getId());
+                            controller.loadLoggedUser(controller.getLoginUser().getId());
                         } catch (SQLException throwables) {
                             throwables.printStackTrace();
                         }
                         userLoggedListener.setUserFirstNameLogged(controller.getUserFirstNameLogged().getFirstName());
                         dispose();
                     }
-                }
-                if(flag == false)
-                    JOptionPane.showMessageDialog(LoginUI.this,"Login Failed","Login",JOptionPane.ERROR_MESSAGE);
-            }
 
+                    else
+                        JOptionPane.showMessageDialog(LoginUI.this,"Login Failed","Login",JOptionPane.ERROR_MESSAGE);
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(LoginUI.this,"Illegal Input","Login",JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                }
+            }
         });
+
         controller.disconnect();
         // -- Action to Cancel Button -- //
         cancelButton.addActionListener(new ActionListener() {
@@ -79,12 +80,14 @@ public class LoginUI extends JDialog {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         layoutControl();
         setSize(400,300);
-        setLocationRelativeTo(parent);
+            setLocationRelativeTo(parent);
     }
+
     public void setUserLoggedListener(UserLoggedListener listener)
     {
         this.userLoggedListener = listener;
     }
+
     private void layoutControl (){
         JPanel controlPanel = new JPanel();
         JPanel buttonsPanel = new JPanel();

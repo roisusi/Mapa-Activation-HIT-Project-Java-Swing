@@ -9,6 +9,7 @@ public class DataBase {
     private List<ActivationFormSip> sipActivation;
     private ActivationFormSip singleActivationFormSip;
     private static Users loggedUser;
+    private static Login LoginUser;
     private Connection con;
 
     public DataBase() {
@@ -84,9 +85,15 @@ public class DataBase {
         return Collections.unmodifiableList(sipActivation);
         //return sipActivation;
     }
+
+    public Login getLoginUser(){
+        return LoginUser;
+    }
+
     public Users getUserFirstNameLogged(){
         return loggedUser;
     }
+
     public ActivationFormSip getSingleActivationSip(int row) throws SQLException {
         String selectSql = "select id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
                 "SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,Date,WanAddress,LanAddress,IPpbx,InternetUser,Infrastructure," +
@@ -140,6 +147,30 @@ public class DataBase {
         return singleActivationFormSip;
     }
 
+    public boolean loginUserAuthentication(String username, String password) throws SQLException {
+        boolean flag = false;
+        String selectSql = "select * from SystemUsers where Username = ? and Password = ?;";
+        PreparedStatement preparedStatement = con.prepareStatement(selectSql);
+        preparedStatement.setString(1, username);
+        preparedStatement.setString(2, password);
+        ResultSet result = preparedStatement.executeQuery();
+
+        while(result.next()) {
+            String loginUserName = result.getString("Username");
+            String loginPassword = result.getString("Password");
+            int id = result.getInt("id");
+
+            if(loginUserName.equals(username) && loginPassword.equals(password)) {
+                flag = true;
+                LoginUser = new Login(id, loginUserName, loginPassword);
+            }
+        }
+
+        preparedStatement.close();
+        result.close();
+        return flag;
+    }
+
     public boolean isUserAlreadyExists(Users user){
         boolean flag = false;
 
@@ -149,6 +180,7 @@ public class DataBase {
         }
         return flag;
     }
+
     public boolean isLoginUserAlreadyExists(Login login){
         boolean flag = false;
 
@@ -158,7 +190,6 @@ public class DataBase {
         }
         return flag;
     }
-
 
     public void updateSystemUser(Object obj, int row, int column) throws SQLException {
         String updateSql = null;
@@ -523,8 +554,6 @@ public class DataBase {
                     loggedUser = new Expert(id,firstName,lastName,email,phoneNumber,UsersType.Expert,userNameId);
                     break;
             }
-            //loggedUser = new Users(id,firstName,lastName,email,phoneNumber,UsersType.Expert,userNameId);
-
         }
         selectStatment2.close();
     }
