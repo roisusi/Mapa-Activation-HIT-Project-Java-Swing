@@ -3,30 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="b1e4548b-2da3-47b5-8f15-6c90845a46f9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/Controller/Controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/Controller/Controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/Model/DataBase.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/Model/DataBase.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/View/ActivationFormSIP.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/View/ActivationFormSIP.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/View/ActivationsMoves$FormId.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/View/ActivationsMoves$FormId.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/View/ActivationsMoves$SessionId.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/View/ActivationsMoves$SessionId.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/View/ActivationsMoves.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/View/ActivationsMoves.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/View/HomePageMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/View/HomePageMenu.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/View/ListOfActivationView$2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/View/ListOfActivationView$2$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/View/ListOfActivationView$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/View/ListOfActivationView$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/View/ListOfActivationView.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/View/ListOfActivationView.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/View/NumberRangesView$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/View/NumberRangesView$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/View/NumberRangesView.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/View/NumberRangesView.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/View/NumberRangesViewModel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/View/NumberRangesViewModel.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Controller.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/DataBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DataBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/NumberRanges.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/NumberRanges.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/ActivationFormSIP.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/ActivationFormSIP.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/ActivationsMoves.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/ActivationsMoves.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/FormEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/FormEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/FormListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/FormListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/View/HomePageMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/HomePageMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/ListOfActivationView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/ListOfActivationView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/NumberRangesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/NumberRangesView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/NumberRangesViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/NumberRangesViewModel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -261,17 +240,6 @@
     </state>
     <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1591609704657" />
     <state x="718" y="246" width="1120" height="1152" key="search.everywhere.popup/0.0.2560.1400@0.0.2560.1400" timestamp="1593641341726" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Model/DataBase.java</url>
-          <line>293</line>
-          <option name="timeStamp" value="31" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Main$Main.ic" NAME="Main Coverage Results" MODIFIED="1593722192708" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
+
 public class HomePageMenu extends JPanel {
 
 
@@ -28,6 +29,7 @@ public class HomePageMenu extends JPanel {
     private Controller controller;
     private GetDataFromSipListener getDataFromSipListener;
     private ListOfActivationView listOfActivationView;
+
 
     public HomePageMenu() {
 
