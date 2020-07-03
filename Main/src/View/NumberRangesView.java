@@ -1,24 +1,30 @@
 package View;
 
-import com.sun.source.tree.NewArrayTree;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class NumberRangesView extends JDialog implements ActionListener {
+        final int MAXNUMBERS = 1000;
         private JTable table;
         private NumberRangesViewModel tableModel;
         private JButton adding;
+        private JButton save;
         private JPanel formPanelLeft;
         private JPanel formPanelRight;
+        private ArrayList fromRange = new ArrayList<Integer>();
+        private ArrayList toRange = new ArrayList<Integer>();
+
 
     public NumberRangesView(JPanel parent) {
         setLayout(new BorderLayout());
         JPanel panel = new JPanel();
+        JPanel buttonPanel = new JPanel();
         JToolBar toolBar = new JToolBar();
 
         //-- Table --//
@@ -28,7 +34,7 @@ public class NumberRangesView extends JDialog implements ActionListener {
         //-- Buttons --//
         adding = new JButton();
         adding.addActionListener(this);
-        ImageIcon imageIcon = new ImageIcon("src/Images/Add_16x16.png");
+        ImageIcon imageIcon = new ImageIcon("src/Images/Add_32x32.png");
         adding.setIcon(imageIcon);
         adding.addActionListener(new ActionListener() {
             @Override
@@ -39,8 +45,27 @@ public class NumberRangesView extends JDialog implements ActionListener {
                 tableModel.fireTableDataChanged();
                 tableModel.isCellEditable(row,col);
 
+
             }
         });
+
+        save = new JButton("שמור");
+        save.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int i = 0;
+                fromRange = ActivationsMoves.SessionId.getFromRange();
+                toRange = ActivationsMoves.SessionId.getToRange();
+                if (fromRange != null && toRange != null)
+                while (!fromRange.get(i).equals("") && !toRange.get(i).equals("")){
+                    System.out.println(fromRange.get(i));
+                    i++;
+                }
+            }
+        });
+
+
+
 
 
         //-- Tool Bar --//
@@ -53,10 +78,17 @@ public class NumberRangesView extends JDialog implements ActionListener {
         Border innerBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black),"הוספת מספרים"); //adds Label to the border
         panel.setBorder(BorderFactory.createCompoundBorder(innerBorder,outerBorder)); //for 2 borders
 
-        //FormControl();
+        //-- Buttons Panel --//
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(save);
+
+
+
         panel.add(new JScrollPane(table), BorderLayout.WEST);
         panel.add(toolBar,BorderLayout.EAST);
-        add(panel);
+
+        add(panel,BorderLayout.CENTER);
+        add(buttonPanel,BorderLayout.SOUTH);
         setModal(true);
         setSize(650, 500); // Size the Frame
         setLocationRelativeTo(panel);

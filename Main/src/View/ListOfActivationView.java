@@ -327,6 +327,11 @@ public class ListOfActivationView extends JDialog {
                             public void formEventOccurred(FormEvent ev) {
                                 getDataFromSipListener.updateActivation(ev);
                             }
+
+                            @Override
+                            public void formEventOccurredNumber(FormEvent e) {
+
+                            }
                         });
                         System.out.println(ActivationsMoves.FormId.getActivationId());
                         activationFormSIP.setVisible(true);

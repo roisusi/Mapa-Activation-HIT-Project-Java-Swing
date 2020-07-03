@@ -144,6 +144,22 @@ public class HomePageMenu extends JPanel {
             public void formEventOccurred(FormEvent e) {
                 getDataFromSipListener.addActivation(e);
             }
+
+            @Override
+            public void formEventOccurredNumber(FormEvent e) {
+                controller.addNumberRange(e);
+                try {
+                    controller.connect();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                try {
+                    controller.insertingNumberRAngeToDataBase();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            controller.disconnect();
+            }
         });
 
         //-- Move Data From Edit to Calender --//

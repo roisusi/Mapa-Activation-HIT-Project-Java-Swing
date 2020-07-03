@@ -5,10 +5,13 @@ import View.ActivationsMoves;
 import View.FormEvent;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Controller {
     DataBase db = new DataBase();
+
 
     public List<Login> getUsers() {
         return db.getLoginUsersFromList();
@@ -20,6 +23,9 @@ public class Controller {
     public Users getUserFirstNameLogged(){
         return db.getUserFirstNameLogged();
     }
+    public List<NumberRanges> getActivationSipFromList(){
+        return db.getNumberRanges();
+    }
 
     public boolean isUserAlreadyExists(Users user) {
         return db.isUserAlreadyExists(user);
@@ -28,6 +34,15 @@ public class Controller {
         return db.isLoginUserAlreadyExists(login);
     }
 
+    public void addNumberRange(FormEvent ev){
+        ArrayList from = ev.getFrom();
+        ArrayList to = ev.getTo();
+        String trunkNumber = ev.getTrunkNumber();
+
+        NumberRanges numberRanges = new NumberRanges(from,to,trunkNumber);
+        db.addNumberRangeToList(numberRanges);
+
+    }
     public void addSystemUser(Users user) {
         //Users systemUser = new Users(user);
         db.addUserToList(user);
@@ -149,6 +164,9 @@ public class Controller {
         db.removeUserFromList(row);
     }
 
+    public void insertingNumberRAngeToDataBase() throws SQLException {
+        db.insertingNumberRangeToDataBase();
+    }
     public void insertingActivationSipToDataBase() throws SQLException {
         db.insertingActivationSipToDataBase();
     }

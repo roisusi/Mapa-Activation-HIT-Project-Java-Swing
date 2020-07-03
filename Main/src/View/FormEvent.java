@@ -2,6 +2,7 @@ package View;
 
 import Model.ActivationType;
 
+import java.util.ArrayList;
 import java.util.EventObject;
 
 public class FormEvent extends EventObject {
@@ -39,6 +40,8 @@ public class FormEvent extends EventObject {
     private String firstName;
     private String connectionType;
     private String projectManagerFirstName;
+    private ArrayList<String> from;
+    private ArrayList<String> to;
 
     public FormEvent(Object source) {
         super(source);
@@ -117,6 +120,12 @@ public class FormEvent extends EventObject {
         this.firstName = firstName;
         this.connectionType = connectionType;
         this.projectManagerFirstName = projectManagerFirstName;
+    }
+
+    public FormEvent(Object source, ArrayList<String> from , ArrayList<String> to , String trunkNumber ){
+        super(source);
+        this.from = from;
+        this.to = to;
     }
 
     public int getId() {
@@ -220,5 +229,13 @@ public class FormEvent extends EventObject {
     }
     public String getProjectManagerFirstName() {
         return projectManagerFirstName;
+    }
+
+    public ArrayList<String> getFrom() {
+        return from;
+    }
+
+    public ArrayList<String> getTo() {
+        return to;
     }
 }

@@ -7,6 +7,7 @@ public class DataBase {
     private List<Users> systemUsers;
     private List<Login> users;
     private List<ActivationFormSip> sipActivation;
+    private List<NumberRanges> numberRanges;
     private static Users loggedUser;
     private Connection con;
 
@@ -14,10 +15,14 @@ public class DataBase {
         this.users = new LinkedList<Login>();
         this.systemUsers = new LinkedList<Users>();
         this.sipActivation = new LinkedList<ActivationFormSip>();
+        this.numberRanges = new LinkedList<NumberRanges>();
     }
 
     public void addActivationSipToList(ActivationFormSip sipAct) {
         sipActivation.add(sipAct);
+    }
+    public void addNumberRangeToList(NumberRanges sipNR) {
+        numberRanges.add(sipNR);
     }
     public void addFirstNameToActivationList(int row, String firstName){
         sipActivation.get(row).setFirstName(firstName);
@@ -31,6 +36,9 @@ public class DataBase {
 
     public List<Login> getLoginUsersFromList() {
         return Collections.unmodifiableList(users);//prevent for other to change the list when they get REF , just get it
+    }
+    public List<NumberRanges> getNumberRanges(){
+        return Collections.unmodifiableList(numberRanges);//prevent for other to change the list when they get REF , just get it
     }
     public List<Users> getUsersFromList() {
         return Collections.unmodifiableList(systemUsers);
@@ -273,6 +281,43 @@ public class DataBase {
         checkStmt.close();
     }
 
+    public void insertingNumberRangeToDataBase() throws SQLException {
+        String checkSql = "select count(*) as count from NumberRange where TrunkName=?";
+        PreparedStatement checkStmt = con.prepareStatement(checkSql);
+
+        String insertSql = "insert into NumberRange (numFrom,numTo,TrunkName) values(?,?,?)";
+        PreparedStatement insertStmt = con.prepareStatement(insertSql);
+
+        for (NumberRanges numberRanges : numberRanges) {
+            ArrayList fromRange = numberRanges.getFromRange();
+            ArrayList toRange = numberRanges.getToRange();
+            String trunkNumber = numberRanges.getTrunk();
+
+
+            checkStmt.setInt(1, Integer.parseInt(fromRange.get(0).toString()));
+            ResultSet checkResult = checkStmt.executeQuery();
+            checkResult.next();
+
+            int count = checkResult.getInt(1);
+
+            if (count == 0) {
+            int i=0;
+            while (fromRange != null && !fromRange.get(i).equals("")){
+
+                System.out.println("Inserting people with ID " + trunkNumber);
+                int col = 1;
+                insertStmt.setString(col++, fromRange.get(i).toString());
+                insertStmt.setString(col++, toRange.get(i).toString());
+                insertStmt.setString(col++, "ROI");
+                insertStmt.executeUpdate();
+                i++;
+            }
+
+            }
+        }
+        insertStmt.close();
+        checkStmt.close();
+    }
     public void insertingActivationSipToDataBase() throws SQLException {
         String checkSql = "select count(*) as count from Activation_SIP where id=?";
         PreparedStatement checkStmt = con.prepareStatement(checkSql);
@@ -448,6 +493,7 @@ public class DataBase {
         insertStatement.close();
         checkStatement.close();
     }
+
 
     public void loadLoggedUser(int id) throws SQLException {
         String selectSql2 = "select id,FirstName,LastName,Email,PhoneNumber,Type,UserNameId from Users where UserNameId in (select id from SystemUsers where id="+id+")";
