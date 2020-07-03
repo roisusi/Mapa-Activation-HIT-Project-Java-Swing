@@ -1,6 +1,8 @@
 package View;
 
 
+import Model.NumberRanges;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -10,11 +12,12 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class NumberRangesView extends JDialog implements ActionListener {
-        final int MAXNUMBERS = 1000;
         private JTable table;
         private NumberRangesViewModel tableModel;
         private JButton adding;
+        private JButton remove;
         private JButton save;
+        private JButton FNR;
         private JPanel formPanelLeft;
         private JPanel formPanelRight;
         private ArrayList fromRange = new ArrayList<Integer>();
@@ -25,7 +28,7 @@ public class NumberRangesView extends JDialog implements ActionListener {
         setLayout(new BorderLayout());
         JPanel panel = new JPanel();
         JPanel buttonPanel = new JPanel();
-        JToolBar toolBar = new JToolBar();
+        JToolBar toolBar = new JToolBar(JToolBar.VERTICAL);
 
         //-- Table --//
         tableModel = new NumberRangesViewModel();
@@ -34,8 +37,8 @@ public class NumberRangesView extends JDialog implements ActionListener {
         //-- Buttons --//
         adding = new JButton();
         adding.addActionListener(this);
-        ImageIcon imageIcon = new ImageIcon("src/Images/Add_32x32.png");
-        adding.setIcon(imageIcon);
+        ImageIcon imageIcon1 = new ImageIcon("src/Images/Add_32x32.png");
+        adding.setIcon(imageIcon1);
         adding.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -45,7 +48,19 @@ public class NumberRangesView extends JDialog implements ActionListener {
                 tableModel.fireTableDataChanged();
                 tableModel.isCellEditable(row,col);
 
-
+            }
+        });
+        remove = new JButton();
+        remove.addActionListener(this);
+        ImageIcon imageIcon2 = new ImageIcon("src/Images/Remove_32x32.png");
+        remove.setIcon(imageIcon2);
+        remove.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = table.getSelectedRow();
+                int col = table.getSelectedColumn();
+                tableModel.fireTableRowsDeleted(row,row);
+                NumberRangesViewModel.removeRows(row);
             }
         });
 
@@ -64,12 +79,12 @@ public class NumberRangesView extends JDialog implements ActionListener {
             }
         });
 
-
-
-
+        FNR = new JButton("הפק FNR");
 
         //-- Tool Bar --//
         toolBar.add(adding);
+        toolBar.addSeparator();
+        toolBar.add(remove);
         toolBar.setFloatable(false); //u cant move the tool bar
 
 
@@ -80,12 +95,16 @@ public class NumberRangesView extends JDialog implements ActionListener {
 
         //-- Buttons Panel --//
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(FNR);
         buttonPanel.add(save);
 
 
-
-        panel.add(new JScrollPane(table), BorderLayout.WEST);
+        //-- Main Panel --//
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(500,380));
+        panel.add(scrollPane, BorderLayout.WEST);
         panel.add(toolBar,BorderLayout.EAST);
+
 
         add(panel,BorderLayout.CENTER);
         add(buttonPanel,BorderLayout.SOUTH);

@@ -12,8 +12,8 @@ public class NumberRangesViewModel extends AbstractTableModel {
     private final int MAXNUMBERS = 1000;
     private String[] colName = {"From", "To", "Count"};
     private static int moreRows = 0;
-    private  ArrayList<String> fromRange = new ArrayList<>();
-    private  ArrayList<String> toRange = new ArrayList<>();
+    private  static ArrayList<String> fromRange = new ArrayList<>();
+    private  static ArrayList<String> toRange = new ArrayList<>();
     private int difference;
 
     public NumberRangesViewModel() {
@@ -38,6 +38,13 @@ public class NumberRangesViewModel extends AbstractTableModel {
 
     public static void setMoreRows() {
         moreRows++;
+    }
+    public static void removeRows(int rowIndex) {
+        if(moreRows != 0) {
+            fromRange.remove(rowIndex);
+            toRange.remove(rowIndex);
+            moreRows--;
+        }
     }
 
     @Override
