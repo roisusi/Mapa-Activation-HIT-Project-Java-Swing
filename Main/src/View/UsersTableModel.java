@@ -63,7 +63,12 @@ public class UsersTableModel extends AbstractTableModel {
         //rowData[row][col] = value;
 
         Users user = userList.get(rowIndex);
-        Login login = loginList.get(rowIndex);
+        Login loginUser = null;
+
+        for(Login login: loginList) {
+            if(login.getId() == user.getUserNameId())
+                loginUser = login;
+        }
 
         switch (columnIndex){
             case 0:
@@ -82,10 +87,10 @@ public class UsersTableModel extends AbstractTableModel {
                 user.setUsersType(UsersType.valueOf(value.toString()));
                 break;
             case 5:
-                login.setUserName(value.toString());
+                loginUser.setUserName(value.toString());
                 break;
             case 6:
-                login.setPassword(value.toString());
+                loginUser.setPassword(value.toString());
                 break;
         }
     }
