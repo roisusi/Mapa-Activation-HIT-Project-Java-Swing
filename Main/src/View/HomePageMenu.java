@@ -140,7 +140,7 @@ public class HomePageMenu extends JPanel {
         });
 
         activationFormSIPDialog.setFormListener(new FormListener() {
-            // ---- this Listener gets from Child Dialog the event of creating Activation Sip                         ---- //
+            // ---- this Listener gets from Child Dialog the event of creating Activation Sip                       ---- //
             // ---- after the creation it adds the event to the DataBase, it send it to HomePage to show it on Table ----//
             @Override
             public void formEventOccurred(FormEvent e) {
@@ -156,7 +156,7 @@ public class HomePageMenu extends JPanel {
                     exception.printStackTrace();
                 }
                 try {
-                    controller.insertingNumberRAngeToDataBase();
+                    controller.insertingNumberRangeToDataBase();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }

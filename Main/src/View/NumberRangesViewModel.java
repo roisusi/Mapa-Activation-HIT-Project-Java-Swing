@@ -1,11 +1,12 @@
 package View;
 
+import Controller.*;
 import Model.NumberRanges;
 
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 
 public class NumberRangesViewModel extends AbstractTableModel {
 
@@ -15,31 +16,22 @@ public class NumberRangesViewModel extends AbstractTableModel {
     private  static ArrayList<String> fromRange = new ArrayList<>();
     private  static ArrayList<String> toRange = new ArrayList<>();
     private int difference;
+    private int size;
+    private NumberRangeController controller;
 
-    public NumberRangesViewModel() {
-        for (int i = 0 ; i < MAXNUMBERS ; i++) {
-            fromRange.add("");
-        }
-        if (ActivationsMoves.SessionId.getFromRange() !=null){
-            fromRange = ActivationsMoves.SessionId.getFromRange();
-        }
-        for (int i = 0 ; i < MAXNUMBERS ; i++) {
-            toRange.add("");
-        }
-        if (ActivationsMoves.SessionId.getFromRange() !=null){
-            toRange = ActivationsMoves.SessionId.getToRange();
-        }
+
+    public NumberRangesViewModel(ArrayList fromRange, ArrayList toRange) {
+        this.fromRange = fromRange;
+        this.toRange = toRange;
+        controller = new NumberRangeController(this.fromRange,this.toRange);
+
     }
-
-    @Override
-    public int getRowCount() {
-        return moreRows;
-    }
-
-    public static void setMoreRows() {
+    public void setMoreRows() {
+        fromRange.add("");
+        toRange.add("");
         moreRows++;
     }
-    public static void removeRows(int rowIndex) {
+    public void removeRows(int rowIndex) {
         if(moreRows != 0) {
             fromRange.remove(rowIndex);
             toRange.remove(rowIndex);
@@ -47,24 +39,53 @@ public class NumberRangesViewModel extends AbstractTableModel {
         }
     }
 
+    public void removeViewCells(){
+        size = fromRange.size();
+        int i=0,index=0;
+        while(i<size){
+            if(!fromRange.get(i).equals("") && !toRange.get(i).equals(""))
+                index++;
+            i++;
+        }
+        moreRows = index;
+
+    }
+
+    public ArrayList fromTableList(){
+        return fromRange;
+    }
+
+    public ArrayList toTableList(){
+        return toRange;
+    }
+
+    @Override
+    public int getRowCount() {
+        return moreRows;
+    }
+
     @Override
     public int getColumnCount() {
         return 3;
     }
 
+
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0:
+
                 return fromRange.get(rowIndex);
             case 1:
                 return toRange.get(rowIndex);
             case 2:
-                if(toRange.get(rowIndex).equals("") || fromRange.get(rowIndex).equals("")) {
+                if(fromRange.size()>0 && toRange.size()>0)
+                if(controller.checkListIsEmpty(toRange.get(rowIndex)) || controller.checkListIsEmpty(fromRange.get(rowIndex))) {
                     difference = 0;
                 }
                 else
-                    difference = Integer.parseInt(toRange.get(rowIndex)) -  Integer.parseInt(fromRange.get(rowIndex));
+                    difference = Integer.parseInt(toRange.get(rowIndex)) -  Integer.parseInt(fromRange.get(rowIndex)) + 1;
 
                 return difference;
         }
@@ -84,42 +105,39 @@ public class NumberRangesViewModel extends AbstractTableModel {
     }
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        String newStr;
         switch (columnIndex) {
             case 0:
-                String from = (String)aValue;
-                if (from.matches("[0-9]+") || from.contains("-")) {
-                    if (from.contains("-")) {
-                        from = from.replace("-", "");
-                    }
-                    if(fromRange.get(rowIndex).equals(""))
-                        fromRange.add(rowIndex,from);
-                    else {
-                        fromRange.remove(rowIndex);
-                        fromRange.add(rowIndex,from);
-                    }
-                    System.out.println("From " + fromRange.get(rowIndex) + " in index " + rowIndex);
+                newStr = controller.checkList((String)aValue);
+                if (!controller.trueNumberIsraelPhoneCheck(newStr))
+                    newStr = "";
+                if(controller.checkListIsEmpty(newStr)) {
+                    fromRange.add(rowIndex, newStr);
                 }
-                ActivationsMoves.SessionId.setFromRange(fromRange);
-
+                else {
+                    fromRange.remove(rowIndex);
+                    fromRange.add(rowIndex,newStr);
+                }
                 break;
             case 1:
-                String to = (String)aValue;
-                if (to.matches("[0-9]+") || to.contains("-")) {
-                    if (to.contains("-")) {
-                        to = to.replace("-", "");
-                    }
-                    if(toRange.get(rowIndex).equals(""))
-                        toRange.add(rowIndex,to);
-                    else {
-                        toRange.remove(rowIndex);
-                        toRange.add(rowIndex,to);
-                    }
-                    System.out.println("From " + toRange.get(rowIndex) + " in index " + rowIndex);
+                newStr = controller.checkList((String)aValue);
+                if (!controller.trueNumberIsraelPhoneCheck(newStr))
+                    newStr = "";
+                if(controller.checkListIsEmpty(newStr)) {
+                        toRange.add(rowIndex, newStr);
                 }
-                ActivationsMoves.SessionId.setToRange(toRange);
+                else {
+                    toRange.remove(rowIndex);
+                    toRange.add(rowIndex,newStr);
+                }
+                if(!controller.checkListIsEmpty(fromRange.get(rowIndex)) && !controller.checkListIsEmpty(toRange.get(rowIndex)) && !controller.negative(Integer.parseInt(fromRange.get(rowIndex)),Integer.parseInt(toRange.get(rowIndex)))){
+                    newStr="";
+                    toRange.remove(rowIndex);
+                    toRange.add(rowIndex,newStr);
+                    JOptionPane.showMessageDialog(null, "המספר ה-TO יותר קטן מה-FROM", "Error", JOptionPane.ERROR_MESSAGE);
+                }
 
                 break;
-
         }
     }
 }
