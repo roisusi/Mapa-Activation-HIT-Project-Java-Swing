@@ -26,6 +26,7 @@ public class HomePageMenu extends JPanel {
     ActivationFormSIP activationFormSIPDialog;
     private Users user;
     private ManageUsers manageUsersForm;
+    private ReportView reportsForm;
     private Controller controller;
     private GetDataFromSipListener getDataFromSipListener;
     private ListOfActivationView listOfActivationView;
@@ -80,7 +81,8 @@ public class HomePageMenu extends JPanel {
         activationFormSIPDialog = new ActivationFormSIP(HomePageMenu.this,0);
         //-- Edit Form Dialog --//
         listOfActivationView = new ListOfActivationView(parent);//,controller.getSipActivation());
-
+        //-- Reports Form Dialog --//
+        reportsForm = new ReportView(HomePageMenu.this);
 
         //Grid Bag Layout - new way to set layouts
         setLayout(new GridBagLayout());
@@ -190,7 +192,15 @@ public class HomePageMenu extends JPanel {
                     JOptionPane.showMessageDialog(HomePageMenu.this,"למשתמש זה אין הרשאות לניהול משתמשים","Error",JOptionPane.ERROR_MESSAGE);
             }
         });
+
+        reports.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                reportsForm.setVisible(true);
+            }
+        });
     }
+
     public void setDataToCalender(GetDataFromSipListener getDataFromSipListener){
         this.getDataFromSipListener = getDataFromSipListener;
     }

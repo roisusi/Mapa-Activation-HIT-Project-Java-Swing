@@ -16,7 +16,7 @@ public class ManageUsersMenu extends JPanel {
     private GetUserFromUsersListener getUserFromUsersListener;
 
     public ManageUsersMenu() {
-        // -- The 2 Buttons --//
+        // -- Create Button --//
         buttonCreateUser = new JButton("יצירת משתמש חדש");
         buttonCreateUser.setPreferredSize(new Dimension(200,50));
 
