@@ -147,15 +147,11 @@ public class DataBase {
             i++;
         }
     }
-    public void updateSystemUser(ArrayList rowsList, ArrayList columnsList, ArrayList valuesList) throws SQLException {
+    public void updateSystemUser(Object obj, int row, int column) throws SQLException {
         String updateSql = null;
-        int size = rowsList.size();
-        Users user;
+        Users user = systemUsers.get(row);
 
-        for (int i = 0; i < size; i++) {
-            user = systemUsers.get((int) rowsList.get(i));
-
-            switch ((int)columnsList.get(i)) {
+        switch(column){
             case 0:
                 updateSql = "update Users set FirstName = ? where id = ?;";
                 break;
@@ -173,37 +169,30 @@ public class DataBase {
                 break;
         }
 
-            PreparedStatement preparedStatement = con.prepareStatement(updateSql);
-            preparedStatement.setString(1, valuesList.get(i).toString());
-            preparedStatement.setInt(2, user.getId());
-            preparedStatement.executeUpdate();
-            preparedStatement.close();
-        }
+        PreparedStatement preparedStatement = con.prepareStatement(updateSql);
+        preparedStatement.setString(1, obj.toString());
+        preparedStatement.setInt(2,  user.getId());
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
     }
-
-    public void updateLoginUser(ArrayList rowsList, ArrayList columnsList, ArrayList valuesList) throws SQLException {
+    public void updateLoginUser(Object obj, int row, int column) throws SQLException {
         String updateSql = null;
-        int size = rowsList.size();
-        Login login;
+        Login login = users.get(row);
 
-        for (int i = 0; i < size; i++) {
-            login = users.get((int) rowsList.get(i));
-
-            switch ((int)columnsList.get(i)) {
-                case 5:
-                    updateSql = "update SystemUsers set Usersname = ? where id = ?;";
-                    break;
-                case 6:
-                    updateSql = "update SystemUsers set Password = ? where id = ?;";
-                    break;
-            }
-
-            PreparedStatement preparedStatement = con.prepareStatement(updateSql);
-            preparedStatement.setString(1, valuesList.get(i).toString());
-            preparedStatement.setInt(2, login.getId());
-            preparedStatement.executeUpdate();
-            preparedStatement.close();
+        switch(column){
+            case 5:
+                updateSql = "update SystemUsers set Usersname = ? where id = ?;";
+                break;
+            case 6:
+                updateSql = "update SystemUsers set Password = ? where id = ?;";
+                break;
         }
+
+        PreparedStatement preparedStatement = con.prepareStatement(updateSql);
+        preparedStatement.setString(1, obj.toString());
+        preparedStatement.setInt(2, login.getId());
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
     }
     public void updateUserExpertFirstName(int row , String firstName) throws SQLException {
         ActivationFormSip activationFormSip = sipActivation.get(row);
@@ -511,7 +500,7 @@ public class DataBase {
         String insertSql = "insert into NumberRange (numFrom,numTo,TrunkName,Activation_Id) values(?,?,?,?)";
         PreparedStatement insertStmt = con.prepareStatement(insertSql);
 
-            for (NumberRanges numberRanges : numberRanges){
+        for (NumberRanges numberRanges : numberRanges){
             ArrayList<String> fromRange = numberRanges.getFromRange();
             ArrayList<String> toRange = numberRanges.getToRange();
             String trunkNumber = numberRanges.getTrunk();

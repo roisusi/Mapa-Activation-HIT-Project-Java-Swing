@@ -4,6 +4,7 @@ import Model.*;
 import View.ActivationsMoves;
 import View.FormEvent;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
@@ -24,6 +25,10 @@ public class Controller {
     public Login getLoginUser() { return db.getLoginUser(); }
     public List<NumberRanges> getActivationSipFromList(){
         return db.getNumberRanges();
+    }
+
+    public Connection getConnection() {
+        return db.getCon();
     }
 
     public boolean isUserAlreadyExists(Users user) {
