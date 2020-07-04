@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.2.final using JasperReports Library version 6.12.2-75c5e90a222ab406e416cbf590a5397028a52de3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Hatkanot" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8e15d519-eab3-497d-b483-a5c1caac3ee0">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<queryString language="SQL">
+		<![CDATA[select * from Activation_SIP]]>
+	</queryString>
+	<field name="LastUpdate" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="LastUpdate"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="Activation_SIP"/>
+	</field>
+	<field name="CustomerName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CustomerName"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="Activation_SIP"/>
+	</field>
+	<field name="ExpertFirstName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ExpertFirstName"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="Activation_SIP"/>
+	</field>
+	<field name="ProjectManagerFirstName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ProjectManagerFirstName"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="Activation_SIP"/>
+	</field>
+	<field name="Status" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Status"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="Activation_SIP"/>
+	</field>
+	<field name="HowManyInstallation" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="HowManyInstallation"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="Activation_SIP"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="86" splitType="Stretch">
+			<image>
+				<reportElement x="275" y="0" width="300" height="64" uuid="ea5ad761-92e5-4024-9d51-efba4363bb54"/>
+				<imageExpression><![CDATA["leaf_banner_red.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="Title" x="0" y="13" width="263" height="33" uuid="91f5fe7f-a65f-46a3-81ae-30f2d82c45a2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="26"/>
+				</textElement>
+				<text><![CDATA[דוח התקנות]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="160" y="50" width="100" height="14" uuid="87847161-44b9-45d4-b656-b5da5bc3aaf0"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="36" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="35" width="555" height="1" uuid="2c4ebb21-8745-45a1-a9ad-477acaac72cb"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement style="Column header" x="0" y="19" width="92" height="15" uuid="95999282-dd9f-4740-8324-9455316e92ad">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2dbcc110-7ee5-45d9-9562-a79a5005ed0d"/>
+				</reportElement>
+				<text><![CDATA[תאריך עדכון אחרון]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="92" y="19" width="92" height="15" uuid="4bcb908a-e17e-47db-af02-b3cbdd88aed1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="709da8aa-bb05-4805-83d8-f28a2db3dcb5"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[שם לקוח]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="184" y="19" width="92" height="15" uuid="2cc6fb45-2c85-4ba9-809f-02ab6dda21a4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3c9e7462-6419-4a30-a462-742f323a3a48"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[מומחה אחראי]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="276" y="19" width="92" height="15" uuid="78711bdc-9fee-47ce-98b3-1963f519fcab">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8b4046ce-5494-4475-9899-0902d208f143"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[מנהל פרוקייט]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="368" y="19" width="92" height="15" uuid="e1f6d542-ceba-4199-8d39-2e0d714dfeaa">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9d9690cb-6a3b-42a6-a83d-6b92f3e666e0"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[סטטוס התקנה]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="460" y="19" width="92" height="15" uuid="858d28a6-5777-4a9b-bf83-bc98ceef355a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9006f11f-f001-47bd-9ec9-43b7d9a33573"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[התקנות חוזרות]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="555" height="1" uuid="ffde0804-90e8-496b-86fb-ee363619f187"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement style="Detail" x="0" y="0" width="92" height="15" uuid="7ed17b85-b9cc-416b-a94c-404f5f04ed6c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2dbcc110-7ee5-45d9-9562-a79a5005ed0d"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{LastUpdate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="92" y="0" width="92" height="15" uuid="af38a2c3-2d8c-4812-985e-a25fd032fabd">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="709da8aa-bb05-4805-83d8-f28a2db3dcb5"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CustomerName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="184" y="0" width="92" height="15" uuid="ee85d181-56bc-4f74-85d1-7dbb50b75d1a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3c9e7462-6419-4a30-a462-742f323a3a48"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{ExpertFirstName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="276" y="0" width="92" height="15" uuid="05e76f49-5e4a-4b27-9426-83eb99007319">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8b4046ce-5494-4475-9899-0902d208f143"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{ProjectManagerFirstName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="368" y="0" width="92" height="15" uuid="b9abe6d8-d9a1-4505-bda9-ea9c34a4637e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9d9690cb-6a3b-42a6-a83d-6b92f3e666e0"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{Status}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="460" y="0" width="92" height="15" uuid="9715f520-c5ee-484b-85c7-ab283f505d9b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9006f11f-f001-47bd-9ec9-43b7d9a33573"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{HowManyInstallation}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="30093aa1-3dd7-4eea-9cc9-e183637af8f4"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement style="Column header" x="433" y="0" width="80" height="20" uuid="c9e9a989-76ae-4c92-a08c-dba3c3185f04"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="Column header" x="513" y="0" width="40" height="20" uuid="736cac2d-8f9a-48bb-b4e7-09302ce0e313"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement style="Column header" x="0" y="0" width="197" height="20" uuid="c49bc611-71b3-4860-8112-76288860b48d"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

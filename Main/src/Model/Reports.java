@@ -25,7 +25,7 @@ public class Reports{
                         e.printStackTrace();
                     }
 
-                JasperReport report = JasperCompileManager.compileReport("C:\\Users\\vinos\\Documents\\GitHub\\Project\\Main\\src\\Report\\Report_Final.jrxml");
+                JasperReport report = JasperCompileManager.compileReport("C:\\Users\\vinos\\Documents\\GitHub\\Project\\Main\\src\\Report\\Activation.jrxml");
                 JasperPrint print = JasperFillManager.fillReport(report,null, controller.getConnection());
                // JasperExportManager.exportReportToPdfFile(print,"C:\\Users\\vinos\\JaspersoftWorkspace\\MyReports\\report1.pdf");
                 JasperViewer.viewReport(print);
