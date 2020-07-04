@@ -126,6 +126,7 @@ public class FormEvent extends EventObject {
         super(source);
         this.from = from;
         this.to = to;
+        this.trunkNumber = trunkNumber;
     }
 
     public int getId() {

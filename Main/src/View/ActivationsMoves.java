@@ -16,6 +16,7 @@ public class ActivationsMoves {
         private static ArrayList fromRange;
         private static ArrayList toRange;
         private static ArrayList difference;
+        public static int newID;
 
         public static String setUserName(String userName){
             return SessionId.userName = userName;
@@ -28,6 +29,14 @@ public class ActivationsMoves {
         }
         public static String isApproved(){
             return SessionId.isApproved;
+        }
+
+        public static int getNewID() {
+            return newID;
+        }
+
+        public static void setNewID(int newID) {
+            SessionId.newID = newID;
         }
 
         public static ArrayList getFromRange() {

@@ -7,7 +7,6 @@ import View.FormEvent;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Controller {
     DataBase db = new DataBase();
@@ -30,7 +29,6 @@ public class Controller {
     public boolean isUserAlreadyExists(Users user) {
         return db.isUserAlreadyExists(user);
     }
-
     public boolean isLoginUserAlreadyExists(Login login) {
         return db.isLoginUserAlreadyExists(login);
     }
@@ -167,10 +165,6 @@ public class Controller {
     {
         db.removeUserFromList(row);
     }
-
-    public void insertingNumberRAngeToDataBase() throws SQLException {
-        db.insertingNumberRangeToDataBase();
-    }
     public void insertingActivationSipToDataBase() throws SQLException {
         db.insertingActivationSipToDataBase();
     }
@@ -200,4 +194,10 @@ public class Controller {
     public void connect () throws Exception {
         db.connect();
     }
+
+    //-- Number Range to DataBse --//
+    public void insertingNumberRangeToDataBase() throws SQLException {
+        db.insertingNumberRangeToDataBase(ActivationsMoves.SessionId.getNewID());
+    }
+
 }

@@ -1,5 +1,7 @@
 package Model;
 
+import View.ActivationsMoves;
+
 import java.sql.*;
 import java.util.*;
 
@@ -11,7 +13,7 @@ public class DataBase {
     private static Users loggedUser;
     private static Login LoginUser;
     private Connection con;
-    private List<NumberRanges> numberRanges;
+    private List<NumberRanges >numberRanges;
 
     public DataBase() {
         this.users = new LinkedList<Login>();
@@ -53,7 +55,7 @@ public class DataBase {
         return loggedUser;
     }
     public List<NumberRanges> getNumberRanges(){
-        return Collections.unmodifiableList(numberRanges);//prevent for other to change the list when they get REF , just get it
+        return Collections.unmodifiableList(numberRanges);
     }
 
     public boolean loginUserAuthentication(String username, String password) throws SQLException {
@@ -365,6 +367,9 @@ public class DataBase {
             if (count == 0) {
                 System.out.println("Inserting people with ID " + id);
                 int col = 1;
+                //-- get ID --//
+                ActivationsMoves.SessionId.setNewID(id);
+
                 insertStmt.setInt(col++,id);
                 insertStmt.setString(col++, customerID);
                 insertStmt.setString(col++, customerName);
@@ -486,18 +491,17 @@ public class DataBase {
         insertStatement.close();
         checkStatement.close();
     }
-    public void insertingNumberRangeToDataBase() throws SQLException {
-        String checkSql = "select count(*) as count from NumberRange where TrunkName=?";
+    public void insertingNumberRangeToDataBase(int activation_id) throws SQLException {
+        String checkSql = "select count(*) as count from NumberRange where id=?";
         PreparedStatement checkStmt = con.prepareStatement(checkSql);
 
-        String insertSql = "insert into NumberRange (numFrom,numTo,TrunkName) values(?,?,?)";
+        String insertSql = "insert into NumberRange (numFrom,numTo,TrunkName,Activation_Id) values(?,?,?,?)";
         PreparedStatement insertStmt = con.prepareStatement(insertSql);
 
-        for (NumberRanges numberRanges : numberRanges) {
-            ArrayList fromRange = numberRanges.getFromRange();
-            ArrayList toRange = numberRanges.getToRange();
+            for (NumberRanges numberRanges : numberRanges){
+            ArrayList<String> fromRange = numberRanges.getFromRange();
+            ArrayList<String> toRange = numberRanges.getToRange();
             String trunkNumber = numberRanges.getTrunk();
-
 
             checkStmt.setInt(1, Integer.parseInt(fromRange.get(0).toString()));
             ResultSet checkResult = checkStmt.executeQuery();
@@ -507,13 +511,13 @@ public class DataBase {
 
             if (count == 0) {
                 int i=0;
-                while (fromRange != null && !fromRange.get(i).equals("")){
-
+                while (fromRange != null && !fromRange.get(i).equals("") && toRange != null && !toRange.get(i).equals("")){
                     System.out.println("Inserting people with ID " + trunkNumber);
                     int col = 1;
-                    insertStmt.setString(col++, fromRange.get(i).toString());
-                    insertStmt.setString(col++, toRange.get(i).toString());
-                    insertStmt.setString(col++, "ROI");
+                    insertStmt.setString(col++, fromRange.get(i));
+                    insertStmt.setString(col++, toRange.get(i));
+                    insertStmt.setString(col++, trunkNumber);
+                    insertStmt.setInt(col++,activation_id);
                     insertStmt.executeUpdate();
                     i++;
                 }

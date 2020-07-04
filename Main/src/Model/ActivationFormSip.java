@@ -361,4 +361,6 @@ public class ActivationFormSip extends ActivationForm {
     public void setConnectionType(String connectionType) {
         this.connectionType = connectionType;
     }
+
+    //
 }
