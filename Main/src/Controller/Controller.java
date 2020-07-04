@@ -105,11 +105,11 @@ public class Controller {
     public void updateStatus(String status,int row) throws SQLException {
         db.updateStatus(status,row);
     }
-    public void updateSystemUser(Object obj, int row, int column) throws SQLException {
-        db.updateSystemUser(obj, row, column);
+    public void updateSystemUser(ArrayList rowsList, ArrayList columnsList, ArrayList valuesList) throws SQLException {
+        db.updateSystemUser(rowsList, columnsList, valuesList);
     }
-    public void updateLoginUser(Object obj, int row, int column) throws SQLException {
-        db.updateLoginUser(obj, row, column);
+    public void updateLoginUser(ArrayList rowsList, ArrayList columnsList, ArrayList valuesList) throws SQLException {
+        db.updateLoginUser(rowsList, columnsList, valuesList);
     }
     public void updateActivationSip(FormEvent ev){
         String customerID = ev.getCustomerID();

@@ -7,24 +7,37 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ManageUsersTableMenu extends JPanel {
     private JTable table;
     private UsersTableModel tableModel;
+    private JButton buttonSave;
     private JPopupMenu popupMenu;
     private UsersTableListener usersTableListener;
-
+    private ArrayList rowsList;
+    private ArrayList columnsList;
+    private ArrayList valuesList;
 
     public ManageUsersTableMenu() {
         JFrame parent = new JFrame();
         tableModel = new UsersTableModel();
         table = new JTable(tableModel);
+        JPanel buttonPanel = new JPanel();
         popupMenu = new JPopupMenu();
         JMenuItem removeItem = new JMenuItem("מחק שורה");
         popupMenu.add(removeItem);
+
+        //--Create lists for table changes--//
+        rowsList = new ArrayList<Integer>();
+        columnsList = new ArrayList<Integer>();
+        valuesList = new ArrayList<String>();
 
         //--Create Table Cell Change Detector--//
         table.setCellSelectionEnabled(true);
@@ -63,6 +76,14 @@ public class ManageUsersTableMenu extends JPanel {
             }
         });
 
+        buttonSave = new JButton("שמור שינויים");
+        buttonSave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                usersTableListener.rowEdit(rowsList, columnsList, valuesList);
+            }
+        });
+
         //--Table Event To Changed Cell--//
         cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
@@ -70,15 +91,24 @@ public class ManageUsersTableMenu extends JPanel {
                 int row = table.getSelectedRow();
                 int column = table.getSelectedColumn();
 
+
                 value = (String) table.getValueAt(row, column);
                 table.setValueAt(value, row, column);
-                usersTableListener.rowEdit(value, row, column);
+
+                rowsList.add(row);
+                columnsList.add(column);
+                valuesList.add(value);
             }
         });
+
+        //-- Buttons Panel --//
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(buttonSave);
 
         //-- Graphic Option --//
         setLayout(new BorderLayout());
         add(new JScrollPane(table), BorderLayout.CENTER);
+        add(buttonPanel,BorderLayout.SOUTH);
     }
 
     public void setData(List<Users> user, List<Login> login)

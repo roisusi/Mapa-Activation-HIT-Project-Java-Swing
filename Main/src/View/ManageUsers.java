@@ -7,6 +7,7 @@ import Controller.Controller;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class ManageUsers extends JFrame {
     private static ManageUsers single_instance = null;
@@ -83,17 +84,23 @@ public class ManageUsers extends JFrame {
 
             //-- Edit right click mouse activation --//
             @Override
-            public void rowEdit(Object obj, int row, int column) {
+            public void rowEdit(ArrayList rowsList, ArrayList columnsList, ArrayList valuesList) {
                 try {
                     controller.connect();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 try {
-                    if(column >= 0 && column <= 4)
-                        controller.updateSystemUser(obj, row, column);
-                    else
-                        controller.updateLoginUser(obj, row, column);
+                    int size = rowsList.size();
+
+                    for (int i = 0; i < size; i++)
+                    {
+                        if((int)columnsList.get(i) >= 0 && (int)columnsList.get(i) <= 4)
+                            controller.updateSystemUser(rowsList, columnsList, valuesList);
+                        else
+                            controller.updateLoginUser(rowsList, columnsList, valuesList);
+                    }
+
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
