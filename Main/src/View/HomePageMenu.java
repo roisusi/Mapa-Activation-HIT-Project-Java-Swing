@@ -1,7 +1,6 @@
 package View;
 
 import Controller.Controller;
-import Model.Reports;
 import Model.Users;
 import Model.UsersType;
 
@@ -12,25 +11,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
+
 public class HomePageMenu extends JPanel {
 
-    public static class SessionId{
-        private static String userName;
-        private static String isApproved;
 
-        public static String setUserName(String userName){
-            return SessionId.userName = userName;
-        }
-        public static String getUserName(){
-            return SessionId.userName;
-        }
-        public static String isApproved(String isApproved){
-            return SessionId.isApproved = isApproved;
-        }
-        public static String isApproved(){
-            return SessionId.isApproved;
-        }
-    }
 
     private JButton createForm;
     private JButton editForm;
@@ -42,9 +26,10 @@ public class HomePageMenu extends JPanel {
     ActivationFormSIP activationFormSIPDialog;
     private Users user;
     private ManageUsers manageUsersForm;
-    private Reports report;
     private Controller controller;
-    private getDataFromSipListener getDataFromSipListener;
+    private GetDataFromSipListener getDataFromSipListener;
+    private ListOfActivationView listOfActivationView;
+
 
     public HomePageMenu() {
 
@@ -67,7 +52,7 @@ public class HomePageMenu extends JPanel {
             @Override
             public void setUserFirstNameLogged(String User) {
                 userName = new JLabel("שלום, " + User);
-                SessionId.setUserName(User);
+                ActivationsMoves.SessionId.setUserName(User);
             }
         });
         loginUI.setVisible(true);
@@ -93,7 +78,9 @@ public class HomePageMenu extends JPanel {
 
         //-- Create Form Dialog --//
         activationFormSIPDialog = new ActivationFormSIP(HomePageMenu.this,0);
-        report = new Reports();
+        //-- Edit Form Dialog --//
+        listOfActivationView = new ListOfActivationView(parent);//,controller.getSipActivation());
+
 
         //Grid Bag Layout - new way to set layouts
         setLayout(new GridBagLayout());
@@ -145,27 +132,48 @@ public class HomePageMenu extends JPanel {
 
         });
 
-        activationFormSIPDialog.setFormListener(new FormListener() {
-            // ---- this Listener gets from Child Dialog the event of creating Activation Sip                         ---- //
-            // ---- after the creation it adds the event to the DataBase, it send it to HomePage to show it on Table ----//
-            @Override
-            public void formEventOccurred(FormEvent e) {
-                getDataFromSipListener.setActivation(e);
-            }
-        });
-
         editForm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ListOfActivationView listOfActivationView = new ListOfActivationView(parent,controller.getSipActivation());
                 listOfActivationView.setVisible(true);
             }
         });
 
-        reports.addActionListener(new ActionListener() {
+        activationFormSIPDialog.setFormListener(new FormListener() {
+            // ---- this Listener gets from Child Dialog the event of creating Activation Sip                       ---- //
+            // ---- after the creation it adds the event to the DataBase, it send it to HomePage to show it on Table ----//
             @Override
-            public void actionPerformed(ActionEvent e) {
-                report.generateReport();
+            public void formEventOccurred(FormEvent e) {
+                getDataFromSipListener.addActivation(e);
+            }
+
+            @Override
+            public void formEventOccurredNumber(FormEvent e) {
+                controller.addNumberRange(e);
+                try {
+                    controller.connect();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                try {
+                    controller.insertingNumberRangeToDataBase();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            controller.disconnect();
+            }
+        });
+
+        //-- Move Data From Edit to Calender --//
+        listOfActivationView.setDataFromSipListener(new GetDataFromSipListener() {
+            @Override
+            public void addActivation(FormEvent e) {
+            //Leave Empty
+            }
+
+            @Override
+            public void updateActivation(FormEvent e) {
+                getDataFromSipListener.updateActivation(e);
             }
         });
 
@@ -178,14 +186,12 @@ public class HomePageMenu extends JPanel {
                     manageUsersForm = ManageUsers.getInstance();
                     manageUsersForm.setVisible(true);
                 }
-
                 else
                     JOptionPane.showMessageDialog(HomePageMenu.this,"למשתמש זה אין הרשאות לניהול משתמשים","Error",JOptionPane.ERROR_MESSAGE);
             }
         });
     }
-    
-    public void setDataToCalender(getDataFromSipListener getDataFromSipListener){
+    public void setDataToCalender(GetDataFromSipListener getDataFromSipListener){
         this.getDataFromSipListener = getDataFromSipListener;
     }
 }

@@ -2,7 +2,6 @@ package View;
 
 import Model.Users;
 import Model.Login;
-import Controller.Controller;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -14,16 +13,16 @@ import java.sql.SQLException;
 public class ManageUsersMenu extends JPanel {
     private JButton buttonCreateUser;
     private CreateUserForm createUserForm;
-    private getUserFromUsersListener getUserFromUsersListener;
+    private GetUserFromUsersListener getUserFromUsersListener;
 
     public ManageUsersMenu() {
         // -- The 2 Buttons --//
-        buttonCreateUser = new JButton("Create User");
+        buttonCreateUser = new JButton("יצירת משתמש חדש");
         buttonCreateUser.setPreferredSize(new Dimension(200,50));
 
         //-- Create The Borders --//
         Border outerBorder = BorderFactory.createEmptyBorder(100,10,300,10);
-        Border innerBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black),"Manage Users Option"); //adds Label to the border
+        Border innerBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black),"תפריט ניהול משתמשים"); //adds Label to the border
         setBorder(BorderFactory.createCompoundBorder(innerBorder,outerBorder)); //for 2 borders
 
         //-- Create Form Dialog --//
@@ -63,7 +62,7 @@ public class ManageUsersMenu extends JPanel {
         });
     }
 
-    public void setUsersToTable(getUserFromUsersListener getUserFromUsersListener){
+    public void setUsersToTable(GetUserFromUsersListener getUserFromUsersListener){
         this.getUserFromUsersListener = getUserFromUsersListener;
     }
 }

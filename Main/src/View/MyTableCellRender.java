@@ -21,9 +21,9 @@ class MyTableCellRender extends DefaultTableCellRenderer {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
 
-        if (value.equals("כן"))
+        if (value != null && value.equals("כן"))
             try {
-                this.setIcon(new ImageIcon(getClass().getResource("Check_16x16.png")));
+                this.setIcon(new ImageIcon(getClass().getResource("/Images/Check_16x16.png")));
                 // This below code setting the border to be highlighted, but not whole
 
             } catch (Exception ex) {

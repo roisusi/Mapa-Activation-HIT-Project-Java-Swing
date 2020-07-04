@@ -1,19 +1,25 @@
 package View;
 
+import Controller.Controller;
 import Model.ActivationFormSip;
+import Model.ListOfActivation;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.UtilDateModel;
 
-import javax.print.event.PrintJobAttributeListener;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class ListOfActivationView extends JDialog {
 
@@ -33,18 +39,28 @@ public class ListOfActivationView extends JDialog {
     private JLabel expertName;
     private JLabel projectManagerName;
     private JLabel numberOfSuccess;
+    private  GetDataFromSipListener getDataFromSipListener;
+    private DefaultListModel actModel;
+    private List<Integer> activationsIdArrayList;
 
-    public ListOfActivationView(JFrame parent, List<ActivationFormSip> activationFormSips) {
+    private int currentId;
+
+    public ListOfActivationView(JFrame parent){//, List<ActivationFormSip> activationFormSips) {
         activations = new JList();
         panel = new JPanel();
         formPanelUp = new JPanel();
         formPanelDownLeft = new JPanel();
         formPanelDownRight = new JPanel();
         view = new JButton("הצג");
-        this.activationFormSips = activationFormSips;
+        activationFormSips = new LinkedList<>();
         activationFormSIP = new ActivationFormSIP(panel,1);
         expertName = new JLabel();
         projectManagerName = new JLabel();
+        activationsIdArrayList = new LinkedList<>();
+
+
+
+
 
         // New format to Date From//
         UtilDateModel modelFrom = new UtilDateModel();
@@ -62,37 +78,53 @@ public class ListOfActivationView extends JDialog {
         view.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                activationFormSips = ActivationsMoves.LoadActivationFromList.getActivationSip();
+                int i = 0,flag=0;
+                actModel = new DefaultListModel();
+                actModel.removeAllElements();
                 //-- Date --//
                 //--From--//
                 try {
-                    dateLabelFormatterFrom.valueToString((Date)fromDate.getModel().getValue());
-                    datePickerEvFrom = dateLabelFormatterFrom.valueToString((Date)fromDate.getModel().getValue());
+                    dateLabelFormatterFrom.valueToString((Date) fromDate.getModel().getValue());
+                    datePickerEvFrom = dateLabelFormatterFrom.valueToString((Date) fromDate.getModel().getValue());
                 } catch (ParseException parseException) {
                     parseException.printStackTrace();
                 }
 
                 //--To--//
                 try {
-                    dateLabelFormatterTo.valueToString((Date)toDate.getModel().getValue());
-                    datePickerEvTo = dateLabelFormatterTo.valueToString((Date)toDate.getModel().getValue());
+                    dateLabelFormatterTo.valueToString((Date) toDate.getModel().getValue());
+                    datePickerEvTo = dateLabelFormatterTo.valueToString((Date) toDate.getModel().getValue());
                 } catch (ParseException parseException) {
                     parseException.printStackTrace();
                 }
-                String from =datePickerEvFrom;
-                String to =datePickerEvTo;
-                DefaultListModel actModel = new DefaultListModel();
-                int i=0;
-                if (isBefore(from,to)){
-                    for (i=0 ; i < activationFormSips.size() ; i++) {
-                        DateChoose = activationFormSips.get(i).getDatePicker();
-                        if (isBefore(DateChoose, from) || (isBefore(DateChoose, to))) {
-                            actModel.addElement(activationFormSips.get(i).getCustomerName());
-                            activations.setModel(actModel);
+                String from = datePickerEvFrom;
+                String to = datePickerEvTo;
+                if (!from.isEmpty() && !to.isEmpty()) {
+                    activationsIdArrayList.clear();
+                    if (isBefore(from, to)) {
+                        for (i = 0; i < activationFormSips.size(); i++) {
+                            DateChoose = activationFormSips.get(i).getDatePicker();
+                            if (isBefore(from,to,DateChoose )) {
+                                actModel.addElement(activationFormSips.get(i).getCustomerName());
+                                activationsIdArrayList.add(activationFormSips.get(i).getId());
+                                activations.setModel(actModel);
+                                flag =1 ;
+                            }
                         }
-                    }
+                    } else
+                        JOptionPane.showMessageDialog(ListOfActivationView.this, "זמן ההתחלה גדול מזמן הסיום", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                else
-                    JOptionPane.showMessageDialog(ListOfActivationView.this, "זמן ההתחלה גדול מזמן הסיום", "Error", JOptionPane.ERROR_MESSAGE);
+                else {
+                    JOptionPane.showMessageDialog(ListOfActivationView.this, "אנא הכנס תאריכים", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
+                //-- if flag==0 then the List is Empty --//
+                if (flag==0) {
+                    actModel.removeAllElements();
+                    activations.setModel(actModel);
+
+                }
             }
         });
         activations.setBorder(BorderFactory.createEtchedBorder()); // create just frame border
@@ -106,183 +138,205 @@ public class ListOfActivationView extends JDialog {
         activations.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int selectedActivation = activations.getSelectedIndex();
-
-                if (e.getButton() == MouseEvent.BUTTON1) //Click Once
-                {
-                    expertName.setText(activationFormSips.get(selectedActivation).getFirstName());
-                    expertName.setForeground(Color.BLUE);
-                    projectManagerName.setText(activationFormSips.get(selectedActivation).getProjectManagerFirstName());
-                    projectManagerName.setForeground(Color.BLUE);
-                    //numberOfSuccess
-                }
-                if(e.getClickCount() == 2) //Double click
-                {
-                    activationFormSIP.customerID.setText(activationFormSips.get(selectedActivation).getCustomerID());
-                    activationFormSIP.customerName.setText(activationFormSips.get(selectedActivation).getCustomerName());
-                    activationFormSIP.contactName.setText(activationFormSips.get(selectedActivation).getContactName());
-                    activationFormSIP.customerPhoneNumber.setText(activationFormSips.get(selectedActivation).getCustomerPhoneNumber());
-                    activationFormSIP.customerEmail.setText(activationFormSips.get(selectedActivation).getCustomerEmail());
-                    activationFormSIP.customerTechName.setText(activationFormSips.get(selectedActivation).getCustomerTechName());
-                    activationFormSIP.customerTechPhoneNumber.setText(activationFormSips.get(selectedActivation).getCustomerTechPhoneNumber());
-                    activationFormSIP.pbxType.setText(activationFormSips.get(selectedActivation).getPbxType());
-                    activationFormSIP.infrastructure.setText(activationFormSips.get(selectedActivation).getInfrastructure());
-                    for (int i=0 ; i <  activationFormSIP.connectionType.getItemCount();i++){
-                        String connectionType = (String)activationFormSIP.connectionType.getModel().getElementAt(i);
-                        String actConnectioType = activationFormSips.get(selectedActivation).getConnectionType();
-                        if (actConnectioType.equals(connectionType))
-                            activationFormSIP.connectionType.setSelectedIndex(i);
+                if (activations.getModel().getSize() != 0) {
+                    int selectedActivation,index;
+                    for (index = 0; index < activationFormSips.size(); index++) {
+                        if (activationsIdArrayList.get(activations.getSelectedIndex()) == activationFormSips.get(index).getId()) {
+                            break;
+                        }
                     }
-                    activationFormSIP.totalNumbers.setText(Integer.toString(activationFormSips.get(selectedActivation).getTotalNumbers()));
-                    activationFormSIP.totalCalls.setText(Integer.toString(activationFormSips.get(selectedActivation).getTotalCalls()));
-
-                    String routerType = activationFormSips.get(selectedActivation).getRouterType();
-                    if (routerType.isEmpty())
-                        activationFormSIP.routerTypeGroup.setSelected(activationFormSIP.routerTypeNO.getModel(),true);
-                    else
+                    selectedActivation = index;
+                    if (e.getButton() == MouseEvent.BUTTON1) //Click Once
                     {
-                        activationFormSIP.routerTypeGroup.setSelected(activationFormSIP.routerTypeYES.getModel(),true);
-                        activationFormSIP.routerTypeTextField.setText(activationFormSips.get(selectedActivation).getRouterType());
-                        activationFormSIP.routerTypeTextField.setEnabled(true);
+                        expertName.setText(activationFormSips.get(selectedActivation).getFirstName());
+                        expertName.setForeground(Color.BLUE);
+                        projectManagerName.setText(activationFormSips.get(selectedActivation).getProjectManagerFirstName());
+                        projectManagerName.setForeground(Color.BLUE);
+                        //numberOfSuccess
                     }
+                    if (e.getClickCount() == 2) //Double click
+                    {
+                        currentId = activationFormSips.get(selectedActivation).getId();
+                        ActivationsMoves.FormId.setActivationId(currentId);
 
-                    activationFormSIP.routerTypeTextField.getText();
-
-                    for (int i=0 ; i <  activationFormSIP.CODEC.getItemCount();i++){
-                        String CODEC = (String)activationFormSIP.CODEC.getModel().getElementAt(i);
-                        String actCODEC = activationFormSips.get(selectedActivation).getCODEC();
-                        if (CODEC.equals(actCODEC))
-                            activationFormSIP.CODEC.setSelectedIndex(i);
-                    }
-
-                    for (int i=0 ; i <  activationFormSIP.typeOfCalls.getItemCount();i++){
-                        String typeOfCalls = (String)activationFormSIP.typeOfCalls.getModel().getElementAt(i);
-                        String actTypeOfCalls = activationFormSips.get(selectedActivation).getTypeOfCalls();
-                        if (typeOfCalls.equals(actTypeOfCalls))
-                            activationFormSIP.typeOfCalls.setSelectedIndex(i);
-                    }
-
-                    for (int i=0 ; i <  activationFormSIP.identificationType.getItemCount();i++){
-                        String identificationType = (String)activationFormSIP.identificationType.getModel().getElementAt(i);
-                        String actIdentificationType = activationFormSips.get(selectedActivation).getIdentificationType();
-                        if (identificationType.equals(actIdentificationType))
-                            activationFormSIP.identificationType.setSelectedIndex(i);
-                    }
-                    activationFormSIP.snbNumber.setText(activationFormSips.get(selectedActivation).getSnbNumber());
-
-                    //--WAN--//
-                    String wan="";
-                    for(int j=0 ,  i = 0 ;i < activationFormSips.get(selectedActivation).getWanAddress().length() ; i ++ ) {
-                        char a = activationFormSips.get(selectedActivation).getWanAddress().charAt(i);
-
-                        if (a != '.')
-                            wan += a;
-                        if (a == '.') {
-                            j++;
-                            if (j == 1) {
-                                activationFormSIP.wanAddressA.setText(wan);
-                                wan="";
-                            }
-                            if (j == 2){
-                                activationFormSIP.wanAddressB.setText(wan);
-                                wan="";
-                            }
-                            if (j == 3){
-                                activationFormSIP.wanAddressC.setText(wan);
-                                wan="";
-                            }
+                        activationFormSIP.customerID.setText(activationFormSips.get(selectedActivation).getCustomerID());
+                        activationFormSIP.customerName.setText(activationFormSips.get(selectedActivation).getCustomerName());
+                        activationFormSIP.contactName.setText(activationFormSips.get(selectedActivation).getContactName());
+                        activationFormSIP.customerPhoneNumber.setText(activationFormSips.get(selectedActivation).getCustomerPhoneNumber());
+                        activationFormSIP.customerEmail.setText(activationFormSips.get(selectedActivation).getCustomerEmail());
+                        activationFormSIP.customerTechName.setText(activationFormSips.get(selectedActivation).getCustomerTechName());
+                        activationFormSIP.customerTechPhoneNumber.setText(activationFormSips.get(selectedActivation).getCustomerTechPhoneNumber());
+                        activationFormSIP.pbxType.setText(activationFormSips.get(selectedActivation).getPbxType());
+                        activationFormSIP.infrastructure.setText(activationFormSips.get(selectedActivation).getInfrastructure());
+                        for (int i = 0; i < activationFormSIP.connectionType.getItemCount(); i++) {
+                            String connectionType = (String) activationFormSIP.connectionType.getModel().getElementAt(i);
+                            String actConnectioType = activationFormSips.get(selectedActivation).getConnectionType();
+                            if (actConnectioType.equals(connectionType))
+                                activationFormSIP.connectionType.setSelectedIndex(i);
                         }
+                        activationFormSIP.totalNumbers.setText(Integer.toString(activationFormSips.get(selectedActivation).getTotalNumbers()));
+                        activationFormSIP.totalCalls.setText(Integer.toString(activationFormSips.get(selectedActivation).getTotalCalls()));
+
+                        String routerType = activationFormSips.get(selectedActivation).getRouterType();
+                        if (routerType.isEmpty())
+                            activationFormSIP.routerTypeGroup.setSelected(activationFormSIP.routerTypeNO.getModel(), true);
+                        else {
+                            activationFormSIP.routerTypeGroup.setSelected(activationFormSIP.routerTypeYES.getModel(), true);
+                            activationFormSIP.routerTypeTextField.setText(activationFormSips.get(selectedActivation).getRouterType());
+                            activationFormSIP.routerTypeTextField.setEnabled(true);
+                        }
+
+                        activationFormSIP.routerTypeTextField.getText();
+
+                        for (int i = 0; i < activationFormSIP.CODEC.getItemCount(); i++) {
+                            String CODEC = (String) activationFormSIP.CODEC.getModel().getElementAt(i);
+                            String actCODEC = activationFormSips.get(selectedActivation).getCODEC();
+                            if (CODEC.equals(actCODEC))
+                                activationFormSIP.CODEC.setSelectedIndex(i);
+                        }
+
+                        for (int i = 0; i < activationFormSIP.typeOfCalls.getItemCount(); i++) {
+                            String typeOfCalls = (String) activationFormSIP.typeOfCalls.getModel().getElementAt(i);
+                            String actTypeOfCalls = activationFormSips.get(selectedActivation).getTypeOfCalls();
+                            if (typeOfCalls.equals(actTypeOfCalls))
+                                activationFormSIP.typeOfCalls.setSelectedIndex(i);
+                        }
+
+                        for (int i = 0; i < activationFormSIP.identificationType.getItemCount(); i++) {
+                            String identificationType = (String) activationFormSIP.identificationType.getModel().getElementAt(i);
+                            String actIdentificationType = activationFormSips.get(selectedActivation).getIdentificationType();
+                            if (identificationType.equals(actIdentificationType))
+                                activationFormSIP.identificationType.setSelectedIndex(i);
+                        }
+                        activationFormSIP.snbNumber.setText(activationFormSips.get(selectedActivation).getSnbNumber());
+
+                        //--WAN--//
+                        String wan = "";
+                        for (int j = 0, i = 0; i < activationFormSips.get(selectedActivation).getWanAddress().length(); i++) {
+                            char a = activationFormSips.get(selectedActivation).getWanAddress().charAt(i);
+
+                            if (a != '.')
+                                wan += a;
+                            if (a == '.') {
+                                j++;
+                                if (j == 1) {
+                                    activationFormSIP.wanAddressA.setText(wan);
+                                    wan = "";
+                                }
+                                if (j == 2) {
+                                    activationFormSIP.wanAddressB.setText(wan);
+                                    wan = "";
+                                }
+                                if (j == 3) {
+                                    activationFormSIP.wanAddressC.setText(wan);
+                                    wan = "";
+                                }
+                            }
                             activationFormSIP.wanAddressD.setText(wan);
-                    }
-
-                    //--LAN--//
-                    String lan="";
-                    for(int j=0 ,  i = 0 ;i < activationFormSips.get(selectedActivation).getLanAddress().length() ; i ++ ) {
-                        char a = activationFormSips.get(selectedActivation).getLanAddress().charAt(i);
-
-                        if (a != '.')
-                            lan += a;
-                        if (a == '.') {
-                            j++;
-                            if (j == 1) {
-                                activationFormSIP.lanAddressA.setText(lan);
-                                lan="";
-                            }
-                            if (j == 2){
-                                activationFormSIP.lanAddressB.setText(lan);
-                                lan="";
-                            }
-                            if (j == 3){
-                                activationFormSIP.lanAddressC.setText(lan);
-                                lan="";
-                            }
                         }
-                        activationFormSIP.lanAddressD.setText(lan);
-                    }
 
-                    //--IP--//
-                    String ip="";
-                    for(int j=0 ,  i = 0 ;i < activationFormSips.get(selectedActivation).getIpAddress().length() ; i ++ ) {
-                        char a = activationFormSips.get(selectedActivation).getIpAddress().charAt(i);
+                        //--LAN--//
+                        String lan = "";
+                        for (int j = 0, i = 0; i < activationFormSips.get(selectedActivation).getLanAddress().length(); i++) {
+                            char a = activationFormSips.get(selectedActivation).getLanAddress().charAt(i);
 
-                        if (a != '.')
-                            ip += a;
-                        if (a == '.') {
-                            j++;
-                            if (j == 1) {
-                                activationFormSIP.ipAddressA.setText(ip);
-                                ip="";
+                            if (a != '.')
+                                lan += a;
+                            if (a == '.') {
+                                j++;
+                                if (j == 1) {
+                                    activationFormSIP.lanAddressA.setText(lan);
+                                    lan = "";
+                                }
+                                if (j == 2) {
+                                    activationFormSIP.lanAddressB.setText(lan);
+                                    lan = "";
+                                }
+                                if (j == 3) {
+                                    activationFormSIP.lanAddressC.setText(lan);
+                                    lan = "";
+                                }
                             }
-                            if (j == 2){
-                                activationFormSIP.ipAddressB.setText(ip);
-                                ip="";
-                            }
-                            if (j == 3){
-                                activationFormSIP.ipAddressC.setText(ip);
-                                ip="";
-                            }
+                            activationFormSIP.lanAddressD.setText(lan);
                         }
-                        activationFormSIP.ipAddressD.setText(ip);
+
+                        //--IP--//
+                        String ip = "";
+                        for (int j = 0, i = 0; i < activationFormSips.get(selectedActivation).getIpAddress().length(); i++) {
+                            char a = activationFormSips.get(selectedActivation).getIpAddress().charAt(i);
+
+                            if (a != '.')
+                                ip += a;
+                            if (a == '.') {
+                                j++;
+                                if (j == 1) {
+                                    activationFormSIP.ipAddressA.setText(ip);
+                                    ip = "";
+                                }
+                                if (j == 2) {
+                                    activationFormSIP.ipAddressB.setText(ip);
+                                    ip = "";
+                                }
+                                if (j == 3) {
+                                    activationFormSIP.ipAddressC.setText(ip);
+                                    ip = "";
+                                }
+                            }
+                            activationFormSIP.ipAddressD.setText(ip);
+                        }
+                        activationFormSIP.internetUser.setText(activationFormSips.get(selectedActivation).getInternetUser());
+
+                        for (int i = 0; i < activationFormSIP.signalAddress.getItemCount(); i++) {
+                            String signalAddress = (String) activationFormSIP.signalAddress.getModel().getElementAt(i);
+                            String actSignalAddress = activationFormSips.get(selectedActivation).getSignalAddress();
+                            if (signalAddress.equals(actSignalAddress))
+                                activationFormSIP.signalAddress.setSelectedIndex(i);
+                        }
+
+                        for (int i = 0; i < activationFormSIP.mediaAddress.getItemCount(); i++) {
+                            String mediaAddress = (String) activationFormSIP.mediaAddress.getModel().getElementAt(i);
+                            String actMediaAddress = activationFormSips.get(selectedActivation).getMediaAddress();
+                            if (mediaAddress.equals(actMediaAddress))
+                                activationFormSIP.mediaAddress.setSelectedIndex(i);
+                        }
+
+                        for (int i = 0; i < activationFormSIP.areaCode.getItemCount(); i++) {
+                            String areaCode = (String) activationFormSIP.areaCode.getModel().getElementAt(i);
+                            String actAreaCode = activationFormSips.get(selectedActivation).getAreaCode();
+                            if (areaCode.equals(actAreaCode))
+                                activationFormSIP.areaCode.setSelectedIndex(i);
+                        }
+
+                        activationFormSIP.emergencyCity.setText(activationFormSips.get(selectedActivation).getEmergencyCity());
+
+                        //-- DATE --//
+                        DatePickerEdit(selectedActivation);
+
+                        String callOutSideCountry = activationFormSips.get(selectedActivation).getCallOutSideCountry();
+                        if (callOutSideCountry.equals("לא"))
+                            activationFormSIP.callOutSideCountry.setSelected(activationFormSIP.callOutSideCountryNO.getModel(), true);
+                        else
+                            activationFormSIP.callOutSideCountry.setSelected(activationFormSIP.callOutSideCountryYES.getModel(), true);
+
+                        activationFormSIP.crNumber.setText(activationFormSips.get(selectedActivation).getCrNumber());
+                        activationFormSIP.trunkNumber.setText(activationFormSips.get(selectedActivation).getTrunkNumber());
+                        activationFormSIP.sbcPort.setValue(activationFormSips.get(selectedActivation).getSbcPort());
+
+                        activationFormSIP.setFormListener(new FormListener() {
+                            @Override
+                            public void formEventOccurred(FormEvent ev) {
+                                getDataFromSipListener.updateActivation(ev);
+                            }
+
+                            @Override
+                            public void formEventOccurredNumber(FormEvent e) {
+
+                            }
+                        });
+                        System.out.println(ActivationsMoves.FormId.getActivationId());
+                        activationFormSIP.setVisible(true);
+
                     }
-                    activationFormSIP.internetUser.setText(activationFormSips.get(selectedActivation).getInternetUser());
-
-                    for (int i=0 ; i <  activationFormSIP.signalAddress.getItemCount();i++){
-                        String signalAddress = (String)activationFormSIP.signalAddress.getModel().getElementAt(i);
-                        String actSignalAddress = activationFormSips.get(selectedActivation).getSignalAddress();
-                        if (signalAddress.equals(actSignalAddress))
-                            activationFormSIP.signalAddress.setSelectedIndex(i);
-                    }
-
-                    for (int i=0 ; i <  activationFormSIP.mediaAddress.getItemCount();i++){
-                        String mediaAddress = (String)activationFormSIP.mediaAddress.getModel().getElementAt(i);
-                        String actMediaAddress = activationFormSips.get(selectedActivation).getMediaAddress();
-                        if (mediaAddress.equals(actMediaAddress))
-                            activationFormSIP.mediaAddress.setSelectedIndex(i);
-                    }
-
-                    for (int i=0 ; i <  activationFormSIP.areaCode.getItemCount();i++){
-                        String areaCode = (String)activationFormSIP.areaCode.getModel().getElementAt(i);
-                        String actAreaCode = activationFormSips.get(selectedActivation).getAreaCode();
-                        if (areaCode.equals(actAreaCode))
-                            activationFormSIP.areaCode.setSelectedIndex(i);
-                    }
-
-                    activationFormSIP.emergencyCity.setText(activationFormSips.get(selectedActivation).getEmergencyCity());
-
-                    //-- DATE --//
-                    DatePickerEdit(selectedActivation);
-
-                    String callOutSideCountry = activationFormSips.get(selectedActivation).getCallOutSideCountry();
-                    if (callOutSideCountry.equals("לא"))
-                        activationFormSIP.callOutSideCountry.setSelected(activationFormSIP.callOutSideCountryNO.getModel(),true);
-                    else
-                        activationFormSIP.callOutSideCountry.setSelected(activationFormSIP.callOutSideCountryYES.getModel(),true);
-
-                    activationFormSIP.crNumber.setText(activationFormSips.get(selectedActivation).getCrNumber());
-                    activationFormSIP.trunkNumber.setText(activationFormSips.get(selectedActivation).getTrunkNumber());
-                    activationFormSIP.sbcPort.setValue(activationFormSips.get(selectedActivation).getSbcPort());
-
-                    activationFormSIP.setVisible(true);
                 }
             }
         });
@@ -382,16 +436,12 @@ public class ListOfActivationView extends JDialog {
     }
 
     //-- if str1 before str2 --//
-    private boolean isBefore(String str1,String str2){
-
+    private boolean isBefore (String str1 , String str2){
         //-- Trims --//
         char from,to;
-        int day1=0;
-        int day2=0;
-        int month1=0;
-        int month2=0;
-        int year1=0;
-        int year2=0;
+        int day1=0,day2=0;
+        int month1=0,month2=0;
+        int year1=0,year2=0;
         String tempDate="";
 
         for(int j=0 ,  i = 0 ;i < str1.length() ; i ++ ) {
@@ -431,18 +481,45 @@ public class ListOfActivationView extends JDialog {
         }
         day2 = Integer.parseInt(tempDate);
         tempDate="";
-
         //--Check is Before --//
-        if (year1 > year2)
+        if (year1 < year2)
+            return true;
+        else if ( year1 == year2 && month1 < month2)
+            return true;
+        else if ( year1 == year2 && month1 == month2 && day1 <= day2)
+            return true;
+        else
             return false;
-        else if (year1 == year2 && month1 > month2 )
-            return false;
-            else if (year1 == year2 && month1 == month2 && day1 > day2)
-                return false;
-                else
-                    return true;
     }
+    //-- if str1 <= str3 <= str2 --//
+    private boolean isBefore(String str1,String str2,String str3){
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date firstDate = null;
+        try {
+            firstDate = sdf.parse(str1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Date secondDate = null;
+        try {
+            secondDate = sdf.parse(str2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Date thirdDate = null;
+        try {
+            thirdDate = sdf.parse(str3);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        int first = firstDate.compareTo(thirdDate);
+        int second = secondDate.compareTo(thirdDate);
+        if ((first == 0 || first < 0) && (second == 0 || second >0))
+            return true;
+        return false;
+    }
     private void DatePickerEdit(int selectedActivation){
         String dateStr="";
         for(int j=0 ,  i = 0 ;i < activationFormSips.get(selectedActivation).getDatePicker().length() ; i ++ ) {
@@ -465,4 +542,7 @@ public class ListOfActivationView extends JDialog {
         activationFormSIP.datePicker.getModel().setSelected(true);
     }
 
+    public void setDataFromSipListener(GetDataFromSipListener listener) {
+        this.getDataFromSipListener = listener;
+    }
 }

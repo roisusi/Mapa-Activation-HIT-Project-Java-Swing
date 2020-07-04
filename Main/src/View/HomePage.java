@@ -2,9 +2,12 @@ package View;
 
 
 import Controller.Controller;
+import Model.ListOfActivation;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class HomePage extends JFrame {
@@ -15,7 +18,11 @@ public class HomePage extends JFrame {
 
     public HomePage() {
         super("Mapa Activation");
+        //Test//
+
+
         controller = new Controller();
+        setJMenuBar(createMenubar());
         setLayout(new BorderLayout()); //set BorderLayout
 
         //-- Creation of Left Side --//
@@ -37,9 +44,9 @@ public class HomePage extends JFrame {
         cal.setData(controller.getSipActivation());
         cal.refresh();
 
-        menu.setDataToCalender(new getDataFromSipListener() {
+        menu.setDataToCalender(new GetDataFromSipListener() {
             @Override
-            public void setActivation(FormEvent e) {
+            public void addActivation(FormEvent e) {
                 controller.addActivationSip(e);
                 try {
                     controller.connect();
@@ -55,7 +62,26 @@ public class HomePage extends JFrame {
                 cal.refresh();
                 controller.disconnect();
             }
+
+            @Override
+            public void updateActivation(FormEvent ev) {
+                controller.updateActivationSip(ev);
+                try {
+                    controller.connect();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                try {
+                    controller.updateActivationSipToDataBase(ActivationsMoves.FormId.getActivationId());
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                cal.refresh();
+                controller.disconnect();
+            }
         });
+
+
         cal.setCalenderTableListener(new CalenderTableListener(){
             //-- Remove right click mouse activation --//
             @Override
@@ -126,5 +152,32 @@ public class HomePage extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //when i press X it will close
         setVisible(true); //show Frame
         controller.disconnect();
+    }
+    private JMenuBar createMenubar() {
+        JMenuBar menuBar = new JMenuBar(); // create the menu bar
+        JMenu file = new JMenu("File"); //create the menu on the bar
+        //-- Option in File Bar --//
+        JMenuItem exit = new JMenuItem("Exit");
+        file.addSeparator(); // add trans line to separate from other items
+        file.add(exit);
+
+        menuBar.add(file);
+
+        //-- Set Mnemonic those are the Key you click on shortcuts , they are view as _ under the Menus like File --//
+        file.setMnemonic(KeyEvent.VK_F);// this is a static class the makes VK_F as Key
+        exit.setMnemonic(KeyEvent.VK_X);
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int action = JOptionPane.showConfirmDialog(HomePage.this, "Do you really want to Exit?", "Confirm", JOptionPane.OK_OPTION,/*Change Icon*/JOptionPane.ERROR_MESSAGE);
+                if (action == JOptionPane.OK_OPTION) {//action gets 0 for no 1 for ok
+                        System.exit(0);
+                }
+            }
+        });
+        //--Set Accelerator those are the shortcut like Ctrl-x without using the menu--//
+        exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));//for ctrl+X
+
+        return menuBar;
     }
 }

@@ -23,6 +23,8 @@ public class HomePageCalenderMenu extends JPanel{
         JFrame parent = new JFrame();
         tableModel = new CalenderPanelModel();
         table = new JTable(tableModel);
+
+
         popupMenu = new JPopupMenu();
         JMenuItem removeItem = new JMenuItem("מחק שורה");
         JMenuItem setExpertItem = new JMenuItem("שייך מומחה להפעלה");

@@ -2,5 +2,5 @@ package View;
 
 public interface UsersTableListener {
     public void rowDelete(int row);
-    //public void addExpertUser(int row , String firstName);
+    public void rowEdit(Object obj, int row, int column);
 }

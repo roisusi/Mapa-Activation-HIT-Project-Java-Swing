@@ -8,4 +8,16 @@ public class PrimaryManager extends Users{
     public PrimaryManager(Users other) {
         super(other);
     }
+
+    public boolean getReports() { return true; }
+
+    public boolean deleteForm() { return true; }
+
+    public boolean editForm() { return true; }
+
+    public boolean createForm() { return true; }
+
+    public boolean manageUsers() { return true; }
+
+    public boolean editUsers() { return true; }
 }
