@@ -209,5 +209,8 @@ public class Controller {
     public List<NumberRanges> getNumberRanges(){
         return db.getNumberRanges();
     }
+    public void updateNumberRangeToDataBase(int activation_id) throws SQLException {
+        db.updateNumberRangeToDataBase(activation_id);
+    }
 
 }

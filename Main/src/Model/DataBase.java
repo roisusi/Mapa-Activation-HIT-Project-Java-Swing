@@ -769,4 +769,59 @@ public class DataBase {
             }
         }
     }
+
+    public void updateNumberRangeToDataBase(int activation_id) throws SQLException {
+
+
+        String selectSql = "select id from NumberRange where id=?";
+        PreparedStatement checkStmt = con.prepareStatement(selectSql);
+
+        String deleteSql = "delete from NumberRange where id=?";
+        PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
+
+        checkStmt.setInt(1, activation_id);
+        ResultSet checkResult = checkStmt.executeQuery();
+        checkResult.next();
+        deleteStmt.setInt(1, activation_id);
+        deleteStmt.executeUpdate();
+
+        deleteStmt.close();
+
+      /*  String checkSql = "select * from NumberRange where id=?";
+        checkStmt = con.prepareStatement(checkSql);*/
+
+        String insertSql = "insert into NumberRange (numFrom,numTo,TrunkName,Activation_Id) values(?,?,?,?)";
+        PreparedStatement insertStmt = con.prepareStatement(insertSql);
+
+        if (activation_id == 0)
+            activation_id = ActivationsMoves.SessionId.getNewID();
+        for (NumberRanges numberRanges : numberRanges){
+            ArrayList<String> fromRange = numberRanges.getFromRange();
+            ArrayList<String> toRange = numberRanges.getToRange();
+            String trunkNumber = numberRanges.getTrunk();
+
+            checkStmt.setInt(1, Integer.parseInt(fromRange.get(0).toString()));
+            checkResult = checkStmt.executeQuery();
+            checkResult.next();
+
+           // int count = checkResult.getInt(1);
+
+           // if (count == 0) {
+                int i=0;
+                while (i<fromRange.size() && fromRange != null && !fromRange.get(i).equals("") && toRange != null && !toRange.get(i).equals("")){
+                    System.out.println("Inserting people with ID " + activation_id);
+                    int col = 1;
+                    insertStmt.setString(col++, fromRange.get(i));
+                    insertStmt.setString(col++, toRange.get(i));
+                    insertStmt.setString(col++, trunkNumber);
+                    insertStmt.setInt(col++,activation_id);
+                    insertStmt.executeUpdate();
+                    i++;
+                }
+
+            }
+        //}
+        insertStmt.close();
+        checkStmt.close();
+    }
 }

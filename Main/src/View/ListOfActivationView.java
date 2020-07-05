@@ -341,7 +341,12 @@ public class ListOfActivationView extends JDialog {
 
                             @Override
                             public void formEventOccurredNumber(FormEvent e) {
-
+                                controller.addNumberRange(e);
+                                try {
+                                    controller.updateNumberRangeToDataBase(ActivationsMoves.FormId.getActivationId());
+                                } catch (SQLException throwables) {
+                                    throwables.printStackTrace();
+                                }
                             }
                         });
                         System.out.println(ActivationsMoves.FormId.getActivationId());
