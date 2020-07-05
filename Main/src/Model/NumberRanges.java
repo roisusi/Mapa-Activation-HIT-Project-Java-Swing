@@ -1,5 +1,7 @@
 package Model;
 
+import net.sf.jasperreports.engine.virtualization.ObjectSerializer;
+
 import javax.swing.*;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -361,5 +363,10 @@ public class NumberRanges {
         if (sum < 0)
             return false;
         return true;
+    }
+
+    public void clear(){
+        fromRange.removeAll(fromRange);
+        toRange.removeAll(toRange);
     }
 }

@@ -1,8 +1,7 @@
 package View;
 
-import Controller.Controller;
+import Controller.*;
 import Model.ActivationFormSip;
-import Model.ListOfActivation;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.UtilDateModel;
 
@@ -15,11 +14,8 @@ import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class ListOfActivationView extends JDialog {
 
@@ -42,6 +38,8 @@ public class ListOfActivationView extends JDialog {
     private  GetDataFromSipListener getDataFromSipListener;
     private DefaultListModel actModel;
     private List<Integer> activationsIdArrayList;
+    private Controller controller;
+    private NumberRangeController numberRangeController;
 
     private int currentId;
 
@@ -53,10 +51,11 @@ public class ListOfActivationView extends JDialog {
         formPanelDownRight = new JPanel();
         view = new JButton("הצג");
         activationFormSips = new LinkedList<>();
-        activationFormSIP = new ActivationFormSIP(panel,1);
+
         expertName = new JLabel();
         projectManagerName = new JLabel();
         activationsIdArrayList = new LinkedList<>();
+        controller = new Controller();
 
 
 
@@ -78,7 +77,19 @@ public class ListOfActivationView extends JDialog {
         view.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                activationFormSips = ActivationsMoves.LoadActivationFromList.getActivationSip();
+
+                try {
+                    controller.connect();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                try {
+                    controller.loadCalenderSipActivationToList();
+                    activationFormSips = controller.getSipActivation();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                controller.disconnect();
                 int i = 0,flag=0;
                 actModel = new DefaultListModel();
                 actModel.removeAllElements();
@@ -158,7 +169,7 @@ public class ListOfActivationView extends JDialog {
                     {
                         currentId = activationFormSips.get(selectedActivation).getId();
                         ActivationsMoves.FormId.setActivationId(currentId);
-
+                        activationFormSIP = new ActivationFormSIP(panel,1,currentId);
                         activationFormSIP.customerID.setText(activationFormSips.get(selectedActivation).getCustomerID());
                         activationFormSIP.customerName.setText(activationFormSips.get(selectedActivation).getCustomerName());
                         activationFormSIP.contactName.setText(activationFormSips.get(selectedActivation).getContactName());
@@ -170,8 +181,8 @@ public class ListOfActivationView extends JDialog {
                         activationFormSIP.infrastructure.setText(activationFormSips.get(selectedActivation).getInfrastructure());
                         for (int i = 0; i < activationFormSIP.connectionType.getItemCount(); i++) {
                             String connectionType = (String) activationFormSIP.connectionType.getModel().getElementAt(i);
-                            String actConnectioType = activationFormSips.get(selectedActivation).getConnectionType();
-                            if (actConnectioType.equals(connectionType))
+                            String actConnectionType = activationFormSips.get(selectedActivation).getConnectionType();
+                            if (actConnectionType.equals(connectionType))
                                 activationFormSIP.connectionType.setSelectedIndex(i);
                         }
                         activationFormSIP.totalNumbers.setText(Integer.toString(activationFormSips.get(selectedActivation).getTotalNumbers()));

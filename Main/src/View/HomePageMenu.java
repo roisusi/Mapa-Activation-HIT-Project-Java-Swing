@@ -78,7 +78,7 @@ public class HomePageMenu extends JPanel {
         setBorder(BorderFactory.createCompoundBorder(innerBorder,outerBorder)); //for 2 borders
 
         //-- Create Form Dialog --//
-        activationFormSIPDialog = new ActivationFormSIP(HomePageMenu.this,0);
+        activationFormSIPDialog = new ActivationFormSIP(HomePageMenu.this,0,0);
         //-- Edit Form Dialog --//
         listOfActivationView = new ListOfActivationView(parent);//,controller.getSipActivation());
         //-- Reports Form Dialog --//
@@ -129,6 +129,8 @@ public class HomePageMenu extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
+                    ActivationsMoves.SessionId.remove();
                 activationFormSIPDialog.setVisible(true);
             }
 
@@ -137,6 +139,8 @@ public class HomePageMenu extends JPanel {
         editForm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
+                    ActivationsMoves.SessionId.remove();
                 listOfActivationView.setVisible(true);
             }
         });

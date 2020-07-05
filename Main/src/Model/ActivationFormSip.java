@@ -25,19 +25,6 @@ public class ActivationFormSip extends ActivationForm {
                              String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress
             , String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType, String projectManagerFirstName, String activationType , String status) {
         this(customerID,  customerName,  contactName,  customerPhoneNumber,  customerEmail,  customerTechName,  customerTechPhoneNumber,  pbxType,  typeOfCalls,  identificationType,  totalNumbers,  snbNumber,  numberRange,  areaCode,  emergencyCity,  callOutSideCountry,  crNumber,  trunkNumber,  datePicker,  wanAddress,  lanAddress,  ipAddress,  internetUser,  infrastructure,  routerType,  CODEC,  totalCalls,  signalAddress,  mediaAddress,  sbcPort,  firstName,  connectionType,  projectManagerFirstName, activationType,status);
-        //super(id,customerID, customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker, firstName, projectManagerFirstName,activationType);
-/*        this.wanAddress = wanAddress;
-        this.lanAddress = lanAddress;
-        this.ipAddress = ipAddress;
-        this.internetUser = internetUser;
-        this.infrastructure = infrastructure;
-        this.routerType = routerType;
-        this.CODEC = CODEC;
-        this.totalCalls = totalCalls;
-        this.signalAddress = signalAddress;
-        this.mediaAddress = mediaAddress;
-        this.sbcPort = sbcPort;
-        this.connectionType = connectionType;*/
         this.id = id;
     }
 

@@ -23,9 +23,6 @@ public class Controller {
         return db.getUserFirstNameLogged();
     }
     public Login getLoginUser() { return db.getLoginUser(); }
-    public List<NumberRanges> getActivationSipFromList(){
-        return db.getNumberRanges();
-    }
 
     public Connection getConnection() {
         return db.getCon();
@@ -193,6 +190,10 @@ public class Controller {
         db.loadCalenderSipActivationToList();
     }
 
+    public void loadNumberRangeFromDataBaseToList(int activation_id) throws SQLException {
+        db.loadNumberRangeFromDataBaseToList(activation_id);
+    }
+
     public void disconnect(){
         db.disconnect();
     }
@@ -203,6 +204,9 @@ public class Controller {
     //-- Number Range to DataBse --//
     public void insertingNumberRangeToDataBase() throws SQLException {
         db.insertingNumberRangeToDataBase(ActivationsMoves.SessionId.getNewID());
+    }
+    public List<NumberRanges> getNumberRanges(){
+        return db.getNumberRanges();
     }
 
 }
