@@ -12,9 +12,9 @@ public class NumberRangesViewModel extends AbstractTableModel {
 
     private final int MAXNUMBERS = 1000;
     private String[] colName = {"From", "To", "Count"};
-    private static int moreRows = 0;
-    private  static ArrayList<String> fromRange = new ArrayList<>();
-    private  static ArrayList<String> toRange = new ArrayList<>();
+    private int moreRows = 0;
+    private ArrayList<String> fromRange = new ArrayList<>();
+    private ArrayList<String> toRange = new ArrayList<>();
     private int difference;
     private int size;
     private NumberRangeController controller;
@@ -24,7 +24,6 @@ public class NumberRangesViewModel extends AbstractTableModel {
         this.fromRange = fromRange;
         this.toRange = toRange;
         controller = new NumberRangeController(this.fromRange,this.toRange);
-
     }
     public void setMoreRows() {
         fromRange.add("");
@@ -48,6 +47,13 @@ public class NumberRangesViewModel extends AbstractTableModel {
             i++;
         }
         moreRows = index;
+
+    }
+
+    public void showEditRows(){
+        for (int i=0 ; i < fromRange.size() ; i ++){
+            moreRows++;
+        }
 
     }
 
@@ -75,7 +81,6 @@ public class NumberRangesViewModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0:
-
                 return fromRange.get(rowIndex);
             case 1:
                 return toRange.get(rowIndex);

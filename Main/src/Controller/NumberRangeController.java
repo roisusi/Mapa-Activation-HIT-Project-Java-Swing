@@ -39,4 +39,26 @@ public class NumberRangeController {
     public boolean negative(int num1,int num2){
         return numberRanges.negative(num1,num2);
     }
+
+    public ArrayList getFrom(){
+        return numberRanges.getFromRange();
+    }
+
+    public ArrayList getTo(){
+        return numberRanges.getToRange();
+    }
+
+    public void clear(){
+        numberRanges.clear();
+    }
+
+    public void setFromRange (ArrayList from){
+        this.from = from;
+        numberRanges.setFromRange(this.from);
+    }
+
+    public void setToRange (ArrayList to){
+        this.to = to;
+        numberRanges.setToRange(this.from);
+    }
 }

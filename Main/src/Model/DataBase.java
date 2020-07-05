@@ -1,5 +1,6 @@
 package Model;
 
+import Controller.NumberRangeController;
 import View.ActivationsMoves;
 
 import java.sql.*;
@@ -9,11 +10,10 @@ public class DataBase {
     private List<Users> systemUsers;
     private List<Login> users;
     private List<ActivationFormSip> sipActivation;
-    private ActivationFormSip singleActivationFormSip;
+    private List<NumberRanges> numberRanges;
     private static Users loggedUser;
     private static Login LoginUser;
     private Connection con;
-    private List<NumberRanges >numberRanges;
 
     public DataBase() {
         this.users = new LinkedList<Login>();
@@ -48,7 +48,6 @@ public class DataBase {
     }
     public List<ActivationFormSip> getActivationSipFromList(){
         return Collections.unmodifiableList(sipActivation);
-        //return sipActivation;
     }
     public Login getLoginUser(){
         return LoginUser;
@@ -57,7 +56,8 @@ public class DataBase {
         return loggedUser;
     }
     public List<NumberRanges> getNumberRanges(){
-        return Collections.unmodifiableList(numberRanges);
+        //return Collections.unmodifiableList(numberRanges);
+        return numberRanges;
     }
 
     public boolean loginUserAuthentication(String username, String password) throws SQLException {
@@ -422,7 +422,6 @@ public class DataBase {
                 insertStmt.executeUpdate();
 
             }
-            //System.out.println("count for person with ID " + id + " is " + count);
         }
         insertStmt.close();
         checkStmt.close();
@@ -511,6 +510,8 @@ public class DataBase {
         String insertSql = "insert into NumberRange (numFrom,numTo,TrunkName,Activation_Id) values(?,?,?,?)";
         PreparedStatement insertStmt = con.prepareStatement(insertSql);
 
+        if (activation_id == 0)
+            activation_id = ActivationsMoves.SessionId.getNewID();
             for (NumberRanges numberRanges : numberRanges){
             ArrayList<String> fromRange = numberRanges.getFromRange();
             ArrayList<String> toRange = numberRanges.getToRange();
@@ -524,7 +525,7 @@ public class DataBase {
 
             if (count == 0) {
                 int i=0;
-                while (fromRange != null && !fromRange.get(i).equals("") && toRange != null && !toRange.get(i).equals("")){
+                while (i<fromRange.size() && fromRange != null && !fromRange.get(i).equals("") && toRange != null && !toRange.get(i).equals("")){
                     System.out.println("Inserting people with ID " + trunkNumber);
                     int col = 1;
                     insertStmt.setString(col++, fromRange.get(i));
@@ -662,6 +663,26 @@ public class DataBase {
         }
         selectStatement.close();
     }
+    public void loadNumberRangeFromDataBaseToList(int activation_id) throws SQLException {
+        numberRanges.clear();
+        String selectSql = "select NumFrom,NumTo,TrunkName from NumberRange where Activation_id=" + activation_id;
+        Statement selectStatement = con.createStatement();
+        ResultSet results = selectStatement.executeQuery(selectSql);
+
+        ArrayList<String> from = new ArrayList<>();
+        ArrayList<String> to = new ArrayList<>();
+        String trunkName="";
+        while (results.next()) {
+            from.add(results.getString("NumFrom"));
+            to.add(results.getString("NumTo"));
+            trunkName = results.getString("TrunkName");
+            NumberRanges numberRange = new NumberRanges(from,to,trunkName);
+            numberRanges.add(numberRange);
+        }
+
+        selectStatement.close();
+    }
+
 
     public void removeActivationFromList(int row) {
         ActivationFormSip activationFormSip = sipActivation.get(row);
@@ -684,6 +705,9 @@ public class DataBase {
             throwables.printStackTrace();
         }
         systemUsers.remove(row);
+    }
+    public void clearListofNumberRange(){
+        numberRanges.clear();
     }
 
     public void deleteActivationFromDataBase(int id) throws SQLException {
@@ -736,7 +760,7 @@ public class DataBase {
     }
 
     public void connect() throws Exception {
-        try {
+/*        try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             new Exception("Driver Not Found");
@@ -744,7 +768,8 @@ public class DataBase {
         //String connectionUrl = "jdbc:mysql://localhost:3306/swingtest?autoReconnect=true&useSSL=false";
         String connectionUrl = "jdbc:mysql://mysql-9407-0.cloudclusters.net:9407/swingtest?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf8";
         con = DriverManager.getConnection(connectionUrl, "Roi", "prnm4400$");
-        //System.out.println("Connected to : " + con);
+        //System.out.println("Connected to : " + con);*/
+        con = DatabaseConnection.getInstance().getConnection();
     }
     public void disconnect() {
         if (con != null) {
@@ -754,5 +779,60 @@ public class DataBase {
                 System.out.println("Connection Closed");
             }
         }
+    }
+
+    public void updateNumberRangeToDataBase(int activation_id) throws SQLException {
+
+
+        String selectSql = "select id from NumberRange where id=?";
+        PreparedStatement checkStmt = con.prepareStatement(selectSql);
+
+        String deleteSql = "delete from NumberRange where id=?";
+        PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
+
+        checkStmt.setInt(1, activation_id);
+        ResultSet checkResult = checkStmt.executeQuery();
+        checkResult.next();
+        deleteStmt.setInt(1, activation_id);
+        deleteStmt.executeUpdate();
+
+        deleteStmt.close();
+
+      /*  String checkSql = "select * from NumberRange where id=?";
+        checkStmt = con.prepareStatement(checkSql);*/
+
+        String insertSql = "insert into NumberRange (numFrom,numTo,TrunkName,Activation_Id) values(?,?,?,?)";
+        PreparedStatement insertStmt = con.prepareStatement(insertSql);
+
+        if (activation_id == 0)
+            activation_id = ActivationsMoves.SessionId.getNewID();
+        for (NumberRanges numberRanges : numberRanges){
+            ArrayList<String> fromRange = numberRanges.getFromRange();
+            ArrayList<String> toRange = numberRanges.getToRange();
+            String trunkNumber = numberRanges.getTrunk();
+
+            checkStmt.setInt(1, Integer.parseInt(fromRange.get(0).toString()));
+            checkResult = checkStmt.executeQuery();
+            checkResult.next();
+
+           // int count = checkResult.getInt(1);
+
+           // if (count == 0) {
+                int i=0;
+                while (i<fromRange.size() && fromRange != null && !fromRange.get(i).equals("") && toRange != null && !toRange.get(i).equals("")){
+                    System.out.println("Inserting people with ID " + activation_id);
+                    int col = 1;
+                    insertStmt.setString(col++, fromRange.get(i));
+                    insertStmt.setString(col++, toRange.get(i));
+                    insertStmt.setString(col++, trunkNumber);
+                    insertStmt.setInt(col++,activation_id);
+                    insertStmt.executeUpdate();
+                    i++;
+                }
+
+            }
+        //}
+        insertStmt.close();
+        checkStmt.close();
     }
 }

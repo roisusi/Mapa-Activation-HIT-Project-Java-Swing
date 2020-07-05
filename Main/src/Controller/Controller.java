@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class Controller {
     DataBase db = new DataBase();
 
+
     public List<Login> getUsers() {
         return db.getLoginUsersFromList();
     }
@@ -23,9 +24,6 @@ public class Controller {
         return db.getUserFirstNameLogged();
     }
     public Login getLoginUser() { return db.getLoginUser(); }
-    public List<NumberRanges> getActivationSipFromList(){
-        return db.getNumberRanges();
-    }
 
     public Connection getConnection() {
         return db.getCon();
@@ -193,8 +191,12 @@ public class Controller {
         db.loadCalenderSipActivationToList();
     }
 
+    public void loadNumberRangeFromDataBaseToList(int activation_id) throws SQLException {
+        db.loadNumberRangeFromDataBaseToList(activation_id);
+    }
+
     public void disconnect(){
-        db.disconnect();
+        //db.disconnect();
     }
     public void connect () throws Exception {
         db.connect();
@@ -203,6 +205,12 @@ public class Controller {
     //-- Number Range to DataBse --//
     public void insertingNumberRangeToDataBase() throws SQLException {
         db.insertingNumberRangeToDataBase(ActivationsMoves.SessionId.getNewID());
+    }
+    public List<NumberRanges> getNumberRanges(){
+        return db.getNumberRanges();
+    }
+    public void updateNumberRangeToDataBase(int activation_id) throws SQLException {
+        db.updateNumberRangeToDataBase(activation_id);
     }
 
 }

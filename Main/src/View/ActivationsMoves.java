@@ -17,7 +17,13 @@ public class ActivationsMoves {
         private static ArrayList toRange;
         private static ArrayList difference;
         public static int newID;
+        private static SessionId sessionId;
 
+        private SessionId(){
+        }
+        public static SessionId getSessionId() {
+            return sessionId;
+        }
         public static String setUserName(String userName){
             return SessionId.userName = userName;
         }
@@ -32,6 +38,11 @@ public class ActivationsMoves {
         }
 
         public static int getNewID() {
+            return newID;
+        }
+        public static int removeID() {
+            if (newID == 1)
+                return newID--;
             return newID;
         }
 
@@ -62,6 +73,13 @@ public class ActivationsMoves {
         public static void setDifference(ArrayList difference) {
             SessionId.difference = difference;
         }
+
+        public static void remove(){
+            fromRange.removeAll(fromRange);
+            toRange.removeAll(toRange);
+        }
+
+
     }
 
     public static class FormId{
