@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class Controller {
     DataBase db = new DataBase();
 
+
     public List<Login> getUsers() {
         return db.getLoginUsersFromList();
     }
@@ -195,7 +196,7 @@ public class Controller {
     }
 
     public void disconnect(){
-        db.disconnect();
+        //db.disconnect();
     }
     public void connect () throws Exception {
         db.connect();

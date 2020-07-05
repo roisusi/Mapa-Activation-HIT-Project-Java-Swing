@@ -10,6 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -345,7 +347,14 @@ public class ActivationFormSIP extends JDialog {
             }
         });
 
-
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
+                    ActivationsMoves.SessionId.remove();
+            }
+        });
         FormControl();
         setModal(true);
         setSize(750, 700); // Size the Frame
@@ -1231,8 +1240,8 @@ public class ActivationFormSIP extends JDialog {
 
                 if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
                     ActivationsMoves.SessionId.remove();
-
                 dispose();
+
             }
             else {
                 if (CheckInputDigits()) {

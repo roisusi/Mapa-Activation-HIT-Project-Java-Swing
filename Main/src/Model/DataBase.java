@@ -749,7 +749,7 @@ public class DataBase {
     }
 
     public void connect() throws Exception {
-        try {
+/*        try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             new Exception("Driver Not Found");
@@ -757,7 +757,8 @@ public class DataBase {
         //String connectionUrl = "jdbc:mysql://localhost:3306/swingtest?autoReconnect=true&useSSL=false";
         String connectionUrl = "jdbc:mysql://mysql-9407-0.cloudclusters.net:9407/swingtest?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf8";
         con = DriverManager.getConnection(connectionUrl, "Roi", "prnm4400$");
-        //System.out.println("Connected to : " + con);
+        //System.out.println("Connected to : " + con);*/
+        con = DatabaseConnection.getInstance().getConnection();
     }
     public void disconnect() {
         if (con != null) {
