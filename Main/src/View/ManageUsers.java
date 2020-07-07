@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.ArrayList;
 
 public class ManageUsers extends JFrame {
     private static ManageUsers single_instance = null;
@@ -27,11 +26,12 @@ public class ManageUsers extends JFrame {
 
         //-- Creation of Right side --//
         cal = new ManageUsersTableMenu();
-        try {
+
+        /*try {
             controller.connect();
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
         try {
             controller.loadSystemUsersFromDataBaseToList();
         } catch (SQLException e) {
@@ -43,7 +43,7 @@ public class ManageUsers extends JFrame {
             e.printStackTrace();
         }
 
-        cal.setData(controller.getSystemUsers(), controller.getUsers());
+        cal.setData(controller.getUsers(), controller.getSystemUsers());
         cal.refresh();
 
         menu.setUsersToTable(new GetUserFromUsersListener() {
@@ -54,14 +54,15 @@ public class ManageUsers extends JFrame {
 
                 else
                 {
-                    try {
+                    /*try {
                         controller.connect();
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                    }
+                    }*/
                     controller.insertingLoginUserToDataBase(login);
                     controller.insertingUserToDataBase(user, login.getId());
-                    controller.addSystemUser(user);
+                    controller.addUserToUsersList(user);
+                    controller.addLoginToLoginList(login);
                     cal.refresh();
                     controller.disconnect();
                 }
@@ -73,14 +74,14 @@ public class ManageUsers extends JFrame {
             @Override
             public void rowDelete(int row)
             {
-                try {
+                /*try {
                     controller.connect();
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                }*/
                 controller.removeUser(row);
-                cal.setData(controller.getSystemUsers(), controller.getUsers());
-                controller.disconnect();
+                cal.setData(controller.getUsers(), controller.getSystemUsers());
+                //controller.disconnect();
             }
 
             //-- Edit right click mouse activation --//
@@ -103,8 +104,8 @@ public class ManageUsers extends JFrame {
                             controller.updateLoginUser(rowsList, columnsList, valuesList);
                     }*/
 
-                cal.setData(controller.getSystemUsers(), controller.getUsers());
-                controller.disconnect();
+                cal.setData(controller.getUsers(), controller.getSystemUsers());
+                //controller.disconnect();
             }
         });
 
@@ -122,7 +123,7 @@ public class ManageUsers extends JFrame {
         setLocationRelativeTo(null); //Center the Frame
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //when i press X it will close
         setVisible(true); //show Frame
-        controller.disconnect();
+        //controller.disconnect();
     }
 
     public static ManageUsers getInstance(){

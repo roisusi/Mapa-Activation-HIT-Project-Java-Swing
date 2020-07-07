@@ -4,7 +4,6 @@ import Model.Users;
 import Model.Login;
 import Model.UsersType;
 
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
@@ -69,8 +68,6 @@ public class UsersTableModel extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
-        //rowData[row][col] = value;
-
         Users user = userList.get(rowIndex);
         Login loginUser = null;
 
@@ -78,8 +75,6 @@ public class UsersTableModel extends AbstractTableModel {
             if(login.getId() == user.getUserNameId())
                 loginUser = login;
         }
-
-
 
         switch (columnIndex){
             case 0:

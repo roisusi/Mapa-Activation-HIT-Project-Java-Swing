@@ -2,7 +2,6 @@ package View;
 
 import Controller.Controller;
 import Model.Users;
-import Model.UsersType;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -10,7 +9,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 
 public class HomePageMenu extends JPanel {
@@ -70,7 +68,6 @@ public class HomePageMenu extends JPanel {
             throwables.printStackTrace();
         }
 
-        user = controller.getUserFirstNameLogged();
         controller.disconnect();
 
         //-- Create The Borders --//
@@ -130,10 +127,15 @@ public class HomePageMenu extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
-                    ActivationsMoves.SessionId.remove();
-                activationFormSIPDialog.failActivation.setEnabled(false);
-                activationFormSIPDialog.setVisible(true);
+                if(controller.getLoggedUser().createForm())
+                {
+                    if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
+                        ActivationsMoves.SessionId.remove();
+                    activationFormSIPDialog.failActivation.setEnabled(false);
+                    activationFormSIPDialog.setVisible(true);
+                }
+                else
+                    JOptionPane.showMessageDialog(HomePageMenu.this,"למשתמש זה אין הרשאות ליצירת טופס התקנה","Error",JOptionPane.ERROR_MESSAGE);
             }
 
         });
@@ -141,9 +143,14 @@ public class HomePageMenu extends JPanel {
         editForm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
-                    ActivationsMoves.SessionId.remove();
-                listOfActivationView.setVisible(true);
+                if(controller.getLoggedUser().editForm())
+                {
+                    if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
+                        ActivationsMoves.SessionId.remove();
+                    listOfActivationView.setVisible(true);
+                }
+                else
+                    JOptionPane.showMessageDialog(HomePageMenu.this,"למשתמש זה אין הרשאות לעריכת טופס התקנה","Error",JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -199,7 +206,7 @@ public class HomePageMenu extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if(user.getUsersType().equals(UsersType.PrimaryManager)) {
+                if(controller.getLoggedUser().manageUsers()) {
                     manageUsersForm = ManageUsers.getInstance();
                     manageUsersForm.setVisible(true);
                 }

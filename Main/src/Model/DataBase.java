@@ -24,6 +24,22 @@ public class DataBase {
 
     public Connection getCon() { return con; }
 
+    public void setLoggedUser(Users user) {
+        loggedUser = user;
+    }
+
+    public Users getLoggedUser() {
+        return loggedUser;
+    }
+
+    public void setLoginUser(Login login) {
+        LoginUser = login;
+    }
+
+    public Login getLoginUser(){
+        return LoginUser;
+    }
+
     public void addActivationSipToList(ActivationFormSip sipAct) {
         sipActivation.add(sipAct);
     }
@@ -49,18 +65,13 @@ public class DataBase {
     public List<ActivationFormSip> getActivationSipFromList(){
         return Collections.unmodifiableList(sipActivation);
     }
-    public Login getLoginUser(){
-        return LoginUser;
-    }
-    public Users getUserFirstNameLogged(){
-        return loggedUser;
-    }
+
     public List<NumberRanges> getNumberRanges(){
         //return Collections.unmodifiableList(numberRanges);
         return numberRanges;
     }
 
-    public boolean loginUserAuthentication(String username, String password) throws SQLException {
+  /*  public boolean loginUserAuthentication(String username, String password) throws SQLException {
         boolean flag = false;
         String selectSql = "select * from SystemUsers where Username = ? and Password = ?;";
         PreparedStatement preparedStatement = con.prepareStatement(selectSql);
@@ -102,7 +113,7 @@ public class DataBase {
         }
         return flag;
     }
-
+*/
     public void updateActivationSipToList(ActivationFormSip sipAct) {
         int i=0;
         for (ActivationFormSip activationFormSip : sipActivation ){
@@ -572,7 +583,7 @@ public class DataBase {
         insertStmt.close();
     }
 
-    public void loadLoggedUser(int id) throws SQLException {
+ /*   public void loadLoggedUser(int id) throws SQLException {
         String selectSql2 = "select id,FirstName,LastName,Email,PhoneNumber,Type,UserNameId from Users where UserNameId in (select id from SystemUsers where id="+id+")";
         Statement selectStatment2 = con.createStatement();
 
@@ -602,22 +613,25 @@ public class DataBase {
         }
         selectStatment2.close();
     }
-    public void loadUsersFromDataBaseToList() throws SQLException {
-        users.clear();
-        int id=0;
-        String selectSql = "select id,Username,Password from SystemUsers";
-        Statement selectStatment = con.createStatement();
 
-        ResultSet results = selectStatment.executeQuery(selectSql);
+  */
+    public List<Login> loadSystemUsersFromDataBaseToList() throws SQLException {
+        int id=0;
+        List<Login> loginList = new LinkedList<Login>();
+        String selectSql = "select * from SystemUsers";
+        Statement selectStatement = con.createStatement();
+        ResultSet results = selectStatement.executeQuery(selectSql);
+
         while (results.next()) {
             id = results.getInt("id");
             String userName = results.getString("Username");
             String password = results.getString("Password");
 
-            Login user = new Login(id,userName, password);
-            users.add(user);
+            Login login = new Login(id,userName, password);
+            loginList.add(login);
         }
-        selectStatment.close();
+        selectStatement.close();
+        return loginList;
     }
     public void loadCalenderSipActivationToList() throws SQLException {
         sipActivation.clear();
@@ -674,8 +688,8 @@ public class DataBase {
         }
         selectStatment.close();
     }
-    public void loadSystemUsersFromDataBaseToList() throws SQLException {
-        systemUsers.clear();
+    public List<Users> loadUsersFromDataBaseToList() throws SQLException {
+        List<Users> usersList = new LinkedList<Users>();
         String selectSql = "select * from Users";
         Statement selectStatement = con.createStatement();
         ResultSet results = selectStatement.executeQuery(selectSql);
@@ -690,10 +704,12 @@ public class DataBase {
             int userNameId = results.getInt("UserNameId");
 
             Users user = new Users(id, firstName, lastName, email, phoneNumber, type, userNameId);
-            systemUsers.add(user);
+            usersList.add(user);
         }
         selectStatement.close();
+        return usersList;
     }
+
     public void loadNumberRangeFromDataBaseToList(int activation_id) throws SQLException {
         numberRanges.clear();
         String selectSql = "select NumFrom,NumTo,TrunkName from NumberRange where Activation_id=" + activation_id;

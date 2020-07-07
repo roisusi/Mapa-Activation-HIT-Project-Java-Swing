@@ -24,9 +24,9 @@ public class ManageUsersTableMenu extends JPanel {
     private JButton buttonSave;
     private JPopupMenu popupMenu;
     private UsersTableListener usersTableListener;
-    private ArrayList rowsList;
-    private ArrayList columnsList;
-    private ArrayList valuesList;
+    //private ArrayList rowsList;
+    //private ArrayList columnsList;
+    //private ArrayList valuesList;
 
     public ManageUsersTableMenu() {
         JFrame parent = new JFrame();
@@ -38,9 +38,9 @@ public class ManageUsersTableMenu extends JPanel {
         popupMenu.add(removeItem);
 
         //--Create lists for table changes--//
-        rowsList = new ArrayList<Integer>();
-        columnsList = new ArrayList<Integer>();
-        valuesList = new ArrayList<String>();
+        //rowsList = new ArrayList<Integer>();
+        //columnsList = new ArrayList<Integer>();
+        //valuesList = new ArrayList<String>();
 
         //--Create Table Cell Change Detector--//
         table.setCellSelectionEnabled(true);
