@@ -65,12 +65,13 @@ public class ActivationFormSIP extends JDialog {
     protected JSpinner sbcPort;
     protected JDatePicker datePicker;
     private FormListener formListener;
-    private JLabel welcom;
+    private JLabel wellcome;
     private JButton addToSchedule;
     protected JButton editToSchedule;
     protected JButton failActivation;
     protected JButton activationToFile;
     protected JButton numberRangeButton;
+    protected JButton templateActivaion;
     private Controller controller;
 
     //-- Labels --//
@@ -139,7 +140,7 @@ public class ActivationFormSIP extends JDialog {
         emergencyCity = new JTextField(15);
         crNumber = new JTextField(15);
         trunkNumber = new JTextField(15);
-        welcom = new JLabel("טופס הפעלת SIP");
+        wellcome = new JLabel("טופס הפעלת SIP");
         this.inedxOfButton = inedxOfButton;
         numberRangeButton = new JButton("הוסף טווחים");
 
@@ -361,6 +362,10 @@ public class ActivationFormSIP extends JDialog {
                     callOutSideCountryEv = "לא";
                 ExpertToFileController controller = new ExpertToFileController(trunkNumber.getText(),(Integer)sbcPort.getValue(),Integer.parseInt(totalCalls.getText()),snbNumber.getText(),
                         wan,lan,ipExternal,(String)signalAddress.getSelectedItem(),(String)mediaAddress.getSelectedItem(),(String)areaCode.getSelectedItem(),emergencyCity.getText(),crNumber.getText(),callOutSideCountryEv);
+                controller.exportToFile();
+                JOptionPane.showMessageDialog(ActivationFormSIP.this,"הקובץ נוצר בהצלחה","INFO",JOptionPane.INFORMATION_MESSAGE);
+
+
             }
         });
 
@@ -1132,8 +1137,8 @@ public class ActivationFormSIP extends JDialog {
         //-- Title Panel Top --//
         formPanelTop.setLayout(new FlowLayout(FlowLayout.CENTER));
         formPanelTop.setBorder(BorderFactory.createLineBorder(Color.black));
-        welcom.setFont(new Font("Arial",Font.PLAIN,36));
-        formPanelTop.add(welcom);
+        wellcome.setFont(new Font("Arial",Font.PLAIN,36));
+        formPanelTop.add(wellcome);
 
 
         // Add sub panels //

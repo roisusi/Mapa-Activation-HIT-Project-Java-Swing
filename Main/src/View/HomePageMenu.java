@@ -133,6 +133,7 @@ public class HomePageMenu extends JPanel {
                 if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
                     ActivationsMoves.SessionId.remove();
                 activationFormSIPDialog.failActivation.setEnabled(false);
+                activationFormSIPDialog.activationToFile.setEnabled(false);
                 activationFormSIPDialog.setVisible(true);
             }
 
