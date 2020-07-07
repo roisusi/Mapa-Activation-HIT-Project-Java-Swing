@@ -47,7 +47,6 @@ public class NumberRangesViewModel extends AbstractTableModel {
             i++;
         }
         moreRows = index;
-
     }
 
     public void showEditRows(){
@@ -86,7 +85,7 @@ public class NumberRangesViewModel extends AbstractTableModel {
                 return toRange.get(rowIndex);
             case 2:
                 if(fromRange.size()>0 && toRange.size()>0)
-                if(controller.checkListIsEmpty(toRange.get(rowIndex)) || controller.checkListIsEmpty(fromRange.get(rowIndex))) {
+                if(controller.checkListIsEmpty(fromRange.get(rowIndex)) || controller.checkListIsEmpty(toRange.get(rowIndex))) {
                     difference = 0;
                 }
                 else
@@ -123,6 +122,7 @@ public class NumberRangesViewModel extends AbstractTableModel {
                     fromRange.remove(rowIndex);
                     fromRange.add(rowIndex,newStr);
                 }
+
                 break;
             case 1:
                 newStr = controller.checkList((String)aValue);

@@ -371,7 +371,7 @@ public class DataBase {
 
         String insertSql = "insert into Activation_SIP (id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,Infrastructure," +
                 "TotalNumbers,TypeOfCalls,IdenteficationType,SNBnumber,NumberRange,InternetUser,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,RouterType,Codec," +
-                "WanAddress,LanAddress,IPpbx,SignalIP,MediaIP,SBCport,Date,TotalCalls,ConnectionType,ActivationType,ExpertFirstName,ProjectManagerFirstName) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                "WanAddress,LanAddress,IPpbx,SignalIP,MediaIP,SBCport,Date,TotalCalls,ConnectionType,ActivationType,ExpertFirstName,ProjectManagerFirstName,ActivationFailCounter) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement insertStmt = con.prepareStatement(insertSql);
 
         for (ActivationFormSip activationFormSip : sipActivation) {
@@ -410,6 +410,7 @@ public class DataBase {
             String activationType = ActivationType.Sip.toString();
             String expertFirstName = activationFormSip.getFirstName();
             String projectManagerFirstName = activationFormSip.getProjectManagerFirstName();
+            int ActivationFailCounter = activationFormSip.getNumOfFails();
 
             checkStmt.setInt(1, id);
             ResultSet checkResult = checkStmt.executeQuery();
@@ -458,6 +459,7 @@ public class DataBase {
                 insertStmt.setString(col++, activationType);
                 insertStmt.setString(col++, expertFirstName);
                 insertStmt.setString(col++, projectManagerFirstName);
+                insertStmt.setInt(col++, ActivationFailCounter);
 
                 insertStmt.executeUpdate();
 
@@ -544,8 +546,7 @@ public class DataBase {
         checkStatement.close();
     }
     public void insertingNumberRangeToDataBase(int activation_id) throws SQLException {
-        String checkSql = "select count(*) as count from NumberRange where id=?";
-        PreparedStatement checkStmt = con.prepareStatement(checkSql);
+
 
         String insertSql = "insert into NumberRange (numFrom,numTo,TrunkName,Activation_Id) values(?,?,?,?)";
         PreparedStatement insertStmt = con.prepareStatement(insertSql);
@@ -556,14 +557,6 @@ public class DataBase {
             ArrayList<String> fromRange = numberRanges.getFromRange();
             ArrayList<String> toRange = numberRanges.getToRange();
             String trunkNumber = numberRanges.getTrunk();
-
-            checkStmt.setInt(1, Integer.parseInt(fromRange.get(0).toString()));
-            ResultSet checkResult = checkStmt.executeQuery();
-            checkResult.next();
-
-            int count = checkResult.getInt(1);
-
-            if (count == 0) {
                 int i=0;
                 while (i<fromRange.size() && fromRange != null && !fromRange.get(i).equals("") && toRange != null && !toRange.get(i).equals("")){
                     System.out.println("Inserting people with ID " + trunkNumber);
@@ -575,11 +568,8 @@ public class DataBase {
                     insertStmt.executeUpdate();
                     i++;
                 }
-
-            }
         }
         insertStmt.close();
-        checkStmt.close();
     }
 
     public void loadLoggedUser(int id) throws SQLException {
@@ -633,7 +623,7 @@ public class DataBase {
         sipActivation.clear();
         String selectSql = "select id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
                 "SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,Date,WanAddress,LanAddress,IPpbx,InternetUser,Infrastructure," +
-                "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,ExpertFirstName,ConnectionType,ProjectManagerFirstName,ActivationType,Status from Activation_SIP order by id";
+                "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,ExpertFirstName,ConnectionType,ProjectManagerFirstName,ActivationType,Status,ActivationFailCounter from Activation_SIP order by id";
         Statement selectStatment = con.createStatement();
 
         ResultSet results = selectStatment.executeQuery(selectSql);
@@ -675,10 +665,11 @@ public class DataBase {
             String projectManagerFirstName = results.getString("ProjectManagerFirstName");
             String activationType = results.getString("ActivationType");
             String status = results.getString("Status");
+            int activationFailCounter = results.getInt("ActivationFailCounter");
 
             ActivationFormSip activation = new ActivationFormSip(id,CustomerID,CustomerName,contactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,
                     TypeOfCalls,IdenteficationType,TotalNumbers,SNBnumber,NumberRange,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,date,WanAddress,LanAddress,IPpbx,InternetUser,
-                    Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName,connectionType,projectManagerFirstName,activationType,status);
+                    Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName,connectionType,projectManagerFirstName,activationType,status,activationFailCounter);
             sipActivation.add(activation);
         }
         selectStatment.close();
@@ -824,15 +815,11 @@ public class DataBase {
     public void updateNumberRangeToDataBase(int activation_id) throws SQLException {
 
 
-        String selectSql = "select id from NumberRange where id=?";
-        PreparedStatement checkStmt = con.prepareStatement(selectSql);
 
-        String deleteSql = "delete from NumberRange where id=?";
+
+        String deleteSql = "delete from NumberRange where activation_id=?";
         PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
 
-        checkStmt.setInt(1, activation_id);
-        ResultSet checkResult = checkStmt.executeQuery();
-        checkResult.next();
         deleteStmt.setInt(1, activation_id);
         deleteStmt.executeUpdate();
 
@@ -851,15 +838,15 @@ public class DataBase {
             ArrayList<String> toRange = numberRanges.getToRange();
             String trunkNumber = numberRanges.getTrunk();
 
-            checkStmt.setInt(1, Integer.parseInt(fromRange.get(0).toString()));
+/*            checkStmt.setInt(1, Integer.parseInt(fromRange.get(0).toString()));
             checkResult = checkStmt.executeQuery();
-            checkResult.next();
+            checkResult.next();*/
 
            // int count = checkResult.getInt(1);
 
            // if (count == 0) {
                 int i=0;
-                while (i<fromRange.size() && fromRange != null && !fromRange.get(i).equals("") && toRange != null && !toRange.get(i).equals("")){
+                while (i<fromRange.size() && fromRange != null && toRange != null && !fromRange.get(i).equals("")  && !toRange.get(i).equals("")){
                     System.out.println("Inserting people with ID " + activation_id);
                     int col = 1;
                     insertStmt.setString(col++, fromRange.get(i));
@@ -873,6 +860,36 @@ public class DataBase {
             }
         //}
         insertStmt.close();
-        checkStmt.close();
     }
+
+    public void failActivation(int activationId) throws SQLException {
+
+        String updateSql = "update Activation_SIP set ActivationFailCounter=? where id=?";
+        PreparedStatement updateStmt = con.prepareStatement(updateSql);
+
+        for (ActivationFormSip activationFormSip : sipActivation) {
+            if (activationFormSip.getId() == activationId) {
+                int numOfFails = activationFormSip.getNumOfFails();
+                numOfFails++;
+
+                System.out.println("Updating FailActivation with ID " + activationId);
+                int col = 1;
+
+                updateStmt.setInt(col++, numOfFails);
+                updateStmt.setInt(col++, activationId);
+                updateStmt.executeUpdate();
+            }
+        }
+        updateStmt.close();
+
+    }
+
+    public void getNumOfFails(int id){
+        sipActivation.get(id).getNumOfFails();
+    }
+
+    public void clearNumberRange(){
+        numberRanges.removeAll(numberRanges);
+    }
+
 }

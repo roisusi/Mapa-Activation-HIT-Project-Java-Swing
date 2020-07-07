@@ -132,6 +132,7 @@ public class HomePageMenu extends JPanel {
             {
                 if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
                     ActivationsMoves.SessionId.remove();
+                activationFormSIPDialog.failActivation.setEnabled(false);
                 activationFormSIPDialog.setVisible(true);
             }
 
@@ -168,6 +169,11 @@ public class HomePageMenu extends JPanel {
                 }
             controller.disconnect();
             }
+
+            @Override
+            public void formUpdateFails() {
+                getDataFromSipListener.Update();
+            }
         });
 
         //-- Move Data From Edit to Calender --//
@@ -180,6 +186,11 @@ public class HomePageMenu extends JPanel {
             @Override
             public void updateActivation(FormEvent e) {
                 getDataFromSipListener.updateActivation(e);
+            }
+
+            @Override
+            public void Update() {
+                getDataFromSipListener.Update();
             }
         });
 

@@ -27,11 +27,9 @@ public class NumberRangeController {
     public void removeEmptyCells(ArrayList from,ArrayList to){
         numberRanges.removeEmptyCells(from,to);
     }
-    public int maxSize(int size) {
-    return numberRanges.maxSize(size);
-    }
-    public void FNRrun(){
 
+    public void FNRtoFileSip(ArrayList from , ArrayList to){
+        numberRanges.FNRtoFileSip(from,to);
     }
     public boolean trueNumberIsraelPhoneCheck(String range){
         return numberRanges.trueNumberIsraelPhoneCheck(range);
@@ -49,7 +47,7 @@ public class NumberRangeController {
     }
 
     public void clear(){
-        numberRanges.clear();
+        numberRanges.clearList();
     }
 
     public void setFromRange (ArrayList from){
