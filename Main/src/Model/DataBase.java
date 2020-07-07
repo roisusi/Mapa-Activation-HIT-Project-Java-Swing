@@ -274,7 +274,7 @@ public class DataBase {
 
         String updateSql = "update Activation_SIP set CustomerID=?,CustomerName=?,ContactName=?,CustomerPhoneNumber=?,CustomerEmail=?,TechnicanName=?,TechnicanPhone=?,SwitchType=?,Infrastructure=?," +
                 "TotalNumbers=?,TypeOfCalls=?,IdenteficationType=?,SNBnumber=?,NumberRange=?,InternetUser=?,AreaCode=?,EmergancyCity=?,CallOutCountry=?,CRnumber=?,TrunkNumber=?,RouterType=?,Codec=?," +
-                "WanAddress=?,LanAddress=?,IPpbx=?,SignalIP=?,MediaIP=?,SBCport=?,Date=?,TotalCalls=?,ConnectionType=?,ActivationType=?,ExpertFirstName=?,ProjectManagerFirstName=? where id=?";
+                "WanAddress=?,LanAddress=?,IPpbx=?,SignalIP=?,MediaIP=?,SBCport=?,Date=?,TotalCalls=?,ConnectionType=?,ActivationType=?,Status=?,ExpertFirstName=?,ProjectManagerFirstName=? where id=?";
 
         PreparedStatement updateStmt = con.prepareStatement(updateSql);
         for (ActivationFormSip activationFormSip : sipActivation) {
@@ -311,6 +311,7 @@ public class DataBase {
                 int totalCalls = activationFormSip.getTotalCalls();
                 String connectionType = activationFormSip.getConnectionType();
                 String activationType = activationFormSip.getActivationType();
+                String status = activationFormSip.getStatus();
                 String expertFirstName = activationFormSip.getFirstName();
                 String projectManagerFirstName = activationFormSip.getProjectManagerFirstName();
 
@@ -353,6 +354,7 @@ public class DataBase {
                 updateStmt.setInt(col++, totalCalls);
                 updateStmt.setString(col++, connectionType);
                 updateStmt.setString(col++, activationType);
+                updateStmt.setString(col++, status);
                 updateStmt.setString(col++, expertFirstName);
                 updateStmt.setString(col++, projectManagerFirstName);
                 updateStmt.setInt(col++, id);
@@ -419,7 +421,7 @@ public class DataBase {
             int count = checkResult.getInt(1);
 
             if (count == 0) {
-                System.out.println("Inserting people with ID " + id);
+                System.out.println("Inserting Activation with ID " + id);
                 int col = 1;
                 //-- get ID --//
                 ActivationsMoves.SessionId.setNewID(id);
@@ -816,26 +818,26 @@ public class DataBase {
 
 
 
-
-        String deleteSql = "delete from NumberRange where activation_id=?";
-        PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
-
-        deleteStmt.setInt(1, activation_id);
-        deleteStmt.executeUpdate();
-
-        deleteStmt.close();
+        for (NumberRanges numberRanges : numberRanges){
+            if(numberRanges.getFromRange() != null) {
+                String deleteSql = "delete from NumberRange where activation_id=?";
+                PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
+                deleteStmt.setInt(1, activation_id);
+                deleteStmt.executeUpdate();
+                deleteStmt.close();
+            }
 
       /*  String checkSql = "select * from NumberRange where id=?";
         checkStmt = con.prepareStatement(checkSql);*/
 
         String insertSql = "insert into NumberRange (numFrom,numTo,TrunkName,Activation_Id) values(?,?,?,?)";
         PreparedStatement insertStmt = con.prepareStatement(insertSql);
-
+        int i=0;
         if (activation_id == 0)
             activation_id = ActivationsMoves.SessionId.getNewID();
-        for (NumberRanges numberRanges : numberRanges){
-            ArrayList<String> fromRange = numberRanges.getFromRange();
-            ArrayList<String> toRange = numberRanges.getToRange();
+
+/*            ArrayList<String> fromRange = numberRanges.getFromRange();
+            ArrayList<String> toRange = numberRanges.getToRange();*/
             String trunkNumber = numberRanges.getTrunk();
 
 /*            checkStmt.setInt(1, Integer.parseInt(fromRange.get(0).toString()));
@@ -843,23 +845,25 @@ public class DataBase {
             checkResult.next();*/
 
            // int count = checkResult.getInt(1);
-
+            // &&
            // if (count == 0) {
-                int i=0;
-                while (i<fromRange.size() && fromRange != null && toRange != null && !fromRange.get(i).equals("")  && !toRange.get(i).equals("")){
-                    System.out.println("Inserting people with ID " + activation_id);
+            //&& !fromRange.get(i).equals("")  && !toRange.get(i).equals("")
+            //fromRange != null && toRange != null &&
+
+                while (numberRanges.getFromRange() != null && i<numberRanges.getFromRange().size() ){
+                    System.out.println("Inserting Numbers with Activation ID " + activation_id);
                     int col = 1;
-                    insertStmt.setString(col++, fromRange.get(i));
-                    insertStmt.setString(col++, toRange.get(i));
+                    insertStmt.setString(col++, numberRanges.getFromRange().get(i));
+                    insertStmt.setString(col++,  numberRanges.getToRange().get(i));
                     insertStmt.setString(col++, trunkNumber);
                     insertStmt.setInt(col++,activation_id);
                     insertStmt.executeUpdate();
                     i++;
                 }
-
+            insertStmt.close();
             }
         //}
-        insertStmt.close();
+
     }
 
     public void failActivation(int activationId) throws SQLException {

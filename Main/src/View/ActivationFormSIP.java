@@ -1165,7 +1165,7 @@ public class ActivationFormSIP extends JDialog {
         String signalAddressEv;
         String mediaAddressEv;
         int sbcPortEv;
-        String firstName;
+        String expertName;
         String connectionTypeEv;
         String projectManagerEv;
         int idSession = ActivationsMoves.FormId.getActivationId();
@@ -1220,17 +1220,19 @@ public class ActivationFormSIP extends JDialog {
                 CODECEv = (String)CODEC.getSelectedItem();
                 signalAddressEv = (String)signalAddress.getSelectedItem();
                 mediaAddressEv = (String)mediaAddress.getSelectedItem();
-                firstName = "";
+                expertName = ActivationsMoves.SessionId.getExpertName();
                 projectManagerEv = ActivationsMoves.SessionId.getUserName();
+                String status = "לא";
 
                 FormEvent evForm;
                 FormEvent evNumbers;
 
                 if (inedxOfButton==0){
                     //--Create New --//
+                    expertName="";
                     evForm= new FormEvent(this,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
                         totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
-                        infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv,numofFailsEv);
+                        infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,expertName,connectionTypeEv,projectManagerEv,numofFailsEv,status);
 
                     evNumbers = new FormEvent(this,ActivationsMoves.SessionId.getFromRange(),ActivationsMoves.SessionId.getToRange(),trunkNumberEv );
 
@@ -1241,7 +1243,7 @@ public class ActivationFormSIP extends JDialog {
 
                     evForm = new FormEvent(this,idSession,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
                             totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
-                            infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv);
+                            infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,expertName,connectionTypeEv,projectManagerEv,status);
 
                     evNumbers = new FormEvent(this,ActivationsMoves.SessionId.getFromRange(),ActivationsMoves.SessionId.getToRange(),trunkNumberEv);
                 }

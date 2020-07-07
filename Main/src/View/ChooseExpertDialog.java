@@ -16,7 +16,7 @@ public class ChooseExpertDialog extends JDialog {
     private JList expertName;
     private Controller controller = new Controller();
     private String getSelectedName;
-    private List<Users> users;
+    //private List<Users> users;
     private UserSetExpertListener userSetExpertListener;
     private int rowFromCalender;
 
@@ -41,10 +41,10 @@ public class ChooseExpertDialog extends JDialog {
         chooseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                users = new LinkedList<Users>();
+                //users = new LinkedList<Users>();
                 getSelectedName = (String)expertModel.getElementAt(expertName.getSelectedIndex());
                 userSetExpertListener.UserSetExpertListener(rowFromCalender,getSelectedName);// news where to add the name (Row)
-                System.out.println("ChooseExpert I got Applications : " + controller.getSipActivation().size());
+                ActivationsMoves.SessionId.setExpertName(getSelectedName);
                 dispose();
             }
         });
