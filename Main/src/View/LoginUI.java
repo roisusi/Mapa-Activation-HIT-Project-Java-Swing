@@ -72,7 +72,7 @@ public class LoginUI extends JDialog {
             }
         });
 
-        //controller.disconnect();
+        controller.disconnect();
         // -- Action to Cancel Button -- //
         cancelButton.addActionListener(new ActionListener() {
             @Override

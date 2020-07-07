@@ -18,6 +18,12 @@ public class UsersManagerController {
         loginList = new LinkedList<Login>();
     }
 
+    public Login getLoginUser() { return db.getLoginUser(); }
+
+    public Users getUserFirstNameLogged(){
+        return db.getLoggedUser();
+    }
+
     public List<Login> getSystemUsers() {
         return loginList;
     }
@@ -32,13 +38,6 @@ public class UsersManagerController {
 
     public void disconnect() { db.disconnect(); }
 
-    public Login getLoginUser() { return db.getLoginUser(); }
-
-    public Users getUserFirstNameLogged(){
-        return db.getLoggedUser();
-    }
-
-    //changed//
     public boolean isUserAlreadyExists(Users user) {
         boolean flag = false;
 
@@ -50,7 +49,6 @@ public class UsersManagerController {
         return flag;
     }
 
-    //changed//
     public boolean isLoginUserAlreadyExists(Login login) {
         boolean flag = false;
 
@@ -63,13 +61,13 @@ public class UsersManagerController {
     }
 
     public void insertingUserToDataBase(Users user, int id) throws SQLException {
-        db.insertingUserToDataBase(user, id);
-    }
-    public void insertingLoginUserToDataBase(Login login) throws SQLException {
-        db.insertingLoginUserToDataBase(login);
+        db.insertingUserToDataBase(user, id, usersList);
     }
 
-    //changed//
+    public void insertingLoginUserToDataBase(Login login) throws SQLException {
+        db.insertingLoginUserToDataBase(login, loginList);
+    }
+
     public boolean loginUserAuthentication(String username, String password) {
         boolean flag = false;
 
@@ -84,7 +82,6 @@ public class UsersManagerController {
         return flag;
     };
 
-    //changed//
     public void loadLoggedUser(int id) {
 
         for(Users user : usersList)
@@ -107,32 +104,24 @@ public class UsersManagerController {
         }
     }
 
-    //changed//
     public void loadUsersFromDataBaseToList() throws SQLException {
         usersList = db.loadUsersFromDataBaseToList();
     }
 
-    //changed//
     public void loadSystemUsersFromDataBaseToList() throws SQLException {
         loginList = db.loadSystemUsersFromDataBaseToList();
     }
 
-    //changed//
-    public void removeUser(int row) { db.removeUserFromList(row); }
-
-    /*public void updateSystemUser(ArrayList rowsList, ArrayList columnsList, ArrayList valuesList) throws SQLException {
-        db.updateSystemUser(rowsList, columnsList, valuesList);
+    public void removeUser(int row) {
+        db.removeUserFromList(row);
+        usersList.remove(row);
+        loginList.remove(row);
     }
-    public void updateLoginUser(ArrayList rowsList, ArrayList columnsList, ArrayList valuesList) throws SQLException {
-        db.updateLoginUser(rowsList, columnsList, valuesList);
-    }*/
 
-    //changed//
     public void updateSystemUsers(List usersList) throws SQLException {
         db.updateSystemUser(usersList);
     }
 
-    //changed//
     public void updateLoginUsers(List loginList) throws SQLException {
         db.updateLoginUser(loginList);
     }

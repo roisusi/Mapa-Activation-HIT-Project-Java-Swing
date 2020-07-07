@@ -481,7 +481,7 @@ public class DataBase {
         insertStmt.close();
         checkStmt.close();
     }
-    public void insertingUserToDataBase(Users user, int userNameId) throws SQLException {
+    public void insertingUserToDataBase(Users user, int userNameId, List<Users> usersList) throws SQLException {
         int lastMinId = 0;
         String checkSql = "select count(*) as count from Users where id = ?;";
         PreparedStatement checkStatement = con.prepareStatement(checkSql);
@@ -489,7 +489,7 @@ public class DataBase {
         String insertSql = "insert into Users (id, FirstName, LastName, Email, PhoneNumber, Type, UserNameId) values (?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement insertStatement = con.prepareStatement(insertSql);
 
-        for (Users systemUser: systemUsers) {
+        for (Users systemUser: usersList) {
             int id = systemUser.getId();
 
             if(id - lastMinId > 1) {
@@ -522,7 +522,7 @@ public class DataBase {
         insertStatement.close();
         checkStatement.close();
     }
-    public void insertingLoginUserToDataBase(Login login) throws SQLException {
+    public void insertingLoginUserToDataBase(Login login, List<Login> loginList) throws SQLException {
         int lastMinId = 0;
         String checkSql = "select count(*) as count from SystemUsers where id = ?;";
         PreparedStatement checkStatement = con.prepareStatement(checkSql);
@@ -530,7 +530,7 @@ public class DataBase {
         String insertSql = "insert into SystemUsers (id, Username, Password) values (?, ?, ?);";
         PreparedStatement insertStatement = con.prepareStatement(insertSql);
 
-        for (Login loginUser: users) {
+        for (Login loginUser: loginList) {
             int id = loginUser.getId();
 
             if(id - lastMinId > 1) {
@@ -753,7 +753,6 @@ public class DataBase {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        systemUsers.remove(row);
     }
     public void clearListofNumberRange(){
         numberRanges.clear();

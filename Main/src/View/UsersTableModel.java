@@ -70,33 +70,43 @@ public class UsersTableModel extends AbstractTableModel {
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
         Users user = userList.get(rowIndex);
         Login loginUser = null;
+        int index = 0;
+        int size = loginList.size();
 
-        for(Login login: loginList) {
-            if(login.getId() == user.getUserNameId())
-                loginUser = login;
+        for (int i = 0; i < size; i++)
+        {
+            if(loginList.get(i).getId() == user.getUserNameId())
+                index = i;
         }
 
         switch (columnIndex){
             case 0:
-                user.setFirstName(value.toString());
+                userList.get(rowIndex).setFirstName(value.toString());
+                //user.setFirstName(value.toString());
                 break;
             case 1:
-                user.setLastName(value.toString());
+                userList.get(rowIndex).setLastName(value.toString());
+                //user.setLastName(value.toString());
                 break;
             case 2:
-                user.setEmail(value.toString());
+                userList.get(rowIndex).setEmail(value.toString());
+                //user.setEmail(value.toString());
                 break;
             case 3:
-                user.setPhoneNumber(value.toString());
+                userList.get(rowIndex).setPhoneNumber(value.toString());
+                //user.setPhoneNumber(value.toString());
                 break;
             case 4:
-                user.setUsersType(UsersType.valueOf(value.toString()));
+                userList.get(rowIndex).setUsersType(UsersType.valueOf(value.toString()));
+                //user.setUsersType(UsersType.valueOf(value.toString()));
                 break;
             case 5:
-                loginUser.setUserName(value.toString());
+                loginList.get(index).setUserName(value.toString());
+                //loginUser.setUserName(value.toString());
                 break;
             case 6:
-                loginUser.setPassword(value.toString());
+                loginList.get(index).setPassword(value.toString());
+                //loginUser.setPassword(value.toString());
                 break;
         }
     }
