@@ -17,27 +17,22 @@ public class ActivationFormSip extends ActivationForm {
     private String connectionType;
     private String status;
 
-
-/*    public ActivationFormSip(String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String firstName, String projectManagerFirstName, String activationType) {
-        super(customerID, customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker, firstName, projectManagerFirstName, activationType,s);
-    }*/
-
     //update
     public ActivationFormSip(int id, String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber,
-                             String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber,String numberRange, String areaCode, String emergencyCity,
+                             String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String areaCode, String emergencyCity,
                              String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress,String internetUser,
                              String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType, String projectManagerFirstName,
-                             String activationType , String status , int numofFails) {
+                             String activationType , String status , int numofFails,String lastUpdate) {
 
-        this(customerID,  customerName,  contactName,  customerPhoneNumber,  customerEmail,  customerTechName,  customerTechPhoneNumber,  pbxType,  typeOfCalls,  identificationType,  totalNumbers,  snbNumber,  numberRange,
+        this(customerID,  customerName,  contactName,  customerPhoneNumber,  customerEmail,  customerTechName,  customerTechPhoneNumber,  pbxType,  typeOfCalls,  identificationType,  totalNumbers,  snbNumber,
                 areaCode,  emergencyCity,  callOutSideCountry,  crNumber,  trunkNumber,  datePicker,  wanAddress,  lanAddress,  ipAddress,  internetUser,  infrastructure,  routerType,  CODEC,
-                totalCalls,  signalAddress,  mediaAddress,  sbcPort,  firstName,  connectionType,  projectManagerFirstName, activationType,status,numofFails);
+                totalCalls,  signalAddress,  mediaAddress,  sbcPort,  firstName,  connectionType,  projectManagerFirstName, activationType,status,numofFails,lastUpdate);
         this.id = id;
     }
 
     //new
-    public ActivationFormSip(String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType, String projectManagerFirstName,String activationType,String status,int numofFails) {
-        super(customerID, customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, numberRange, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker, firstName, projectManagerFirstName,activationType,numofFails);
+    public ActivationFormSip(String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType, String projectManagerFirstName,String activationType,String status,int numofFails,String lastUpdate) {
+        super(customerID, customerName, contactName, customerPhoneNumber, customerEmail, customerTechName, customerTechPhoneNumber, pbxType, typeOfCalls, identificationType, totalNumbers, snbNumber, areaCode, emergencyCity, callOutSideCountry, crNumber, trunkNumber, datePicker, firstName, projectManagerFirstName,activationType,numofFails,lastUpdate);
         this.wanAddress = wanAddress;
         this.lanAddress = lanAddress;
         this.ipAddress = ipAddress;
@@ -125,10 +120,6 @@ public class ActivationFormSip extends ActivationForm {
         return super.getSnbNumber();
     }
     @Override
-    public String getNumberRange() {
-        return super.getNumberRange();
-    }
-    @Override
     public String getAreaCode() {
         return super.getAreaCode();
     }
@@ -211,11 +202,6 @@ public class ActivationFormSip extends ActivationForm {
     @Override
     public void setSnbNumber(String snbNumber) {
         super.setSnbNumber(snbNumber);
-    }
-
-    @Override
-    public void setNumberRange(String numberRange) {
-        super.setNumberRange(numberRange);
     }
 
     @Override
