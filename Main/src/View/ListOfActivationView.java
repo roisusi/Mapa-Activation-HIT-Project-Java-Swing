@@ -341,12 +341,40 @@ public class ListOfActivationView extends JDialog {
 
                             @Override
                             public void formEventOccurredNumber(FormEvent e) {
+                                controller.clearNumberRange();
                                 controller.addNumberRange(e);
                                 try {
                                     controller.updateNumberRangeToDataBase(ActivationsMoves.FormId.getActivationId());
                                 } catch (SQLException throwables) {
                                     throwables.printStackTrace();
                                 }
+                            }
+
+                            @Override
+                            public void formUpdateFails() {
+
+                            }
+                        });
+                        activationFormSIP.failActivation.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                try {
+                                    controller.connect();
+                                } catch (Exception exception) {
+                                    exception.printStackTrace();
+                                }
+                                try {
+                                    controller.failActivation(ActivationsMoves.FormId.getActivationId());
+                                    controller.loadCalenderSipActivationToList();
+                                } catch (SQLException throwables) {
+                                    throwables.printStackTrace();
+                                }
+                                String fails = "הבקשה בוצע מספר ההכשלות הוא : " + controller.getSipActivation().get(selectedActivation).getNumOfFails();
+                                JOptionPane.showMessageDialog(ListOfActivationView.this, fails , "Info", JOptionPane.INFORMATION_MESSAGE);
+                                controller.disconnect();
+                                getDataFromSipListener.Update();
+
+
                             }
                         });
                         System.out.println(ActivationsMoves.FormId.getActivationId());

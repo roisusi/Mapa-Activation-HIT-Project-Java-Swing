@@ -30,19 +30,8 @@ public class ActivationsMoves {
         public static String getUserName(){
             return SessionId.userName;
         }
-        public static String isApproved(String isApproved){
-            return SessionId.isApproved = isApproved;
-        }
-        public static String isApproved(){
-            return SessionId.isApproved;
-        }
 
         public static int getNewID() {
-            return newID;
-        }
-        public static int removeID() {
-            if (newID == 1)
-                return newID--;
             return newID;
         }
 
@@ -66,20 +55,13 @@ public class ActivationsMoves {
             SessionId.toRange = toRange;
         }
 
-        public static ArrayList getDifference() {
-            return difference;
-        }
-
-        public static void setDifference(ArrayList difference) {
-            SessionId.difference = difference;
-        }
-
         public static void remove(){
             fromRange.removeAll(fromRange);
             toRange.removeAll(toRange);
+            fromRange = null;
+            toRange = null;
+
         }
-
-
     }
 
     public static class FormId{
@@ -93,28 +75,6 @@ public class ActivationsMoves {
         }
         public static void setActivationId(int activationId) {
             FormId.activationId = activationId;
-        }
-    }
-
-    public static class LoadActivationFromList{
-        private static List<ActivationFormSip> activationFormSips;
-        private static Controller controller;
-
-        public static List<ActivationFormSip> getActivationSip(){
-            controller = new Controller();
-            try {
-                controller.connect();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                controller.loadCalenderSipActivationToList();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            activationFormSips = controller.getSipActivation();
-            controller.disconnect();
-            return activationFormSips;
         }
     }
 }

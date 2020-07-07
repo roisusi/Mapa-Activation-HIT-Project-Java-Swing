@@ -25,19 +25,10 @@ public abstract class ActivationForm  {
     protected String firstName;
     protected String projectManagerFirstName;
     protected String activationType;
-
-
-/*    public ActivationForm(int id ,String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker,String firstName,String projectManagerFirstName,String activationType) {
-        this(customerID,customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,firstName,projectManagerFirstName,activationType);
-        this.id = id;
-
-    }*/
-
-    public ActivationForm() {
-    }
+    protected int numOfFails;
 
     //-- Without id For Saving --//
-    public ActivationForm(String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker,String firstName, String projectManagerFirstName,String activationType) {
+    public ActivationForm(String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker,String firstName, String projectManagerFirstName,String activationType , int numOfFails) {
         this.customerID = customerID;
         this.customerName = customerName;
         this.contactName = contactName;
@@ -60,6 +51,7 @@ public abstract class ActivationForm  {
         this.firstName = firstName;
         this.projectManagerFirstName = projectManagerFirstName;
         this.activationType = activationType;
+        this.numOfFails = numOfFails;
     }
 
     public String getActivationType() {
@@ -153,6 +145,10 @@ public abstract class ActivationForm  {
     public String getDatePicker() {
         return datePicker;
     }
+    public int getNumOfFails() {
+        return numOfFails;
+    }
+
 
     public void setCustomerID(String customerID) {
         this.customerID = customerID;
@@ -237,4 +233,9 @@ public abstract class ActivationForm  {
     public void setActivationType(String activationType) {
         this.activationType = activationType;
     }
+    public void setNumOfFails(int numOfFails) {
+        this.numOfFails = numOfFails;
+    }
+
+
 }

@@ -39,11 +39,6 @@ public class NumberRangesView extends JDialog implements ActionListener {
             e.printStackTrace();
         }
         try {
-/*            if (numberRangeController != null) {
-                from.removeAll(from);
-                to.removeAll(to);
-                numberRangeController.clear();
-            }*/
             if (act != 0)
                 controller.loadNumberRangeFromDataBaseToList(act);
         } catch (SQLException throwables) {
@@ -51,29 +46,21 @@ public class NumberRangesView extends JDialog implements ActionListener {
         }
 
         controller.disconnect();
-        if (controller.getNumberRanges().size() != 0) {
-            numberRangeController = new NumberRangeController(controller.getNumberRanges().get(0).getFromRange(), controller.getNumberRanges().get(0).getToRange());
-            from = numberRangeController.getFrom();
-            to = numberRangeController.getTo();
-        }
-        else if (numberRangeController == null && ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null) {
+
+        if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null){
             from = ActivationsMoves.SessionId.getFromRange();
-            to = ActivationsMoves.SessionId.getFromRange();
-
+            to = ActivationsMoves.SessionId.getToRange();
         }
-/*        else if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getFromRange() != null ){
-            from = ActivationsMoves.SessionId.getFromRange();
-            to = ActivationsMoves.SessionId.getFromRange();
-        }*/
-
-
+        else if (controller.getNumberRanges().size() !=0){
+            from = controller.getNumberRanges().get(0).getFromRange();
+            to = controller.getNumberRanges().get(0).getToRange();
+        }
 
         numberRangeController = new NumberRangeController(from, to);
         tableModel = new NumberRangesViewModel(from,to);
         table = new JTable(tableModel);
         tableModel.showEditRows();
         tableModel.fireTableDataChanged();
-
 
         //-- Buttons --//
         adding = new JButton();
@@ -104,14 +91,14 @@ public class NumberRangesView extends JDialog implements ActionListener {
                 int i = 0;
                 from = tableModel.fromTableList();
                 to = tableModel.toTableList();
-                //numberRangeController = new NumberRangeController(from,to);
+                numberRangeController = new NumberRangeController(from,to);
                 tableModel.removeViewCells();
                 numberRangeController.removeEmptyCells(from,to);
-                tableModel.fireTableDataChanged();
                 numberRangeController.setFromRange(from);
                 numberRangeController.setToRange(to);
                 ActivationsMoves.SessionId.setFromRange(from);
                 ActivationsMoves.SessionId.setToRange(to);
+                tableModel.fireTableDataChanged();
                 dispose();
             }
         });
@@ -122,6 +109,7 @@ public class NumberRangesView extends JDialog implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 numberRangeController = new NumberRangeController(from,to);
                 numberRangeController.removeEmptyCells(from,to);
+                numberRangeController.FNRtoFileSip(from,to);
             }
         });
 
@@ -172,7 +160,13 @@ public class NumberRangesView extends JDialog implements ActionListener {
     }
     public void delNumberRage(){
         int row = table.getSelectedRow();
-        tableModel.removeRows(row);
-        tableModel.fireTableDataChanged();
+        if (row == -1){
+            JOptionPane.showMessageDialog(NumberRangesView.this, "נא בחר שורה למחירה", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        else {
+            tableModel.removeRows(row);
+            tableModel.fireTableRowsDeleted(row,row);
+            //tableModel.fireTableDataChanged();
+        }
     }
 }

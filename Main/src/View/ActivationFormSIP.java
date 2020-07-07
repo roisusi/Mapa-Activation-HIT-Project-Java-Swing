@@ -73,10 +73,10 @@ public class ActivationFormSIP extends JDialog {
     private JLabel welcom;
     private JButton addToSchedule;
     protected JButton editToSchedule;
-    private JButton failActivation;
-    private JButton rangeNumbers;
+    protected JButton failActivation;
     private JButton activationToFile;
     protected JButton numberRangeButton;
+    private Controller controller;
 
     //-- Labels --//
     private JLabel customerIDLabel = new JLabel("מספר לקוח : ");
@@ -117,13 +117,10 @@ public class ActivationFormSIP extends JDialog {
     private LoginUI loginUI;
     private int inedxOfButton;
     private DateLabelFormatter dateLabelFormatter;
-    private NumberRanges numberRanges;
     private NumberRangesView numberRangesView;
-    private NumberRangeController numberRangeController;
-    private Controller controller;
 
 
-    public ActivationFormSIP(JPanel parent,int inedxOfButton,int id) {
+    public ActivationFormSIP(JPanel parent,int inedxOfButton,int activationId) {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createTitledBorder("טופס התקנה"));
@@ -151,6 +148,9 @@ public class ActivationFormSIP extends JDialog {
         welcom = new JLabel("טופס הפעלת SIP");
         this.inedxOfButton = inedxOfButton;
         numberRangeButton = new JButton("הוסף טווחים");
+
+        controller = new Controller();
+
 
 
         //-- Spinner --//
@@ -283,7 +283,6 @@ public class ActivationFormSIP extends JDialog {
         addToSchedule = new JButton("הוסף הפעלה");
         editToSchedule = new JButton("עדכן הפעלה");
         failActivation = new JButton("הכשל הפעלה");
-        rangeNumbers = new JButton("הוסף מספרים");
         activationToFile = new JButton("הוצא נתונים");
 
 
@@ -342,10 +341,18 @@ public class ActivationFormSIP extends JDialog {
         numberRangeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                numberRangesView = new NumberRangesView(mainPanel,id);
+                numberRangesView = new NumberRangesView(mainPanel,activationId);
                 numberRangesView.setVisible(true);
             }
         });
+        failActivation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+            }
+        });
+
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -355,6 +362,9 @@ public class ActivationFormSIP extends JDialog {
                     ActivationsMoves.SessionId.remove();
             }
         });
+
+
+
         FormControl();
         setModal(true);
         setSize(750, 700); // Size the Frame
@@ -1101,7 +1111,6 @@ public class ActivationFormSIP extends JDialog {
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         buttonsPanel.add(activationToFile);
         buttonsPanel.add(failActivation);
-        buttonsPanel.add(rangeNumbers);
         setAddOrEditBotton(inedxOfButton);
 
 
@@ -1191,6 +1200,7 @@ public class ActivationFormSIP extends JDialog {
                 numberRangeEv = numberRange.getText();
                 areaCodeEv = (String)areaCode.getSelectedItem();
                 emergencyCityEv = emergencyCity.getText();
+                int numofFailsEv = 1;
 
                 //-- get Radio from callOutSideCountry --//
                 String getcallOutSideCountryChoice = callOutSideCountry.getSelection().getActionCommand();
@@ -1212,15 +1222,15 @@ public class ActivationFormSIP extends JDialog {
                 mediaAddressEv = (String)mediaAddress.getSelectedItem();
                 firstName = "";
                 projectManagerEv = ActivationsMoves.SessionId.getUserName();
+
                 FormEvent evForm;
                 FormEvent evNumbers;
-
 
                 if (inedxOfButton==0){
                     //--Create New --//
                     evForm= new FormEvent(this,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
                         totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
-                        infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv);
+                        infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv,numofFailsEv);
 
                     evNumbers = new FormEvent(this,ActivationsMoves.SessionId.getFromRange(),ActivationsMoves.SessionId.getToRange(),trunkNumberEv );
 

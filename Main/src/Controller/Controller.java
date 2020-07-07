@@ -88,9 +88,10 @@ public class Controller {
         String projectManagerFirstName= ev.getProjectManagerFirstName();
         String activationType;
         activationType = ActivationType.Sip.toString();
+        int activationFailCounter = ev.getNumofFails();
 
         ActivationFormSip activationFormSip= new ActivationFormSip(customerID, customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,
-            numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType,"לא");
+            numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType,"לא",activationFailCounter);
         db.addActivationSipToList(activationFormSip);
     }
     public void addFirstNameToActivationList(int row, String firstName){
@@ -149,10 +150,11 @@ public class Controller {
         String activationType;
         activationType = ActivationType.Sip.toString();
         int id = ActivationsMoves.FormId.getActivationId();
+        int numOfFail = ev.getNumofFails();
 
 
         ActivationFormSip activationFormSip= new ActivationFormSip(id,customerID, customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,
-                numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType,"לא");
+                numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType,"לא",numOfFail);
         db.updateActivationSipToList(activationFormSip);
 
     }
@@ -211,6 +213,18 @@ public class Controller {
     }
     public void updateNumberRangeToDataBase(int activation_id) throws SQLException {
         db.updateNumberRangeToDataBase(activation_id);
+    }
+
+    public void failActivation(int activationId) throws SQLException {
+        db.failActivation(activationId);
+    }
+
+    public void getNumOfFails(int id){
+        db.getNumOfFails(id);
+    }
+
+    public void clearNumberRange(){
+        db.clearNumberRange();
     }
 
 }
