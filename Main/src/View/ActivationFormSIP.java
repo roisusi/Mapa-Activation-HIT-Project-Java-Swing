@@ -1,8 +1,6 @@
 package View;
 
-import Controller.Controller;
-import Controller.NumberRangeController;
-import Model.NumberRanges;
+import Controller.*;
 import com.mysql.jdbc.StringUtils;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.UtilDateModel;
@@ -12,12 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Observable;
 
 public class ActivationFormSIP extends JDialog {
     private JPanel formPanelTop = new JPanel();
@@ -74,7 +69,7 @@ public class ActivationFormSIP extends JDialog {
     private JButton addToSchedule;
     protected JButton editToSchedule;
     protected JButton failActivation;
-    private JButton activationToFile;
+    protected JButton activationToFile;
     protected JButton numberRangeButton;
     private Controller controller;
 
@@ -351,6 +346,23 @@ public class ActivationFormSIP extends JDialog {
 
             }
         });
+        activationToFile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String wan = ChainIpAddress(wanAddressA.getText(),wanAddressB.getText(),wanAddressC.getText(),wanAddressD.getText());
+                String lan = ChainIpAddress(lanAddressA.getText(),lanAddressB.getText(),lanAddressC.getText(),lanAddressD.getText());
+                String ipExternal = ChainIpAddress(ipAddressA.getText(),ipAddressB.getText(),ipAddressC.getText(),ipAddressD.getText());
+                //-- get Radio from callOutSideCountry --//
+                String callOutSideCountryEv;
+                String getcallOutSideCountryChoice = callOutSideCountry.getSelection().getActionCommand();
+                if (getcallOutSideCountryChoice.equals("YES"))
+                    callOutSideCountryEv = "כן";
+                else
+                    callOutSideCountryEv = "לא";
+                ExpertToFileController controller = new ExpertToFileController(trunkNumber.getText(),(Integer)sbcPort.getValue(),Integer.parseInt(totalCalls.getText()),snbNumber.getText(),
+                        wan,lan,ipExternal,(String)signalAddress.getSelectedItem(),(String)mediaAddress.getSelectedItem(),(String)areaCode.getSelectedItem(),emergencyCity.getText(),crNumber.getText(),callOutSideCountryEv);
+            }
+        });
 
 
         addWindowListener(new WindowAdapter() {
@@ -372,6 +384,10 @@ public class ActivationFormSIP extends JDialog {
     }
     public void setFormListener(FormListener listener) {
         this.formListener = listener;
+    }
+    private String ChainIpAddress(String a , String b , String c , String d){
+        return a + "." + b + "." + c + "." + d ;
+
     }
     private boolean CheckIP(){
         boolean allGood = true;
