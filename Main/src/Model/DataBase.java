@@ -147,6 +147,7 @@ public class DataBase {
             i++;
         }
     }
+    /*
     public void updateSystemUser(ArrayList rowsList, ArrayList columnsList, ArrayList valuesList) throws SQLException {
         String updateSql = null;
         int size = rowsList.size();
@@ -204,7 +205,46 @@ public class DataBase {
             preparedStatement.executeUpdate();
             preparedStatement.close();
         }
+    }*/
+
+    public void updateSystemUser(List usersList) throws SQLException {
+        int size = usersList.size();
+        String updateSql = "update Users set id = ?, FirstName = ?, LastName = ?, Email = ?, PhoneNumber = ?, Type = ?, UserNameId = ? where id = ?;";
+        PreparedStatement preparedStatement = con.prepareStatement(updateSql);
+
+        for (int i = 0; i < size; i++)
+        {
+            Users user = (Users) usersList.get(i);
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setString(2, user.getFirstName());
+            preparedStatement.setString(3, user.getLastName());
+            preparedStatement.setString(4, user.getEmail());
+            preparedStatement.setString(5, user.getPhoneNumber());
+            preparedStatement.setString(6, user.getUsersType().toString());
+            preparedStatement.setInt(7, user.getUserNameId());
+            preparedStatement.setInt(8, user.getId());
+            preparedStatement.executeUpdate();
+        }
+        preparedStatement.close();
     }
+
+    public void updateLoginUser(List loginList) throws SQLException {
+        int size = loginList.size();
+        String updateSql = "update SystemUsers set id = ?, Username = ?, Password = ? where id = ?;";
+        PreparedStatement preparedStatement = con.prepareStatement(updateSql);
+
+        for (int i = 0; i < size; i++)
+        {
+            Login login = (Login)loginList.get(i);
+            preparedStatement.setInt(1, login.getId());
+            preparedStatement.setString(2, login.getUserName());
+            preparedStatement.setString(3, login.getPassword());
+            preparedStatement.setInt(4, login.getId());
+            preparedStatement.executeUpdate();
+        }
+        preparedStatement.close();
+    }
+
     public void updateUserExpertFirstName(int row , String firstName) throws SQLException {
         ActivationFormSip activationFormSip = sipActivation.get(row);
         String updateSql = "update Activation_SIP set ExpertFirstName=? where id=?";

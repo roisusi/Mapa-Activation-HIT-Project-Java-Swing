@@ -2,6 +2,7 @@ package View;
 
 import Controller.Controller;
 import Model.ActivationFormSip;
+import Model.UsersType;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class ActivationsMoves {
             if (newID == 1)
                 return newID--;
             return newID;
-        }
+        };
 
         public static void setNewID(int newID) {
             SessionId.newID = newID;

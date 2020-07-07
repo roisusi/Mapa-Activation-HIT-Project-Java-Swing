@@ -2,6 +2,7 @@ package View;
 
 import Model.Users;
 import Model.Login;
+import jdk.net.SocketFlow;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -9,9 +10,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +52,14 @@ public class ManageUsersTableMenu extends JPanel {
         Border innerBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black),"משתמשי מערכת"); //adds Label to the border
         setBorder(BorderFactory.createCompoundBorder(innerBorder,outerBorder)); //for 2 borders
 
+        TableColumn userTypeColumn = table.getColumnModel().getColumn(4);
+        JComboBox comboBox = new JComboBox();
+        comboBox.addItem("PrimaryManager");
+        comboBox.addItem("ProjectManager");
+        comboBox.addItem("Expert");
+        userTypeColumn.setCellEditor(new DefaultCellEditor(comboBox));
+
+
         //-- Table Event To Mouse Click --//
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -77,29 +88,43 @@ public class ManageUsersTableMenu extends JPanel {
         });
 
         buttonSave = new JButton("שמור שינויים");
+
         buttonSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                usersTableListener.rowEdit(rowsList, columnsList, valuesList);
+                try {
+                    usersTableListener.rowEdit(tableModel.getUserList(), tableModel.getLoginList());
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+
+                //usersTableListener.rowEdit(rowsList, columnsList, valuesList);
             }
         });
 
-        //--Table Event To Changed Cell--//
-        cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                String value = null;
-                int row = table.getSelectedRow();
-                int column = table.getSelectedColumn();
+/*
+        ListSelectionModel model = table.getSelectionModel();
+        model.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public  void valueChanged(ListSelectionEvent listSelectionEvent) {
 
+                //if(!model.isSelectionEmpty())
+                //{
 
-                value = (String) table.getValueAt(row, column);
-                table.setValueAt(value, row, column);
+                    //JOptionPane.showConfirmDialog(parent, "Change detected ", "Message", JOptionPane.INFORMATION_MESSAGE);
+                    String value = null;
+                    int row = listSelectionEvent.getFirstIndex();
+                    int column = table.getSelectedColumn();
+                    value = table.getCellEditor(row,column).getCellEditorValue().toString();
 
-                rowsList.add(row);
-                columnsList.add(column);
-                valuesList.add(value);
+                    boolean flag = table.getCellEditor(row,column).stopCellEditing();
+                    rowsList.add(row);
+                    columnsList.add(column);
+                    valuesList.add(value);
+                //}
             }
         });
+*/
 
         //-- Buttons Panel --//
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));

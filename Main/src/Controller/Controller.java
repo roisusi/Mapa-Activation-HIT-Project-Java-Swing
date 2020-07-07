@@ -12,33 +12,16 @@ import java.util.ArrayList;
 public class Controller {
     DataBase db = new DataBase();
 
-
-    public List<Login> getUsers() {
-        return db.getLoginUsersFromList();
-    }
     public List<ActivationFormSip> getSipActivation() {
         return db.getActivationSipFromList();
     }
-    public List<Users> getSystemUsers() { return db.getUsersFromList(); }
     public Users getUserFirstNameLogged(){
         return db.getUserFirstNameLogged();
     }
-    public Login getLoginUser() { return db.getLoginUser(); }
 
     public Connection getConnection() {
         return db.getCon();
     }
-
-    public boolean isUserAlreadyExists(Users user) {
-        return db.isUserAlreadyExists(user);
-    }
-    public boolean isLoginUserAlreadyExists(Login login) {
-        return db.isLoginUserAlreadyExists(login);
-    }
-
-    public boolean loginUserAuthentication(String username, String password) throws SQLException {
-        return db.loginUserAuthentication(username, password);
-    };
 
     public void addNumberRange(FormEvent ev){
         ArrayList from = ev.getFrom();
@@ -49,9 +32,7 @@ public class Controller {
         db.addNumberRangeToList(numberRanges);
 
     }
-    public void addSystemUser(Users user) {
-        db.addUserToList(user);
-    }
+
     public void addActivationSip(FormEvent ev) {
         String customerID = ev.getCustomerID();
         String customerName = ev.getCustomerName();
@@ -106,12 +87,7 @@ public class Controller {
     public void updateStatus(String status,int row) throws SQLException {
         db.updateStatus(status,row);
     }
-    public void updateSystemUser(ArrayList rowsList, ArrayList columnsList, ArrayList valuesList) throws SQLException {
-        db.updateSystemUser(rowsList, columnsList, valuesList);
-    }
-    public void updateLoginUser(ArrayList rowsList, ArrayList columnsList, ArrayList valuesList) throws SQLException {
-        db.updateLoginUser(rowsList, columnsList, valuesList);
-    }
+
     public void updateActivationSip(FormEvent ev){
         String customerID = ev.getCustomerID();
         String customerName = ev.getCustomerName();
@@ -164,29 +140,11 @@ public class Controller {
     {
         db.removeActivationFromList(row);
     }
-    public void removeUser(int row)
-    {
-        db.removeUserFromList(row);
-    }
+
     public void insertingActivationSipToDataBase() throws SQLException {
         db.insertingActivationSipToDataBase();
     }
-    public void insertingUserToDataBase(Users user, int id) throws SQLException {
-        db.insertingUserToDataBase(user, id);
-    }
-    public void insertingLoginUserToDataBase(Login login) throws SQLException {
-        db.insertingLoginUserToDataBase(login);
-    }
 
-    public void loadLoggedUser(int id) throws SQLException {
-        db.loadLoggedUser(id);
-    }
-    public void loadUsersFromDataBaseToList() throws SQLException {
-        db.loadUsersFromDataBaseToList();
-    }
-    public void loadSystemUsersFromDataBaseToList() throws SQLException {
-        db.loadSystemUsersFromDataBaseToList();
-    }
     public void loadCalenderSipActivationToList() throws SQLException {
         db.loadCalenderSipActivationToList();
     }

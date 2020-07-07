@@ -2,11 +2,12 @@ package View;
 
 import Model.Users;
 import Model.Login;
-import Controller.Controller;
+import Controller.UsersManagerController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ArrayList;
 
 public class ManageUsers extends JFrame {
@@ -14,11 +15,11 @@ public class ManageUsers extends JFrame {
     private ManageUsersTableMenu cal;
     private ManageUsersMenu menu;
     private UpperMenu upperMenu;
-    private Controller controller;
+    private UsersManagerController controller;
 
     private ManageUsers() {
         super("ניהול משתמשים");
-        controller = new Controller();
+        controller = new UsersManagerController();
         setLayout(new BorderLayout()); //set BorderLayout
 
         //-- Creation of Left Side --//
@@ -84,14 +85,15 @@ public class ManageUsers extends JFrame {
 
             //-- Edit right click mouse activation --//
             @Override
-            public void rowEdit(ArrayList rowsList, ArrayList columnsList, ArrayList valuesList) {
+            public void rowEdit(List usersList, List loginList) throws SQLException {
                 try {
                     controller.connect();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                try {
-                    int size = rowsList.size();
+                controller.updateSystemUsers(usersList);
+                controller.updateLoginUsers(loginList);
+                    /*int size = rowsList.size();
 
                     for (int i = 0; i < size; i++)
                     {
@@ -99,11 +101,8 @@ public class ManageUsers extends JFrame {
                             controller.updateSystemUser(rowsList, columnsList, valuesList);
                         else
                             controller.updateLoginUser(rowsList, columnsList, valuesList);
-                    }
+                    }*/
 
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
                 cal.setData(controller.getSystemUsers(), controller.getUsers());
                 controller.disconnect();
             }
