@@ -14,6 +14,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Observable;
@@ -44,7 +45,6 @@ public class ActivationFormSIP extends JDialog {
     protected JTextField totalNumbers;
     protected JTextField totalCalls;
     protected JTextField snbNumber;
-    protected JTextField numberRange;
     protected JTextField wanAddressA;
     protected JTextField wanAddressB;
     protected JTextField wanAddressC;
@@ -140,7 +140,6 @@ public class ActivationFormSIP extends JDialog {
         totalCalls = new JTextField(15);
         routerTypeTextField = new JTextField(15);
         snbNumber = new JTextField(15);
-        numberRange = new JTextField(15);
         internetUser = new JTextField(15);
         emergencyCity = new JTextField(15);
         crNumber = new JTextField(15);
@@ -1148,7 +1147,6 @@ public class ActivationFormSIP extends JDialog {
         String identificationTypeEv;
         int totalNumbersEv;
         String snbNumberEv;
-        String numberRangeEv;
         String areaCodeEv;
         String emergencyCityEv;
         String callOutSideCountryEv;
@@ -1170,11 +1168,16 @@ public class ActivationFormSIP extends JDialog {
         String projectManagerEv;
         int idSession = ActivationsMoves.FormId.getActivationId();
 
+        // -- Date Handle --//
+
         try {
             datePickerEv = dateLabelFormatter.valueToString((Date)datePicker.getModel().getValue());
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        String lastUpdateEv = formatter.format(date);
 
 
         if (checkEmptyCells()) {
@@ -1197,7 +1200,6 @@ public class ActivationFormSIP extends JDialog {
                 connectionTypeEv = (String)connectionType.getSelectedItem();
 
                 snbNumberEv = snbNumber.getText();
-                numberRangeEv = numberRange.getText();
                 areaCodeEv = (String)areaCode.getSelectedItem();
                 emergencyCityEv = emergencyCity.getText();
                 int numofFailsEv = 1;
@@ -1231,8 +1233,8 @@ public class ActivationFormSIP extends JDialog {
                     //--Create New --//
                     expertName="";
                     evForm= new FormEvent(this,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
-                        totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
-                        infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,expertName,connectionTypeEv,projectManagerEv,numofFailsEv,status);
+                        totalNumbersEv,snbNumberEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
+                        infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,expertName,connectionTypeEv,projectManagerEv,numofFailsEv,status,lastUpdateEv);
 
                     evNumbers = new FormEvent(this,ActivationsMoves.SessionId.getFromRange(),ActivationsMoves.SessionId.getToRange(),trunkNumberEv );
 
@@ -1242,8 +1244,8 @@ public class ActivationFormSIP extends JDialog {
                     //--Edited --//
 
                     evForm = new FormEvent(this,idSession,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
-                            totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
-                            infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,expertName,connectionTypeEv,projectManagerEv,status);
+                            totalNumbersEv,snbNumberEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
+                            infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,expertName,connectionTypeEv,projectManagerEv,status,lastUpdateEv);
 
                     evNumbers = new FormEvent(this,ActivationsMoves.SessionId.getFromRange(),ActivationsMoves.SessionId.getToRange(),trunkNumberEv);
                 }

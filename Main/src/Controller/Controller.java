@@ -46,7 +46,6 @@ public class Controller {
         String identificationType = ev.getIdentificationType();
         int totalNumbers = ev.getTotalNumbers();
         String snbNumber = ev.getSnbNumber();
-        String numberRange = ev.getNumberRange();
         String areaCode = ev.getAreaCode();
         String emergencyCity = ev.getEmergencyCity();
         String callOutSideCountry = ev.getCallOutSideCountry();
@@ -64,16 +63,17 @@ public class Controller {
         String signalAddress = ev.getSignalAddress();
         String mediaAddress = ev.getMediaAddress();
         int sbcPort = ev.getSbcPort();
-        String firstNAme = ev.getFirstName();
+        String expertName = ev.getFirstName();
         String connectionType = ev.getConnectionType();
         String projectManagerFirstName= ev.getProjectManagerFirstName();
         String activationType;
         activationType = ActivationType.Sip.toString();
         int activationFailCounter = ev.getNumofFails();
         String status = ev.getStatus();
+        String lastUpdate = ev.getLastUpdate();
 
         ActivationFormSip activationFormSip= new ActivationFormSip(customerID, customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,
-            numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType,status,activationFailCounter);
+            areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,expertName,connectionType,projectManagerFirstName,activationType,status,activationFailCounter,lastUpdate);
         db.addActivationSipToList(activationFormSip);
     }
     public void addFirstNameToActivationList(int row, String firstName){
@@ -103,7 +103,6 @@ public class Controller {
         String identificationType = ev.getIdentificationType();
         int totalNumbers = ev.getTotalNumbers();
         String snbNumber = ev.getSnbNumber();
-        String numberRange = ev.getNumberRange();
         String areaCode = ev.getAreaCode();
         String emergencyCity = ev.getEmergencyCity();
         String callOutSideCountry = ev.getCallOutSideCountry();
@@ -129,10 +128,11 @@ public class Controller {
         int id = ActivationsMoves.FormId.getActivationId();
         int numOfFail = ev.getNumofFails();
         String status = ev.getStatus();
+        String lastUpate = ev.getLastUpdate();
 
 
         ActivationFormSip activationFormSip= new ActivationFormSip(id,customerID, customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,
-                numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType,status,numOfFail);
+                areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType,status,numOfFail,lastUpate);
         db.updateActivationSipToList(activationFormSip);
 
     }

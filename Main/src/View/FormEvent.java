@@ -19,7 +19,6 @@ public class FormEvent extends EventObject {
     private String identificationType;
     private int totalNumbers;
     private String snbNumber;
-    private String numberRange;
     private String areaCode;
     private String emergencyCity; //need to change by all Cities of EMS
     private String callOutSideCountry;
@@ -44,12 +43,13 @@ public class FormEvent extends EventObject {
     private ArrayList<String> to;
     private int numofFails;
     private String status;
+    private String lastUpdate;
 
     public FormEvent(Object source) {
         super(source);
     }
 
-    public FormEvent(Object source, int id, String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType,  String projectManagerFirstName,String status) {
+    public FormEvent(Object source, int id, String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType,  String projectManagerFirstName,String status,String lastUpdate) {
         super(source);
         this.id = id;
         this.customerID = customerID;
@@ -64,7 +64,6 @@ public class FormEvent extends EventObject {
         this.identificationType = identificationType;
         this.totalNumbers = totalNumbers;
         this.snbNumber = snbNumber;
-        this.numberRange = numberRange;
         this.areaCode = areaCode;
         this.emergencyCity = emergencyCity;
         this.callOutSideCountry = callOutSideCountry;
@@ -86,9 +85,10 @@ public class FormEvent extends EventObject {
         this.connectionType = connectionType;
         this.projectManagerFirstName = projectManagerFirstName;
         this.status = status;
+        this.lastUpdate = lastUpdate;
     }
 
-    public FormEvent(Object source, String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType, String projectManagerFirstName,int numofFails,String status) {
+    public FormEvent(Object source, String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType, String projectManagerFirstName,int numofFails,String status,String lastUpdate) {
         super(source);
         this.customerID = customerID;
         this.customerName = customerName;
@@ -102,7 +102,6 @@ public class FormEvent extends EventObject {
         this.identificationType = identificationType;
         this.totalNumbers = totalNumbers;
         this.snbNumber = snbNumber;
-        this.numberRange = numberRange;
         this.areaCode = areaCode;
         this.emergencyCity = emergencyCity;
         this.callOutSideCountry = callOutSideCountry;
@@ -125,6 +124,7 @@ public class FormEvent extends EventObject {
         this.projectManagerFirstName = projectManagerFirstName;
         this.numofFails = numofFails;
         this.status = status;
+        this.lastUpdate = lastUpdate;
     }
 
     public FormEvent(Object source, ArrayList<String> from , ArrayList<String> to , String trunkNumber ){
@@ -132,6 +132,10 @@ public class FormEvent extends EventObject {
         this.from = from;
         this.to = to;
         this.trunkNumber = trunkNumber;
+    }
+
+    public String getLastUpdate() {
+        return lastUpdate;
     }
 
     public String getStatus() {
@@ -185,9 +189,6 @@ public class FormEvent extends EventObject {
     }
     public String getSnbNumber() {
         return snbNumber;
-    }
-    public String getNumberRange() {
-        return numberRange;
     }
     public String getAreaCode() {
         return areaCode;
