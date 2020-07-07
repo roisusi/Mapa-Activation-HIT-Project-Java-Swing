@@ -32,6 +32,7 @@ public class ReportView extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 reports.InstallReport();
+                dispose();
 
             }
         });
@@ -40,6 +41,7 @@ public class ReportView extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 reports.ActivationReport();
+                dispose();
             }
         });
 

@@ -142,7 +142,7 @@ public class ActivationFormSIP extends JDialog {
         trunkNumber = new JTextField(15);
         wellcome = new JLabel("טופס הפעלת SIP");
         this.inedxOfButton = inedxOfButton;
-        numberRangeButton = new JButton("הוסף טווחים");
+
 
         controller = new Controller();
 
@@ -279,6 +279,8 @@ public class ActivationFormSIP extends JDialog {
         editToSchedule = new JButton("עדכן הפעלה");
         failActivation = new JButton("הכשל הפעלה");
         activationToFile = new JButton("הוצא נתונים");
+        numberRangeButton = new JButton("הוסף טווחים");
+        templateActivaion = new JButton("טופס מוכן");
 
 
 
@@ -365,6 +367,17 @@ public class ActivationFormSIP extends JDialog {
                 controller.exportToFile();
                 JOptionPane.showMessageDialog(ActivationFormSIP.this,"הקובץ נוצר בהצלחה","INFO",JOptionPane.INFORMATION_MESSAGE);
 
+
+            }
+        });
+        templateActivaion.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CODEC.setSelectedIndex(5);
+                typeOfCalls.setSelectedIndex(3);
+                identificationType.setSelectedIndex(1);
+                signalAddress.setSelectedIndex(4);
+                mediaAddress.setSelectedIndex(4);
 
             }
         });
@@ -1129,6 +1142,7 @@ public class ActivationFormSIP extends JDialog {
 
         //-- Buttons Panel --//
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        buttonsPanel.add(templateActivaion);
         buttonsPanel.add(activationToFile);
         buttonsPanel.add(failActivation);
         setAddOrEditBotton(inedxOfButton);
