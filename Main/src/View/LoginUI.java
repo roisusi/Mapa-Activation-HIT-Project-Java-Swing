@@ -1,6 +1,6 @@
 package View;
 
-import Controller.Controller;
+import Controller.UsersManagerController;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 public class LoginUI extends JDialog {
-    private Controller controller;
+    private UsersManagerController controller;
     private JTextField userField;
     private JPasswordField passwordField;
     private JButton OKButton;
@@ -26,7 +26,7 @@ public class LoginUI extends JDialog {
         passwordField = new JPasswordField(10);
         OKButton = new JButton("OK");
         cancelButton = new JButton("Cancel");
-        controller = new Controller();
+        controller = new UsersManagerController();
 
 
         //-- Password --//
@@ -148,5 +148,4 @@ public class LoginUI extends JDialog {
 
 
     }
-
 }

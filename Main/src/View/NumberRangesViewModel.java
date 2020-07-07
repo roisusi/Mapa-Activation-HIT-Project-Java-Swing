@@ -12,9 +12,9 @@ public class NumberRangesViewModel extends AbstractTableModel {
 
     private final int MAXNUMBERS = 1000;
     private String[] colName = {"From", "To", "Count"};
-    private static int moreRows = 0;
-    private  static ArrayList<String> fromRange = new ArrayList<>();
-    private  static ArrayList<String> toRange = new ArrayList<>();
+    private int moreRows = 0;
+    private ArrayList<String> fromRange = new ArrayList<>();
+    private ArrayList<String> toRange = new ArrayList<>();
     private int difference;
     private int size;
     private NumberRangeController controller;
@@ -24,7 +24,6 @@ public class NumberRangesViewModel extends AbstractTableModel {
         this.fromRange = fromRange;
         this.toRange = toRange;
         controller = new NumberRangeController(this.fromRange,this.toRange);
-
     }
     public void setMoreRows() {
         fromRange.add("");
@@ -48,6 +47,12 @@ public class NumberRangesViewModel extends AbstractTableModel {
             i++;
         }
         moreRows = index;
+    }
+
+    public void showEditRows(){
+        for (int i=0 ; i < fromRange.size() ; i ++){
+            moreRows++;
+        }
 
     }
 
@@ -75,13 +80,12 @@ public class NumberRangesViewModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0:
-
                 return fromRange.get(rowIndex);
             case 1:
                 return toRange.get(rowIndex);
             case 2:
                 if(fromRange.size()>0 && toRange.size()>0)
-                if(controller.checkListIsEmpty(toRange.get(rowIndex)) || controller.checkListIsEmpty(fromRange.get(rowIndex))) {
+                if(controller.checkListIsEmpty(fromRange.get(rowIndex)) || controller.checkListIsEmpty(toRange.get(rowIndex))) {
                     difference = 0;
                 }
                 else
@@ -118,6 +122,7 @@ public class NumberRangesViewModel extends AbstractTableModel {
                     fromRange.remove(rowIndex);
                     fromRange.add(rowIndex,newStr);
                 }
+
                 break;
             case 1:
                 newStr = controller.checkList((String)aValue);

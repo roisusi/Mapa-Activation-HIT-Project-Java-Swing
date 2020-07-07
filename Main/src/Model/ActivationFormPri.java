@@ -1,3 +1,4 @@
+/*
 package Model;
 
 import java.util.Date;
@@ -134,3 +135,4 @@ public class ActivationFormPri extends ActivationForm{
         return super.getActivationType();
     }
 }
+*/

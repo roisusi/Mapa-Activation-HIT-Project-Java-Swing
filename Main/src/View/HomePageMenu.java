@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 public class HomePageMenu extends JPanel {
@@ -78,7 +79,7 @@ public class HomePageMenu extends JPanel {
         setBorder(BorderFactory.createCompoundBorder(innerBorder,outerBorder)); //for 2 borders
 
         //-- Create Form Dialog --//
-        activationFormSIPDialog = new ActivationFormSIP(HomePageMenu.this,0);
+        activationFormSIPDialog = new ActivationFormSIP(HomePageMenu.this,0,0);
         //-- Edit Form Dialog --//
         listOfActivationView = new ListOfActivationView(parent);//,controller.getSipActivation());
         //-- Reports Form Dialog --//
@@ -129,6 +130,9 @@ public class HomePageMenu extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
+                    ActivationsMoves.SessionId.remove();
+                activationFormSIPDialog.failActivation.setEnabled(false);
                 activationFormSIPDialog.setVisible(true);
             }
 
@@ -137,6 +141,8 @@ public class HomePageMenu extends JPanel {
         editForm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
+                    ActivationsMoves.SessionId.remove();
                 listOfActivationView.setVisible(true);
             }
         });
@@ -148,7 +154,6 @@ public class HomePageMenu extends JPanel {
             public void formEventOccurred(FormEvent e) {
                 getDataFromSipListener.addActivation(e);
             }
-
             @Override
             public void formEventOccurredNumber(FormEvent e) {
                 controller.addNumberRange(e);
@@ -164,6 +169,11 @@ public class HomePageMenu extends JPanel {
                 }
             controller.disconnect();
             }
+
+            @Override
+            public void formUpdateFails() {
+                getDataFromSipListener.Update();
+            }
         });
 
         //-- Move Data From Edit to Calender --//
@@ -176,6 +186,11 @@ public class HomePageMenu extends JPanel {
             @Override
             public void updateActivation(FormEvent e) {
                 getDataFromSipListener.updateActivation(e);
+            }
+
+            @Override
+            public void Update() {
+                getDataFromSipListener.Update();
             }
         });
 

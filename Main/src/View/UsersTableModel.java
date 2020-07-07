@@ -4,6 +4,7 @@ import Model.Users;
 import Model.Login;
 import Model.UsersType;
 
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
@@ -19,6 +20,14 @@ public class UsersTableModel extends AbstractTableModel {
     {
         this.userList = userList;
         this.loginList = loginList;
+    }
+
+    public List<Login> getLoginList() {
+        return loginList;
+    }
+
+    public List<Users> getUserList() {
+        return userList;
     }
 
     @Override
@@ -70,6 +79,8 @@ public class UsersTableModel extends AbstractTableModel {
                 loginUser = login;
         }
 
+
+
         switch (columnIndex){
             case 0:
                 user.setFirstName(value.toString());
@@ -102,6 +113,4 @@ public class UsersTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int row, int column) { return true; }
-
-
 }

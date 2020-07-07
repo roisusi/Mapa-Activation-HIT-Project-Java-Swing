@@ -1,5 +1,7 @@
 package View;
 
+import Controller.Controller;
+import Controller.NumberRangeController;
 import Model.NumberRanges;
 import com.mysql.jdbc.StringUtils;
 import org.jdatepicker.JDatePicker;
@@ -8,8 +10,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Observable;
 
 public class ActivationFormSIP extends JDialog {
     private JPanel formPanelTop = new JPanel();
@@ -54,7 +61,7 @@ public class ActivationFormSIP extends JDialog {
     protected JComboBox signalAddress;
     protected JComboBox mediaAddress;
     protected JComboBox areaCode;
-    protected JTextField emergencyCity; //need to change by all Cities of EMS
+    protected JTextField emergencyCity;
     protected ButtonGroup callOutSideCountry;
     protected JRadioButton callOutSideCountryYES;
     protected JRadioButton callOutSideCountryNO;
@@ -66,10 +73,10 @@ public class ActivationFormSIP extends JDialog {
     private JLabel welcom;
     private JButton addToSchedule;
     protected JButton editToSchedule;
-    private JButton failActivation;
-    private JButton rangeNumbers;
+    protected JButton failActivation;
     private JButton activationToFile;
-    private JButton namberRangeButton;
+    protected JButton numberRangeButton;
+    private Controller controller;
 
     //-- Labels --//
     private JLabel customerIDLabel = new JLabel("מספר לקוח : ");
@@ -110,11 +117,10 @@ public class ActivationFormSIP extends JDialog {
     private LoginUI loginUI;
     private int inedxOfButton;
     private DateLabelFormatter dateLabelFormatter;
-    private NumberRanges numberRanges;
     private NumberRangesView numberRangesView;
 
 
-    public ActivationFormSIP(JPanel parent,int inedxOfButton) {
+    public ActivationFormSIP(JPanel parent,int inedxOfButton,int activationId) {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createTitledBorder("טופס התקנה"));
@@ -141,7 +147,10 @@ public class ActivationFormSIP extends JDialog {
         trunkNumber = new JTextField(15);
         welcom = new JLabel("טופס הפעלת SIP");
         this.inedxOfButton = inedxOfButton;
-        namberRangeButton = new JButton("הוסף טווחים");
+        numberRangeButton = new JButton("הוסף טווחים");
+
+        controller = new Controller();
+
 
 
         //-- Spinner --//
@@ -274,7 +283,6 @@ public class ActivationFormSIP extends JDialog {
         addToSchedule = new JButton("הוסף הפעלה");
         editToSchedule = new JButton("עדכן הפעלה");
         failActivation = new JButton("הכשל הפעלה");
-        rangeNumbers = new JButton("הוסף מספרים");
         activationToFile = new JButton("הוצא נתונים");
 
 
@@ -330,13 +338,31 @@ public class ActivationFormSIP extends JDialog {
                 System.out.println(ActivationsMoves.FormId.getActivationId());
             }
         });
-        namberRangeButton.addActionListener(new ActionListener() {
+        numberRangeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                numberRangesView = new NumberRangesView(mainPanel);
+                numberRangesView = new NumberRangesView(mainPanel,activationId);
                 numberRangesView.setVisible(true);
             }
         });
+        failActivation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+            }
+        });
+
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
+                    ActivationsMoves.SessionId.remove();
+            }
+        });
+
 
 
         FormControl();
@@ -719,7 +745,7 @@ public class ActivationFormSIP extends JDialog {
         gcLeft.gridx = 0;
         gcLeft.insets = new Insets(0,0,0,0);
         gcLeft.anchor = GridBagConstraints.LINE_END;
-        formPanelLeft.add(namberRangeButton,gcLeft);
+        formPanelLeft.add(numberRangeButton,gcLeft);
         gcLeft.gridx++;
         gcLeft.insets = new Insets(0,0,0,0);
         gcLeft.anchor = GridBagConstraints.LINE_START;
@@ -1085,7 +1111,6 @@ public class ActivationFormSIP extends JDialog {
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         buttonsPanel.add(activationToFile);
         buttonsPanel.add(failActivation);
-        buttonsPanel.add(rangeNumbers);
         setAddOrEditBotton(inedxOfButton);
 
 
@@ -1175,6 +1200,7 @@ public class ActivationFormSIP extends JDialog {
                 numberRangeEv = numberRange.getText();
                 areaCodeEv = (String)areaCode.getSelectedItem();
                 emergencyCityEv = emergencyCity.getText();
+                int numofFailsEv = 1;
 
                 //-- get Radio from callOutSideCountry --//
                 String getcallOutSideCountryChoice = callOutSideCountry.getSelection().getActionCommand();
@@ -1196,15 +1222,15 @@ public class ActivationFormSIP extends JDialog {
                 mediaAddressEv = (String)mediaAddress.getSelectedItem();
                 firstName = "";
                 projectManagerEv = ActivationsMoves.SessionId.getUserName();
+
                 FormEvent evForm;
                 FormEvent evNumbers;
-
 
                 if (inedxOfButton==0){
                     //--Create New --//
                     evForm= new FormEvent(this,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
                         totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
-                        infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv);
+                        infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv,numofFailsEv);
 
                     evNumbers = new FormEvent(this,ActivationsMoves.SessionId.getFromRange(),ActivationsMoves.SessionId.getToRange(),trunkNumberEv );
 
@@ -1217,17 +1243,15 @@ public class ActivationFormSIP extends JDialog {
                             totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
                             infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv);
 
-
-                    /*numberRanges = new NumberRanges(idSession,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
-                            totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
-                            infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv,"Sip","last", ActivationsMoves.SessionId.getFromRange(), ActivationsMoves.SessionId.getToRange());*/
-
                     evNumbers = new FormEvent(this,ActivationsMoves.SessionId.getFromRange(),ActivationsMoves.SessionId.getToRange(),trunkNumberEv);
                 }
                 formListener.formEventOccurred(evForm);
                 formListener.formEventOccurredNumber(evNumbers);
 
+                if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
+                    ActivationsMoves.SessionId.remove();
                 dispose();
+
             }
             else {
                 if (CheckInputDigits()) {

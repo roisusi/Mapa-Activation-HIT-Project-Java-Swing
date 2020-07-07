@@ -8,17 +8,18 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jdatepicker" level="application" />
-    <orderEntry type="library" name="jar_files (1)" level="application" />
+    <orderEntry type="library" name="Japser" level="application" />
+    <orderEntry type="library" name="mysqlConnector" level="application" />
     <orderEntry type="library" name="mysql-connector-java-5.1.49-bin" level="application" />
+    <orderEntry type="library" name="Main" level="application" />
     <orderEntry type="library" name="bcprov-jdk15on-1.62" level="application" />
     <orderEntry type="library" name="castor-core-1.4.1" level="application" />
-    <orderEntry type="library" name="common-image-3.4.1" level="application" />
+    <orderEntry type="library" name="commons-beanutils-1.9.4" level="application" />
     <orderEntry type="library" name="ecj-4.4.2" level="application" />
     <orderEntry type="library" name="itext-2.1.7.js7" level="application" />
-    <orderEntry type="library" name="jackson-annotations-2.10.0" level="application" />
+    <orderEntry type="library" name="jackson-databind-2.10.0" level="application" />
     <orderEntry type="library" name="jasperreports-6.12.2" level="application" />
     <orderEntry type="library" name="javax.inject-1" level="application" />
     <orderEntry type="library" name="jcommon-1.0.23" level="application" />
-    <orderEntry type="library" name="jfreechart-1.0.19" level="application" />
   </component>
 </module>

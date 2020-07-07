@@ -12,35 +12,16 @@ import java.util.ArrayList;
 public class Controller {
     DataBase db = new DataBase();
 
-    public List<Login> getUsers() {
-        return db.getLoginUsersFromList();
-    }
     public List<ActivationFormSip> getSipActivation() {
         return db.getActivationSipFromList();
     }
-    public List<Users> getSystemUsers() { return db.getUsersFromList(); }
     public Users getUserFirstNameLogged(){
         return db.getUserFirstNameLogged();
-    }
-    public Login getLoginUser() { return db.getLoginUser(); }
-    public List<NumberRanges> getActivationSipFromList(){
-        return db.getNumberRanges();
     }
 
     public Connection getConnection() {
         return db.getCon();
     }
-
-    public boolean isUserAlreadyExists(Users user) {
-        return db.isUserAlreadyExists(user);
-    }
-    public boolean isLoginUserAlreadyExists(Login login) {
-        return db.isLoginUserAlreadyExists(login);
-    }
-
-    public boolean loginUserAuthentication(String username, String password) throws SQLException {
-        return db.loginUserAuthentication(username, password);
-    };
 
     public void addNumberRange(FormEvent ev){
         ArrayList from = ev.getFrom();
@@ -51,9 +32,7 @@ public class Controller {
         db.addNumberRangeToList(numberRanges);
 
     }
-    public void addSystemUser(Users user) {
-        db.addUserToList(user);
-    }
+
     public void addActivationSip(FormEvent ev) {
         String customerID = ev.getCustomerID();
         String customerName = ev.getCustomerName();
@@ -90,9 +69,10 @@ public class Controller {
         String projectManagerFirstName= ev.getProjectManagerFirstName();
         String activationType;
         activationType = ActivationType.Sip.toString();
+        int activationFailCounter = ev.getNumofFails();
 
         ActivationFormSip activationFormSip= new ActivationFormSip(customerID, customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,
-            numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType,"לא");
+            numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType,"לא",activationFailCounter);
         db.addActivationSipToList(activationFormSip);
     }
     public void addFirstNameToActivationList(int row, String firstName){
@@ -108,12 +88,7 @@ public class Controller {
     public void updateStatus(String status,int row) throws SQLException {
         db.updateStatus(status,row);
     }
-    public void updateSystemUser(Object obj, int row, int column) throws SQLException {
-        db.updateSystemUser(obj, row, column);
-    }
-    public void updateLoginUser(Object obj, int row, int column) throws SQLException {
-        db.updateLoginUser(obj, row, column);
-    }
+
     public void updateActivationSip(FormEvent ev){
         String customerID = ev.getCustomerID();
         String customerName = ev.getCustomerName();
@@ -151,10 +126,11 @@ public class Controller {
         String activationType;
         activationType = ActivationType.Sip.toString();
         int id = ActivationsMoves.FormId.getActivationId();
+        int numOfFail = ev.getNumofFails();
 
 
         ActivationFormSip activationFormSip= new ActivationFormSip(id,customerID, customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,
-                numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType,"לא");
+                numberRange,areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType,"לא",numOfFail);
         db.updateActivationSipToList(activationFormSip);
 
     }
@@ -166,35 +142,21 @@ public class Controller {
     {
         db.removeActivationFromList(row);
     }
-    public void removeUser(int row)
-    {
-        db.removeUserFromList(row);
-    }
+
     public void insertingActivationSipToDataBase() throws SQLException {
         db.insertingActivationSipToDataBase();
     }
-    public void insertingUserToDataBase(Users user, int id) throws SQLException {
-        db.insertingUserToDataBase(user, id);
-    }
-    public void insertingLoginUserToDataBase(Login login) throws SQLException {
-        db.insertingLoginUserToDataBase(login);
-    }
 
-    public void loadLoggedUser(int id) throws SQLException {
-        db.loadLoggedUser(id);
-    }
-    public void loadUsersFromDataBaseToList() throws SQLException {
-        db.loadUsersFromDataBaseToList();
-    }
-    public void loadSystemUsersFromDataBaseToList() throws SQLException {
-        db.loadSystemUsersFromDataBaseToList();
-    }
     public void loadCalenderSipActivationToList() throws SQLException {
         db.loadCalenderSipActivationToList();
     }
 
+    public void loadNumberRangeFromDataBaseToList(int activation_id) throws SQLException {
+        db.loadNumberRangeFromDataBaseToList(activation_id);
+    }
+
     public void disconnect(){
-        db.disconnect();
+        //db.disconnect();
     }
     public void connect () throws Exception {
         db.connect();
@@ -203,6 +165,24 @@ public class Controller {
     //-- Number Range to DataBse --//
     public void insertingNumberRangeToDataBase() throws SQLException {
         db.insertingNumberRangeToDataBase(ActivationsMoves.SessionId.getNewID());
+    }
+    public List<NumberRanges> getNumberRanges(){
+        return db.getNumberRanges();
+    }
+    public void updateNumberRangeToDataBase(int activation_id) throws SQLException {
+        db.updateNumberRangeToDataBase(activation_id);
+    }
+
+    public void failActivation(int activationId) throws SQLException {
+        db.failActivation(activationId);
+    }
+
+    public void getNumOfFails(int id){
+        db.getNumOfFails(id);
+    }
+
+    public void clearNumberRange(){
+        db.clearNumberRange();
     }
 
 }

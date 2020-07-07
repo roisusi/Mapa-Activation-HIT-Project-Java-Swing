@@ -42,12 +42,13 @@ public class FormEvent extends EventObject {
     private String projectManagerFirstName;
     private ArrayList<String> from;
     private ArrayList<String> to;
+    private int numofFails;
 
     public FormEvent(Object source) {
         super(source);
     }
 
-    public FormEvent(Object source, int id, String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType, String projectManagerFirstName) {
+    public FormEvent(Object source, int id, String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType,  String projectManagerFirstName) {
         super(source);
         this.id = id;
         this.customerID = customerID;
@@ -85,7 +86,7 @@ public class FormEvent extends EventObject {
         this.projectManagerFirstName = projectManagerFirstName;
     }
 
-    public FormEvent(Object source, String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType, String projectManagerFirstName) {
+    public FormEvent(Object source, String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker, String wanAddress, String lanAddress, String ipAddress, String internetUser, String infrastructure, String routerType, String CODEC, int totalCalls, String signalAddress, String mediaAddress, int sbcPort, String firstName, String connectionType, String projectManagerFirstName,int numofFails) {
         super(source);
         this.customerID = customerID;
         this.customerName = customerName;
@@ -120,6 +121,7 @@ public class FormEvent extends EventObject {
         this.firstName = firstName;
         this.connectionType = connectionType;
         this.projectManagerFirstName = projectManagerFirstName;
+        this.numofFails = numofFails;
     }
 
     public FormEvent(Object source, ArrayList<String> from , ArrayList<String> to , String trunkNumber ){
@@ -129,6 +131,9 @@ public class FormEvent extends EventObject {
         this.trunkNumber = trunkNumber;
     }
 
+    public int getNumofFails() {
+        return numofFails;
+    }
     public int getId() {
         return id;
     }
@@ -239,4 +244,5 @@ public class FormEvent extends EventObject {
     public ArrayList<String> getTo() {
         return to;
     }
+
 }

@@ -79,6 +79,22 @@ public class HomePage extends JFrame {
                 cal.refresh();
                 controller.disconnect();
             }
+
+            @Override
+            public void Update() {
+                try {
+                    controller.connect();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                try {
+                    controller.loadCalenderSipActivationToList();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                cal.refresh();
+                controller.disconnect();
+            }
         });
 
 

@@ -2,22 +2,24 @@ package View;
 
 import Model.Users;
 import Model.Login;
-import Controller.Controller;
+import Controller.UsersManagerController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ManageUsers extends JFrame {
     private static ManageUsers single_instance = null;
     private ManageUsersTableMenu cal;
     private ManageUsersMenu menu;
     private UpperMenu upperMenu;
-    private Controller controller;
+    private UsersManagerController controller;
 
     private ManageUsers() {
         super("ניהול משתמשים");
-        controller = new Controller();
+        controller = new UsersManagerController();
         setLayout(new BorderLayout()); //set BorderLayout
 
         //-- Creation of Left Side --//
@@ -83,20 +85,24 @@ public class ManageUsers extends JFrame {
 
             //-- Edit right click mouse activation --//
             @Override
-            public void rowEdit(Object obj, int row, int column) {
+            public void rowEdit(List usersList, List loginList) throws SQLException {
                 try {
                     controller.connect();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                try {
-                    if(column >= 0 && column <= 4)
-                        controller.updateSystemUser(obj, row, column);
-                    else
-                        controller.updateLoginUser(obj, row, column);
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
+                controller.updateSystemUsers(usersList);
+                controller.updateLoginUsers(loginList);
+                    /*int size = rowsList.size();
+
+                    for (int i = 0; i < size; i++)
+                    {
+                        if((int)columnsList.get(i) >= 0 && (int)columnsList.get(i) <= 4)
+                            controller.updateSystemUser(rowsList, columnsList, valuesList);
+                        else
+                            controller.updateLoginUser(rowsList, columnsList, valuesList);
+                    }*/
+
                 cal.setData(controller.getSystemUsers(), controller.getUsers());
                 controller.disconnect();
             }

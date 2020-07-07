@@ -13,7 +13,7 @@ import java.util.List;
 public class CalenderPanelModel extends AbstractTableModel {
     private List<ActivationFormSip> dbSip;
 
-    private String[] colName = {"מומחה","מנהל פרוייקט","שם הלקוח","תאריך","סוג הפעלה","הפעלה מאושרת?"};
+    private String[] colName = {"מומחה","מנהל פרוייקט","שם הלקוח","תאריך","סוג הפעלה","הפעלה מאושרת?","נסיון הפעלה"};
     public CalenderPanelModel() {
     }
     public void setData(List<ActivationFormSip> db)
@@ -27,7 +27,7 @@ public class CalenderPanelModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 6;
+        return 7;
     }
 
     @Override
@@ -46,6 +46,8 @@ public class CalenderPanelModel extends AbstractTableModel {
                 return sip.getActivationType();
             case 5:
                 return sip.getStatus();
+            case 6:
+                return sip.getNumOfFails();
         }
         return null;
     }

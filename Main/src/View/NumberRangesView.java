@@ -1,5 +1,6 @@
 package View;
 
+import Controller.Controller;
 import Controller.NumberRangeController;
 import Model.NumberRanges;
 
@@ -8,33 +9,58 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class NumberRangesView extends JDialog implements ActionListener {
-        private JTable table;
-        private NumberRangesViewModel tableModel;
-        private JButton adding;
-        private JButton remove;
-        private JButton save;
-        private JButton FNR;
-        private ArrayList fromRange = new ArrayList<Integer>();
-        private ArrayList toRange = new ArrayList<Integer>();
-        private NumberRangeController numberRangeController;
+    private JTable table;
+    private NumberRangesViewModel tableModel;
+    private JButton adding;
+    private JButton remove;
+    private JButton save;
+    private JButton FNR;
+    private ArrayList from = new ArrayList();
+    private ArrayList to = new ArrayList();
+    private JPanel panel = new JPanel();
+    private NumberRangeController numberRangeController;
+    private Controller controller;
 
 
-    public NumberRangesView(JPanel parent) {
+
+    public NumberRangesView(JPanel parent,int id) {
         setLayout(new BorderLayout());
-        JPanel panel = new JPanel();
         JPanel buttonPanel = new JPanel();
         JToolBar toolBar = new JToolBar(JToolBar.VERTICAL);
-
-        //-- Table --//
-        if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null) {
-            fromRange = ActivationsMoves.SessionId.getFromRange();
-            toRange = ActivationsMoves.SessionId.getToRange();
+        int act = id;
+        controller = new Controller();
+        try {
+            controller.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        tableModel = new NumberRangesViewModel(fromRange,toRange);
+        try {
+            if (act != 0)
+                controller.loadNumberRangeFromDataBaseToList(act);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        controller.disconnect();
+
+        if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null){
+            from = ActivationsMoves.SessionId.getFromRange();
+            to = ActivationsMoves.SessionId.getToRange();
+        }
+        else if (controller.getNumberRanges().size() !=0){
+            from = controller.getNumberRanges().get(0).getFromRange();
+            to = controller.getNumberRanges().get(0).getToRange();
+        }
+
+        numberRangeController = new NumberRangeController(from, to);
+        tableModel = new NumberRangesViewModel(from,to);
         table = new JTable(tableModel);
+        tableModel.showEditRows();
+        tableModel.fireTableDataChanged();
 
         //-- Buttons --//
         adding = new JButton();
@@ -63,14 +89,16 @@ public class NumberRangesView extends JDialog implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int i = 0;
-                fromRange = tableModel.fromTableList();
-                toRange = tableModel.toTableList();
-                numberRangeController = new NumberRangeController(fromRange,toRange);
+                from = tableModel.fromTableList();
+                to = tableModel.toTableList();
+                numberRangeController = new NumberRangeController(from,to);
                 tableModel.removeViewCells();
-                numberRangeController.removeEmptyCells(fromRange,toRange);
+                numberRangeController.removeEmptyCells(from,to);
+                numberRangeController.setFromRange(from);
+                numberRangeController.setToRange(to);
+                ActivationsMoves.SessionId.setFromRange(from);
+                ActivationsMoves.SessionId.setToRange(to);
                 tableModel.fireTableDataChanged();
-                ActivationsMoves.SessionId.setFromRange(fromRange);
-                ActivationsMoves.SessionId.setToRange(toRange);
                 dispose();
             }
         });
@@ -79,8 +107,9 @@ public class NumberRangesView extends JDialog implements ActionListener {
         FNR.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                numberRangeController = new NumberRangeController(fromRange,toRange);
-                numberRangeController.removeEmptyCells(fromRange,toRange);
+                numberRangeController = new NumberRangeController(from,to);
+                numberRangeController.removeEmptyCells(from,to);
+                numberRangeController.FNRtoFileSip(from,to);
             }
         });
 
@@ -131,7 +160,13 @@ public class NumberRangesView extends JDialog implements ActionListener {
     }
     public void delNumberRage(){
         int row = table.getSelectedRow();
-        tableModel.removeRows(row);
-        tableModel.fireTableDataChanged();
+        if (row == -1){
+            JOptionPane.showMessageDialog(NumberRangesView.this, "נא בחר שורה למחירה", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        else {
+            tableModel.removeRows(row);
+            tableModel.fireTableRowsDeleted(row,row);
+            //tableModel.fireTableDataChanged();
+        }
     }
 }

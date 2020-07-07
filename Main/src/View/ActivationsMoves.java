@@ -17,18 +17,18 @@ public class ActivationsMoves {
         private static ArrayList toRange;
         private static ArrayList difference;
         public static int newID;
+        private static SessionId sessionId;
 
+        private SessionId(){
+        }
+        public static SessionId getSessionId() {
+            return sessionId;
+        }
         public static String setUserName(String userName){
             return SessionId.userName = userName;
         }
         public static String getUserName(){
             return SessionId.userName;
-        }
-        public static String isApproved(String isApproved){
-            return SessionId.isApproved = isApproved;
-        }
-        public static String isApproved(){
-            return SessionId.isApproved;
         }
 
         public static int getNewID() {
@@ -55,12 +55,12 @@ public class ActivationsMoves {
             SessionId.toRange = toRange;
         }
 
-        public static ArrayList getDifference() {
-            return difference;
-        }
+        public static void remove(){
+            fromRange.removeAll(fromRange);
+            toRange.removeAll(toRange);
+            fromRange = null;
+            toRange = null;
 
-        public static void setDifference(ArrayList difference) {
-            SessionId.difference = difference;
         }
     }
 
@@ -75,28 +75,6 @@ public class ActivationsMoves {
         }
         public static void setActivationId(int activationId) {
             FormId.activationId = activationId;
-        }
-    }
-
-    public static class LoadActivationFromList{
-        private static List<ActivationFormSip> activationFormSips;
-        private static Controller controller;
-
-        public static List<ActivationFormSip> getActivationSip(){
-            controller = new Controller();
-            try {
-                controller.connect();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                controller.loadCalenderSipActivationToList();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-            activationFormSips = controller.getSipActivation();
-            controller.disconnect();
-            return activationFormSips;
         }
     }
 }

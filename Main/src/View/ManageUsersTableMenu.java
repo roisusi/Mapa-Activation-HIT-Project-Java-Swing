@@ -2,29 +2,45 @@ package View;
 
 import Model.Users;
 import Model.Login;
+import jdk.net.SocketFlow;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ManageUsersTableMenu extends JPanel {
     private JTable table;
     private UsersTableModel tableModel;
+    private JButton buttonSave;
     private JPopupMenu popupMenu;
     private UsersTableListener usersTableListener;
-
+    private ArrayList rowsList;
+    private ArrayList columnsList;
+    private ArrayList valuesList;
 
     public ManageUsersTableMenu() {
         JFrame parent = new JFrame();
         tableModel = new UsersTableModel();
         table = new JTable(tableModel);
+        JPanel buttonPanel = new JPanel();
         popupMenu = new JPopupMenu();
         JMenuItem removeItem = new JMenuItem("מחק שורה");
         popupMenu.add(removeItem);
+
+        //--Create lists for table changes--//
+        rowsList = new ArrayList<Integer>();
+        columnsList = new ArrayList<Integer>();
+        valuesList = new ArrayList<String>();
 
         //--Create Table Cell Change Detector--//
         table.setCellSelectionEnabled(true);
@@ -35,6 +51,14 @@ public class ManageUsersTableMenu extends JPanel {
         Border outerBorder = BorderFactory.createEmptyBorder(20,30,300,30);
         Border innerBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black),"משתמשי מערכת"); //adds Label to the border
         setBorder(BorderFactory.createCompoundBorder(innerBorder,outerBorder)); //for 2 borders
+
+        TableColumn userTypeColumn = table.getColumnModel().getColumn(4);
+        JComboBox comboBox = new JComboBox();
+        comboBox.addItem("PrimaryManager");
+        comboBox.addItem("ProjectManager");
+        comboBox.addItem("Expert");
+        userTypeColumn.setCellEditor(new DefaultCellEditor(comboBox));
+
 
         //-- Table Event To Mouse Click --//
         table.addMouseListener(new MouseAdapter() {
@@ -63,22 +87,53 @@ public class ManageUsersTableMenu extends JPanel {
             }
         });
 
-        //--Table Event To Changed Cell--//
-        cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                String value = null;
-                int row = table.getSelectedRow();
-                int column = table.getSelectedColumn();
+        buttonSave = new JButton("שמור שינויים");
 
-                value = (String) table.getValueAt(row, column);
-                table.setValueAt(value, row, column);
-                usersTableListener.rowEdit(value, row, column);
+        buttonSave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    usersTableListener.rowEdit(tableModel.getUserList(), tableModel.getLoginList());
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+
+                //usersTableListener.rowEdit(rowsList, columnsList, valuesList);
             }
         });
+
+/*
+        ListSelectionModel model = table.getSelectionModel();
+        model.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public  void valueChanged(ListSelectionEvent listSelectionEvent) {
+
+                //if(!model.isSelectionEmpty())
+                //{
+
+                    //JOptionPane.showConfirmDialog(parent, "Change detected ", "Message", JOptionPane.INFORMATION_MESSAGE);
+                    String value = null;
+                    int row = listSelectionEvent.getFirstIndex();
+                    int column = table.getSelectedColumn();
+                    value = table.getCellEditor(row,column).getCellEditorValue().toString();
+
+                    boolean flag = table.getCellEditor(row,column).stopCellEditing();
+                    rowsList.add(row);
+                    columnsList.add(column);
+                    valuesList.add(value);
+                //}
+            }
+        });
+*/
+
+        //-- Buttons Panel --//
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(buttonSave);
 
         //-- Graphic Option --//
         setLayout(new BorderLayout());
         add(new JScrollPane(table), BorderLayout.CENTER);
+        add(buttonPanel,BorderLayout.SOUTH);
     }
 
     public void setData(List<Users> user, List<Login> login)
