@@ -88,7 +88,6 @@ public class NumberRangesView extends JDialog implements ActionListener {
         save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int i = 0;
                 from = tableModel.fromTableList();
                 to = tableModel.toTableList();
                 numberRangeController = new NumberRangeController(from,to);
@@ -107,8 +106,16 @@ public class NumberRangesView extends JDialog implements ActionListener {
         FNR.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                from = tableModel.fromTableList();
+                to = tableModel.toTableList();
                 numberRangeController = new NumberRangeController(from,to);
+                tableModel.removeViewCells();
                 numberRangeController.removeEmptyCells(from,to);
+                numberRangeController.setFromRange(from);
+                numberRangeController.setToRange(to);
+                ActivationsMoves.SessionId.setFromRange(from);
+                ActivationsMoves.SessionId.setToRange(to);
+                tableModel.fireTableDataChanged();
                 numberRangeController.FNRtoFileSip(from,to);
             }
         });

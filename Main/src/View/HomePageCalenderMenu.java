@@ -26,7 +26,6 @@ public class HomePageCalenderMenu extends JPanel{
         table = new JTable(tableModel);
         activationSipController = new ActivationSipController();
 
-
         popupMenu = new JPopupMenu();
         JMenuItem removeItem = new JMenuItem("מחק שורה");
         JMenuItem setExpertItem = new JMenuItem("שייך מומחה להפעלה");
@@ -38,7 +37,7 @@ public class HomePageCalenderMenu extends JPanel{
 
         //-- Create The Borders --//
         Border outerBorder = BorderFactory.createEmptyBorder(20,30,300,30);
-        Border innerBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black),"Calander Option"); //adds Label to the border
+        Border innerBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black),"Calender Option"); //adds Label to the border
         setBorder(BorderFactory.createCompoundBorder(innerBorder,outerBorder)); //for 2 borders
         //-- table event to mouse click --//
         table.addMouseListener(new MouseAdapter() {

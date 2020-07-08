@@ -55,8 +55,8 @@ public class CreateUserForm extends JDialog {
         authenticationType = new JComboBox();
         DefaultComboBoxModel type = new DefaultComboBoxModel();
         type.addElement("נא לבחור");
-        type.addElement("primaryManager");
-        type.addElement("projectManager");
+        type.addElement("PrimaryManager");
+        type.addElement("ProjectManager");
         type.addElement("Expert");
         authenticationType.setPreferredSize(dim);
         authenticationType.setModel(type);

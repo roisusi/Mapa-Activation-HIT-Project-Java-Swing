@@ -403,6 +403,12 @@ public class ActivationFormSIP extends JDialog {
                 mediaAddress.setSelectedIndex(4);
             }
         });
+        signalAddress.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mediaAddress.setSelectedIndex(signalAddress.getSelectedIndex());
+            }
+        });
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -1294,8 +1300,6 @@ public class ActivationFormSIP extends JDialog {
                         infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,expertName,connectionTypeEv,projectManagerEv,numofFailsEv,status,lastUpdateEv);
 
                     evNumbers = new FormEvent(this,ActivationsMoves.SessionId.getFromRange(),ActivationsMoves.SessionId.getToRange(),trunkNumberEv );
-
-
                 }
                 else {
 
@@ -1313,7 +1317,6 @@ public class ActivationFormSIP extends JDialog {
                     ActivationsMoves.SessionId.remove();
                 clearForm();
                 dispose();
-
             }
             else {
                 if (CheckInputDigits()) {
