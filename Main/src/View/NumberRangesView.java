@@ -113,8 +113,6 @@ public class NumberRangesView extends JDialog implements ActionListener {
                 numberRangeController.removeEmptyCells(from,to);
                 numberRangeController.setFromRange(from);
                 numberRangeController.setToRange(to);
-                ActivationsMoves.SessionId.setFromRange(from);
-                ActivationsMoves.SessionId.setToRange(to);
                 tableModel.fireTableDataChanged();
                 numberRangeController.FNRtoFileSip(from,to);
             }

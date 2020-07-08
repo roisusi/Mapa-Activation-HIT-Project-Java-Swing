@@ -2,6 +2,8 @@ package View;
 
 
 import Controller.ActivationSipController;
+import Controller.NumberRangeController;
+import Controller.UsersManagerController;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -10,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 public class HomePageCalenderMenu extends JPanel{
     private JTable table;
@@ -18,6 +21,8 @@ public class HomePageCalenderMenu extends JPanel{
     private CalenderTableListener calenderTableListener;
     private ChooseExpertDialog expert;
     private ActivationSipController activationSipController;
+    private NumberRangeController numberRangeController;
+    private UsersManagerController usersManagerController;
 
     public HomePageCalenderMenu() {
 
@@ -25,14 +30,30 @@ public class HomePageCalenderMenu extends JPanel{
         tableModel = new CalenderPanelModel();
         table = new JTable(tableModel);
         activationSipController = new ActivationSipController();
+        numberRangeController = new NumberRangeController();
+        usersManagerController = new UsersManagerController();
+        try {
+            usersManagerController.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            usersManagerController.loadUsersFromDataBaseToList();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        usersManagerController.disconnect();
 
         popupMenu = new JPopupMenu();
+
         JMenuItem removeItem = new JMenuItem("מחק שורה");
         JMenuItem setExpertItem = new JMenuItem("שייך מומחה להפעלה");
         JMenuItem setApproved = new JMenuItem("אשר הפעלה");
-        popupMenu.add(removeItem);
-        popupMenu.add(setExpertItem);
-        popupMenu.add(setApproved);
+        if (!usersManagerController.getUserFirstNameLogged().getUsersType().toString().equals("ProjectManager")) {
+            popupMenu.add(removeItem);
+            popupMenu.add(setExpertItem);
+            popupMenu.add(setApproved);
+        }
 
 
         //-- Create The Borders --//
@@ -57,10 +78,10 @@ public class HomePageCalenderMenu extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 int row = table.getSelectedRow();
                 int action = JOptionPane.showConfirmDialog(parent, "האם ברצונך למחוק ?", "Confirm", JOptionPane.OK_OPTION,/*Change Icon*/JOptionPane.INFORMATION_MESSAGE);
-
                 if(calenderTableListener != null && action==JOptionPane.OK_OPTION)
                 {
                     calenderTableListener.rowDelete(row);
+
                 }
                 tableModel.fireTableRowsDeleted(row,row);//tell him more efficent that what exact row deleted
             }

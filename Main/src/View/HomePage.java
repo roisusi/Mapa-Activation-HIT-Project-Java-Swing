@@ -34,7 +34,6 @@ public class HomePage extends JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("Home Page Create Calender I got Applications : " + activationSipController.getSipActivation().size());
         cal.setData(activationSipController);
         cal.refresh();
 
@@ -52,7 +51,6 @@ public class HomePage extends JFrame {
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
-                System.out.println("Home Page Create menu set data I got Applications : " + activationSipController.getSipActivation().size());
                 cal.refresh();
                 activationSipController.disconnect();
             }
@@ -102,16 +100,18 @@ public class HomePage extends JFrame {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                activationSipController.removeActivation(row);
+                try {
+                    activationSipController.removeActivation(row);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 cal.setData(activationSipController);
-                System.out.println("Home Page setCalenderTableListener I got Applications : " + activationSipController.getSipActivation().size());
                 activationSipController.disconnect();
             }
             //-- Set right click mouse first name to activation --//
             @Override
             public void addExpertUser(int row, String firstName) {
                 activationSipController.addFirstNameToActivationList(row,firstName);
-                System.out.println("Home Page addExpertUser I got Applications : " + activationSipController.getSipActivation().size());
                 try {
                     activationSipController.connect();
                 } catch (Exception e) {
@@ -140,7 +140,6 @@ public class HomePage extends JFrame {
                     throwables.printStackTrace();
                 }
                 cal.setData(activationSipController);
-                System.out.println("Status is : "+ activationSipController.getSipActivation().get(row).getStatus());
                 activationSipController.disconnect();
             }
         });

@@ -122,8 +122,7 @@ public class ActivationSipController {
         db.updateActivationSipToDataBase(id);
     }
 
-    public void removeActivation(int row)
-    {
+    public void removeActivation(int row) throws Exception {
         db.removeActivationFromList(row);
     }
 

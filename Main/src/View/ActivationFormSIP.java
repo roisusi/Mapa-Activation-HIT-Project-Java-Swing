@@ -121,6 +121,7 @@ public class ActivationFormSIP extends JDialog {
 
     // Controllers //
     private ActivationSipController activationSipController;
+    private UsersManagerController usersManagerController;
 
     // DatePicker //
     private String datePickerEv;
@@ -163,6 +164,18 @@ public class ActivationFormSIP extends JDialog {
 
         // Controller //
         activationSipController = new ActivationSipController();
+        usersManagerController = new UsersManagerController();
+        try {
+            usersManagerController.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            usersManagerController.loadUsersFromDataBaseToList();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        usersManagerController.disconnect();
 
         //-- Spinner --//
         sbcPort = new JSpinner();
@@ -419,7 +432,7 @@ public class ActivationFormSIP extends JDialog {
                 clearForm();
             }
         });
-
+        disablePortAndTrunk();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createTitledBorder("טופס התקנה"));
         add(mainPanel,BorderLayout.CENTER);
@@ -726,13 +739,13 @@ public class ActivationFormSIP extends JDialog {
         else {
             crNumberLabel.setForeground(Color.black);
         }
-
-        if (trunkNumber.getText().isEmpty() || trunkNumber.getText().trim().isEmpty()) {
-            trunkNumberLabel.setForeground(Color.red);
-            allGood = false;
-        }
-        else {
-            trunkNumberLabel.setForeground(Color.black);
+        if (!usersManagerController.getUserFirstNameLogged().getUsersType().toString().equals("ProjectManager")) {
+            if (trunkNumber.getText().isEmpty() || trunkNumber.getText().trim().isEmpty()) {
+                trunkNumberLabel.setForeground(Color.red);
+                allGood = false;
+            } else {
+                trunkNumberLabel.setForeground(Color.black);
+            }
         }
 
         if (wanAddressA.getText().isEmpty() || wanAddressA.getText().trim().isEmpty() || wanAddressB.getText().isEmpty() || wanAddressB.getText().trim().isEmpty()
@@ -1290,7 +1303,6 @@ public class ActivationFormSIP extends JDialog {
 
                 FormEvent evForm;
                 FormEvent evNumbers;
-
                 if (indexOfButton ==0){
 
                     //--Create New --//
@@ -1406,5 +1418,14 @@ public class ActivationFormSIP extends JDialog {
         mediaAddressLabel.setForeground(Color.black);
         datePicker.getModel().setSelected(false);
         dateLabel.setForeground(Color.black);
+    }
+
+    public void disablePortAndTrunk(){
+        String user = usersManagerController.getUserFirstNameLogged().getUsersType().toString();
+        if (user.equals("ProjectManager")){
+            ((JSpinner.DefaultEditor) sbcPort.getEditor()).getTextField().setEditable(false);
+            sbcPort.setEnabled(false);
+            trunkNumber.setEnabled(false);
+        }
     }
 }
