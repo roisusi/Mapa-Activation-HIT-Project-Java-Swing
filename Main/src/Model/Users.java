@@ -1,6 +1,6 @@
 package Model;
 
-public class Users {
+public class Users implements UserFunctionality{
     protected int id;
     protected String firstName;
     protected String lastName;
@@ -77,15 +77,21 @@ public class Users {
 
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
-    public boolean getReports() { return true; }
+    @Override
+    public boolean getReports() { return false; }
 
-    public boolean deleteForm() { return true; }
+    @Override
+    public boolean deleteForm() { return false; }
 
-    public boolean editForm() { return true; }
+    @Override
+    public boolean editForm() { return false; }
 
-    public boolean createForm() { return true; }
+    @Override
+    public boolean createForm() { return false; }
 
-    public boolean manageUsers() { return true; }
+    @Override
+    public boolean manageUsers() { return false; }
 
-    public boolean editUsers() { return true; }
+    @Override
+    public boolean editUsers() { return false; }
 }

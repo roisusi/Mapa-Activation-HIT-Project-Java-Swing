@@ -32,14 +32,14 @@ public class LoginUI extends JDialog {
         //-- Password --//
         passwordField.setEchoChar('*');//instead of circles we get ****
 
-        // -- Action to OK Button -- //
+        //-- Action to OK Button --//
         OKButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String username = userField.getText();
                 String password = new String(passwordField.getPassword());
 
-                // this is is used for check username and password on DB
+                //-- Create first Data Base instance --//
                 try {
                     controller.connect();
                 } catch (Exception ev) {
@@ -47,25 +47,28 @@ public class LoginUI extends JDialog {
                 }
 
                 try {
-                    if(controller.loginUserAuthentication(username, password))
-                    {
-                        JOptionPane.showMessageDialog(LoginUI.this,"Login Success","Login",JOptionPane.INFORMATION_MESSAGE);
-                        try {
-                            controller.loadLoggedUser(controller.getLoginUser().getId());
-                        } catch (SQLException throwables) {
-                            throwables.printStackTrace();
-                        }
-                        userLoggedListener.setUserFirstNameLogged(controller.getUserFirstNameLogged().getFirstName());
-                        dispose();
-                    }
-
-                    else
-                        JOptionPane.showMessageDialog(LoginUI.this,"Login Failed","Login",JOptionPane.ERROR_MESSAGE);
-
+                    controller.loadUsersFromDataBaseToList();
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(LoginUI.this,"Illegal Input","Login",JOptionPane.ERROR_MESSAGE);
                     ex.printStackTrace();
                 }
+
+                try {
+                    controller.loadSystemUsersFromDataBaseToList();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+
+                if(controller.loginUserAuthentication(username, password))
+                {
+                    JOptionPane.showMessageDialog(LoginUI.this,"Login Success","Login",JOptionPane.INFORMATION_MESSAGE);
+                    controller.loadLoggedUser(controller.getLoginUser().getId());
+                    userLoggedListener.setUserFirstNameLogged(controller.getUserFirstNameLogged().getFirstName());
+                    dispose();
+                }
+
+                else
+                    JOptionPane.showMessageDialog(LoginUI.this,"Login Failed","Login",JOptionPane.ERROR_MESSAGE);
+                    //JOptionPane.showMessageDialog(LoginUI.this,"Illegal Input","Login",JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -80,7 +83,7 @@ public class LoginUI extends JDialog {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         layoutControl();
         setSize(400,300);
-            setLocationRelativeTo(parent);
+        setLocationRelativeTo(parent);
     }
 
     public void setUserLoggedListener(UserLoggedListener listener)

@@ -15,8 +15,9 @@ public class Controller {
     public List<ActivationFormSip> getSipActivation() {
         return db.getActivationSipFromList();
     }
-    public Users getUserFirstNameLogged(){
-        return db.getUserFirstNameLogged();
+
+    public Users getLoggedUser(){
+        return db.getLoggedUser();
     }
 
     public Connection getConnection() {
