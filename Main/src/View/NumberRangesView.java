@@ -1,8 +1,7 @@
 package View;
 
-import Controller.Controller;
+import Controller.ActivationSipController;
 import Controller.NumberRangeController;
-import Model.NumberRanges;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -23,7 +22,7 @@ public class NumberRangesView extends JDialog implements ActionListener {
     private ArrayList to = new ArrayList();
     private JPanel panel = new JPanel();
     private NumberRangeController numberRangeController;
-    private Controller controller;
+    private ActivationSipController activationSipController;
 
 
 
@@ -31,29 +30,30 @@ public class NumberRangesView extends JDialog implements ActionListener {
         setLayout(new BorderLayout());
         JPanel buttonPanel = new JPanel();
         JToolBar toolBar = new JToolBar(JToolBar.VERTICAL);
-        int act = id;
-        controller = new Controller();
+        activationSipController = new ActivationSipController();
+        numberRangeController = new NumberRangeController();
+
         try {
-            controller.connect();
+            numberRangeController.connect();
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            if (act != 0)
-                controller.loadNumberRangeFromDataBaseToList(act);
+            if (id != 0)
+                numberRangeController.loadNumberRangeFromDataBaseToList(id);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
-        controller.disconnect();
+        numberRangeController.disconnect();
 
         if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null){
             from = ActivationsMoves.SessionId.getFromRange();
             to = ActivationsMoves.SessionId.getToRange();
         }
-        else if (controller.getNumberRanges().size() !=0){
-            from = controller.getNumberRanges().get(0).getFromRange();
-            to = controller.getNumberRanges().get(0).getToRange();
+        else if (numberRangeController.getNumberRanges().size() !=0){
+            from = numberRangeController.getNumberRanges().get(0).getFromRange();
+            to = numberRangeController.getNumberRanges().get(0).getToRange();
         }
 
         numberRangeController = new NumberRangeController(from, to);

@@ -1,8 +1,6 @@
 package View;
 
-import Controller.Controller;
-import Controller.UsersManagerController;
-import Model.Users;
+import Controller.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -11,10 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
-
 public class HomePageMenu extends JPanel {
-
-
 
     private JButton createForm;
     private JButton editForm;
@@ -23,18 +18,17 @@ public class HomePageMenu extends JPanel {
     private LoginUI loginUI;
     private JLabel userName;
     private JFrame parent;
-    ActivationFormSIP activationFormSIPDialog;
-    private Users user;
+    private ActivationFormSIP activationFormSIPDialog;
     private ManageUsers manageUsersForm;
     private ReportView reportsForm;
-    private Controller controller;
+    private ActivationSipController activationSipController;
     private UsersManagerController usersManagerController;
+    private NumberRangeController numberRangeController;
     private GetDataFromSipListener getDataFromSipListener;
     private ListOfActivationView listOfActivationView;
 
 
     public HomePageMenu() {
-
         // -- The 4 Buttons --//
         createForm = new JButton("צור הפעלת SIP");
         createForm.setPreferredSize(new Dimension(200,50));
@@ -47,8 +41,9 @@ public class HomePageMenu extends JPanel {
 
         parent = new JFrame();
         loginUI = new LoginUI(parent);
-        controller = new Controller();
+        activationSipController = new ActivationSipController();
         usersManagerController = new UsersManagerController();
+        numberRangeController = new NumberRangeController();
 
         //-- Login -> get the logged user that logged --//
         loginUI.setUserLoggedListener(new UserLoggedListener() {
@@ -61,17 +56,17 @@ public class HomePageMenu extends JPanel {
         loginUI.setVisible(true);
 
         try {
-            controller.connect();
+            activationSipController.connect();
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            controller.loadCalenderSipActivationToList();
+            activationSipController.loadActivationSipToList();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
-        controller.disconnect();
+        activationSipController.disconnect();
 
         //-- Create The Borders --//
         Border outerBorder = BorderFactory.createEmptyBorder(100,10,300,10);
@@ -130,27 +125,16 @@ public class HomePageMenu extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-<<<<<<< Updated upstream
-                if(controller.getLoggedUser().createForm())
-=======
                 if(usersManagerController.getUserFirstNameLogged().createForm())
->>>>>>> Stashed changes
                 {
                     if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
                         ActivationsMoves.SessionId.remove();
                     activationFormSIPDialog.failActivation.setEnabled(false);
-<<<<<<< Updated upstream
-                    activationFormSIPDialog.setVisible(true);
-                }
-                else
-                    JOptionPane.showMessageDialog(HomePageMenu.this,"למשתמש זה אין הרשאות ליצירת טופס התקנה","Error",JOptionPane.ERROR_MESSAGE);
-=======
                     activationFormSIPDialog.activationToFile.setEnabled(false);
                     activationFormSIPDialog.setVisible(true);
                 }
                 else
                     JOptionPane.showMessageDialog(HomePageMenu.this, "למשתמש זה אין הרשאות ליצירת טופס התקנה", "Error", JOptionPane.ERROR_MESSAGE);
->>>>>>> Stashed changes
             }
 
         });
@@ -158,22 +142,14 @@ public class HomePageMenu extends JPanel {
         editForm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-<<<<<<< Updated upstream
-                if(controller.getLoggedUser().editForm())
-=======
                 if(usersManagerController.getUserFirstNameLogged().editForm())
->>>>>>> Stashed changes
                 {
                     if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
                         ActivationsMoves.SessionId.remove();
                     listOfActivationView.setVisible(true);
                 }
                 else
-<<<<<<< Updated upstream
-                    JOptionPane.showMessageDialog(HomePageMenu.this,"למשתמש זה אין הרשאות לעריכת טופס התקנה","Error",JOptionPane.ERROR_MESSAGE);
-=======
                     JOptionPane.showMessageDialog(HomePageMenu.this, "למשתמש זה אין הרשאות לעריכת טופס התקנה", "Error", JOptionPane.ERROR_MESSAGE);
->>>>>>> Stashed changes
             }
         });
 
@@ -186,23 +162,24 @@ public class HomePageMenu extends JPanel {
             }
             @Override
             public void formEventOccurredNumber(FormEvent e) {
-                controller.addNumberRange(e);
+                numberRangeController.addNumberRange(e);
                 try {
-                    controller.connect();
+                    activationSipController.connect();
+                    numberRangeController.connect();
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
                 try {
-                    controller.insertingNumberRangeToDataBase();
+                    numberRangeController.insertingNumberRangeToDataBase();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
-            controller.disconnect();
+                activationSipController.disconnect();
             }
 
             @Override
             public void formUpdateFails() {
-                getDataFromSipListener.Update();
+                getDataFromSipListener.UpdateNumberRange();
             }
         });
 
@@ -210,7 +187,7 @@ public class HomePageMenu extends JPanel {
         listOfActivationView.setDataFromSipListener(new GetDataFromSipListener() {
             @Override
             public void addActivation(FormEvent e) {
-            //Leave Empty
+                //Leave Empty
             }
 
             @Override
@@ -219,8 +196,8 @@ public class HomePageMenu extends JPanel {
             }
 
             @Override
-            public void Update() {
-                getDataFromSipListener.Update();
+            public void UpdateNumberRange() {
+                getDataFromSipListener.UpdateNumberRange();
             }
         });
 
@@ -229,11 +206,7 @@ public class HomePageMenu extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-<<<<<<< Updated upstream
-                if(controller.getLoggedUser().manageUsers()) {
-=======
                 if(usersManagerController.getUserFirstNameLogged().manageUsers()) {
->>>>>>> Stashed changes
                     manageUsersForm = ManageUsers.getInstance();
                     manageUsersForm.setVisible(true);
                 }

@@ -1,5 +1,10 @@
 package Model;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class ExpertListFile {
 
     private String DT;
@@ -36,6 +41,26 @@ public class ExpertListFile {
 
     public void exportToFile(){
         DT = "Trunk Name : " + trunkNumber + "\n";
-        //DT =+
+        DT += "SBC Port : " + sbcPort + "\n";
+        DT += "Total Calls : " + totalCalls + "\n";
+        DT += "SNB Number : " + snbNumber + "\n";
+        DT += "WAN Address : " + wan + "\n";
+        DT += "LAN Address : " + lan + "\n";
+        DT += "IP Address : " + ipExternal + "\n";
+        DT += "SIG Address : " + signalAddress + "\n";
+        DT += "RTP Address : " + mediaAddress + "\n";
+        DT += "Area Code : " + areaCode + "\n";
+        DT += "Emergency City : " + emergencyCity + "\n";
+        DT += "CR-Number : " + crNumber + "\n";
+        DT += "Call Outside Country allowed : " + callOutSideCountry + "\n";
+
+        try {
+            File file = new File(trunkNumber + ".txt");
+            BufferedWriter output = new BufferedWriter(new FileWriter(file));
+            output.write(DT);
+            output.close();
+        } catch ( IOException e ) {
+            e.printStackTrace();
+        }
     }
 }

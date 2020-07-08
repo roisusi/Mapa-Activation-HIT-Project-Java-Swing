@@ -1,22 +1,18 @@
 package View;
 
-import Controller.Controller;
-import Model.Users;
+import Controller.ActivationSipController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.LinkedList;
-import java.util.List;
 
 public class ChooseExpertDialog extends JDialog {
     private JLabel name = new JLabel("בחר מומחה");
     private JButton chooseButton = new JButton("בחר");
     private JList expertName;
-    private Controller controller = new Controller();
+    private ActivationSipController activationSipController = new ActivationSipController();
     private String getSelectedName;
-    //private List<Users> users;
     private UserSetExpertListener userSetExpertListener;
     private int rowFromCalender;
 
@@ -41,7 +37,6 @@ public class ChooseExpertDialog extends JDialog {
         chooseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //users = new LinkedList<Users>();
                 getSelectedName = (String)expertModel.getElementAt(expertName.getSelectedIndex());
                 userSetExpertListener.UserSetExpertListener(rowFromCalender,getSelectedName);// news where to add the name (Row)
                 ActivationsMoves.SessionId.setExpertName(getSelectedName);

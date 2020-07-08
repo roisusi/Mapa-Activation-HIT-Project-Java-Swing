@@ -1,7 +1,5 @@
 package Model;
 
-import java.util.Date;
-
 public abstract class ActivationForm  {
     protected String customerID;
     protected String customerName;
@@ -21,14 +19,14 @@ public abstract class ActivationForm  {
     protected String crNumber;
     protected String trunkNumber;
     protected String datePicker;
-    protected String firstName;
+    protected String expertName;
     protected String projectManagerFirstName;
     protected String activationType;
     protected int numOfFails;
     protected String lastUpdate;
 
     //-- Without id For Saving --//
-    public ActivationForm(String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker,String firstName, String projectManagerFirstName,String activationType , int numOfFails,String lastUpdate) {
+    public ActivationForm(String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker,String expertName, String projectManagerFirstName,String activationType , int numOfFails,String lastUpdate) {
         this.customerID = customerID;
         this.customerName = customerName;
         this.contactName = contactName;
@@ -47,7 +45,7 @@ public abstract class ActivationForm  {
         this.crNumber = crNumber;
         this.trunkNumber = trunkNumber;
         this.datePicker = datePicker;
-        this.firstName = firstName;
+        this.expertName = expertName;
         this.projectManagerFirstName = projectManagerFirstName;
         this.activationType = activationType;
         this.numOfFails = numOfFails;
@@ -66,12 +64,12 @@ public abstract class ActivationForm  {
         return projectManagerFirstName;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getExpertFirstName() {
+        return expertName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setExpertName(String expertName) {
+        this.expertName = expertName;
     }
 
     public String getCustomerID() {

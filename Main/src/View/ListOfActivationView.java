@@ -1,10 +1,9 @@
 package View;
 
 import Controller.*;
-import Model.ActivationFormSip;
+
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.UtilDateModel;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -28,112 +27,51 @@ public class ListOfActivationView extends JDialog {
     private JPanel formPanelDownRight;
     private JButton view;
     private String DateChoose;
-    private List<ActivationFormSip> activationFormSips;
     private ActivationFormSIP activationFormSIP;
     private String datePickerEvFrom;
     private String datePickerEvTo;
     private JLabel expertName;
     private JLabel projectManagerName;
-    private  GetDataFromSipListener getDataFromSipListener;
+    private GetDataFromSipListener getDataFromSipListener;
     private DefaultListModel actModel;
     private List<Integer> activationsIdArrayList;
-    private Controller controller;
+    private ActivationSipController activationSipController;
+    private NumberRangeController numberRangeController;
+    private DateLabelFormatter dateLabelFormatterFrom;
+    private DateLabelFormatter dateLabelFormatterTo;
 
     private int currentId;
 
-    public ListOfActivationView(JFrame parent){//, List<ActivationFormSip> activationFormSips) {
+    public ListOfActivationView(JFrame parent){
         activations = new JList();
         panel = new JPanel();
         formPanelUp = new JPanel();
         formPanelDownLeft = new JPanel();
         formPanelDownRight = new JPanel();
         view = new JButton("הצג");
-        activationFormSips = new LinkedList<>();
-
         expertName = new JLabel();
         projectManagerName = new JLabel();
         activationsIdArrayList = new LinkedList<>();
-        controller = new Controller();
-
-
-
-
+        activationSipController = new ActivationSipController();
+        numberRangeController = new NumberRangeController();
 
         // New format to Date From//
         UtilDateModel modelFrom = new UtilDateModel();
         fromDate = new JDatePicker(modelFrom);
         datePickerEvFrom="";
-        DateLabelFormatter dateLabelFormatterFrom = new DateLabelFormatter();
+        dateLabelFormatterFrom = new DateLabelFormatter();
 
         // New format to Date to//
         UtilDateModel modelTo = new UtilDateModel();
         toDate = new JDatePicker(modelTo);
         datePickerEvTo="";
-        DateLabelFormatter dateLabelFormatterTo = new DateLabelFormatter();
+        dateLabelFormatterTo = new DateLabelFormatter();
 
         //-- View Get List from Dates --//
         view.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                try {
-                    controller.connect();
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-                try {
-                    controller.loadCalenderSipActivationToList();
-                    activationFormSips = controller.getSipActivation();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-                controller.disconnect();
-                int i = 0,flag=0;
-                actModel = new DefaultListModel();
-                actModel.removeAllElements();
-                //-- Date --//
-                //--From--//
-                try {
-                    dateLabelFormatterFrom.valueToString((Date) fromDate.getModel().getValue());
-                    datePickerEvFrom = dateLabelFormatterFrom.valueToString((Date) fromDate.getModel().getValue());
-                } catch (ParseException parseException) {
-                    parseException.printStackTrace();
-                }
-
-                //--To--//
-                try {
-                    dateLabelFormatterTo.valueToString((Date) toDate.getModel().getValue());
-                    datePickerEvTo = dateLabelFormatterTo.valueToString((Date) toDate.getModel().getValue());
-                } catch (ParseException parseException) {
-                    parseException.printStackTrace();
-                }
-                String from = datePickerEvFrom;
-                String to = datePickerEvTo;
-                if (!from.isEmpty() && !to.isEmpty()) {
-                    activationsIdArrayList.clear();
-                    if (isBefore(from, to)) {
-                        for (i = 0; i < activationFormSips.size(); i++) {
-                            DateChoose = activationFormSips.get(i).getDatePicker();
-                            if (isBefore(from,to,DateChoose )) {
-                                actModel.addElement(activationFormSips.get(i).getCustomerName());
-                                activationsIdArrayList.add(activationFormSips.get(i).getId());
-                                activations.setModel(actModel);
-                                flag =1 ;
-                            }
-                        }
-                    } else
-                        JOptionPane.showMessageDialog(ListOfActivationView.this, "זמן ההתחלה גדול מזמן הסיום", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                else {
-                    JOptionPane.showMessageDialog(ListOfActivationView.this, "אנא הכנס תאריכים", "Error", JOptionPane.ERROR_MESSAGE);
-
-                }
-                //-- if flag==0 then the List is Empty --//
-                if (flag==0) {
-                    actModel.removeAllElements();
-                    activations.setModel(actModel);
-
-                }
+                loadActivationToJlist();
             }
         });
         activations.setBorder(BorderFactory.createEtchedBorder()); // create just frame border
@@ -149,49 +87,49 @@ public class ListOfActivationView extends JDialog {
             public void mouseClicked(MouseEvent e) {
                 if (activations.getModel().getSize() != 0) {
                     int selectedActivation,index;
-                    for (index = 0; index < activationFormSips.size(); index++) {
-                        if (activationsIdArrayList.get(activations.getSelectedIndex()) == activationFormSips.get(index).getId()) {
+                    for (index = 0; index < activationSipController.getSipActivation().size(); index++) {
+                        if (activationsIdArrayList.get(activations.getSelectedIndex()) == activationSipController.getSipActivation().get(index).getId()) {
                             break;
                         }
                     }
                     selectedActivation = index;
                     if (e.getButton() == MouseEvent.BUTTON1) //Click Once
                     {
-                        expertName.setText(activationFormSips.get(selectedActivation).getFirstName());
+                        expertName.setText(activationSipController.getSipActivation().get(selectedActivation).getExpertFirstName());
                         expertName.setForeground(Color.BLUE);
-                        projectManagerName.setText(activationFormSips.get(selectedActivation).getProjectManagerFirstName());
+                        projectManagerName.setText(activationSipController.getSipActivation().get(selectedActivation).getProjectManagerFirstName());
                         projectManagerName.setForeground(Color.BLUE);
                         //numberOfSuccess
                     }
                     if (e.getClickCount() == 2) //Double click
                     {
-                        currentId = activationFormSips.get(selectedActivation).getId();
+                        currentId = activationSipController.getSipActivation().get(selectedActivation).getId();
                         ActivationsMoves.FormId.setActivationId(currentId);
                         activationFormSIP = new ActivationFormSIP(panel,1,currentId);
-                        activationFormSIP.customerID.setText(activationFormSips.get(selectedActivation).getCustomerID());
-                        activationFormSIP.customerName.setText(activationFormSips.get(selectedActivation).getCustomerName());
-                        activationFormSIP.contactName.setText(activationFormSips.get(selectedActivation).getContactName());
-                        activationFormSIP.customerPhoneNumber.setText(activationFormSips.get(selectedActivation).getCustomerPhoneNumber());
-                        activationFormSIP.customerEmail.setText(activationFormSips.get(selectedActivation).getCustomerEmail());
-                        activationFormSIP.customerTechName.setText(activationFormSips.get(selectedActivation).getCustomerTechName());
-                        activationFormSIP.customerTechPhoneNumber.setText(activationFormSips.get(selectedActivation).getCustomerTechPhoneNumber());
-                        activationFormSIP.pbxType.setText(activationFormSips.get(selectedActivation).getPbxType());
-                        activationFormSIP.infrastructure.setText(activationFormSips.get(selectedActivation).getInfrastructure());
+                        activationFormSIP.customerID.setText(activationSipController.getSipActivation().get(selectedActivation).getCustomerID());
+                        activationFormSIP.customerName.setText(activationSipController.getSipActivation().get(selectedActivation).getCustomerName());
+                        activationFormSIP.contactName.setText(activationSipController.getSipActivation().get(selectedActivation).getContactName());
+                        activationFormSIP.customerPhoneNumber.setText(activationSipController.getSipActivation().get(selectedActivation).getCustomerPhoneNumber());
+                        activationFormSIP.customerEmail.setText(activationSipController.getSipActivation().get(selectedActivation).getCustomerEmail());
+                        activationFormSIP.customerTechName.setText(activationSipController.getSipActivation().get(selectedActivation).getCustomerTechName());
+                        activationFormSIP.customerTechPhoneNumber.setText(activationSipController.getSipActivation().get(selectedActivation).getCustomerTechPhoneNumber());
+                        activationFormSIP.pbxType.setText(activationSipController.getSipActivation().get(selectedActivation).getPbxType());
+                        activationFormSIP.infrastructure.setText(activationSipController.getSipActivation().get(selectedActivation).getInfrastructure());
                         for (int i = 0; i < activationFormSIP.connectionType.getItemCount(); i++) {
                             String connectionType = (String) activationFormSIP.connectionType.getModel().getElementAt(i);
-                            String actConnectionType = activationFormSips.get(selectedActivation).getConnectionType();
+                            String actConnectionType = activationSipController.getSipActivation().get(selectedActivation).getConnectionType();
                             if (actConnectionType.equals(connectionType))
                                 activationFormSIP.connectionType.setSelectedIndex(i);
                         }
-                        activationFormSIP.totalNumbers.setText(Integer.toString(activationFormSips.get(selectedActivation).getTotalNumbers()));
-                        activationFormSIP.totalCalls.setText(Integer.toString(activationFormSips.get(selectedActivation).getTotalCalls()));
+                        activationFormSIP.totalNumbers.setText(Integer.toString(activationSipController.getSipActivation().get(selectedActivation).getTotalNumbers()));
+                        activationFormSIP.totalCalls.setText(Integer.toString(activationSipController.getSipActivation().get(selectedActivation).getTotalCalls()));
 
-                        String routerType = activationFormSips.get(selectedActivation).getRouterType();
+                        String routerType = activationSipController.getSipActivation().get(selectedActivation).getRouterType();
                         if (routerType.isEmpty())
                             activationFormSIP.routerTypeGroup.setSelected(activationFormSIP.routerTypeNO.getModel(), true);
                         else {
                             activationFormSIP.routerTypeGroup.setSelected(activationFormSIP.routerTypeYES.getModel(), true);
-                            activationFormSIP.routerTypeTextField.setText(activationFormSips.get(selectedActivation).getRouterType());
+                            activationFormSIP.routerTypeTextField.setText(activationSipController.getSipActivation().get(selectedActivation).getRouterType());
                             activationFormSIP.routerTypeTextField.setEnabled(true);
                         }
 
@@ -199,31 +137,30 @@ public class ListOfActivationView extends JDialog {
 
                         for (int i = 0; i < activationFormSIP.CODEC.getItemCount(); i++) {
                             String CODEC = (String) activationFormSIP.CODEC.getModel().getElementAt(i);
-                            String actCODEC = activationFormSips.get(selectedActivation).getCODEC();
+                            String actCODEC = activationSipController.getSipActivation().get(selectedActivation).getCODEC();
                             if (CODEC.equals(actCODEC))
                                 activationFormSIP.CODEC.setSelectedIndex(i);
                         }
 
                         for (int i = 0; i < activationFormSIP.typeOfCalls.getItemCount(); i++) {
                             String typeOfCalls = (String) activationFormSIP.typeOfCalls.getModel().getElementAt(i);
-                            String actTypeOfCalls = activationFormSips.get(selectedActivation).getTypeOfCalls();
+                            String actTypeOfCalls = activationSipController.getSipActivation().get(selectedActivation).getTypeOfCalls();
                             if (typeOfCalls.equals(actTypeOfCalls))
                                 activationFormSIP.typeOfCalls.setSelectedIndex(i);
                         }
 
                         for (int i = 0; i < activationFormSIP.identificationType.getItemCount(); i++) {
                             String identificationType = (String) activationFormSIP.identificationType.getModel().getElementAt(i);
-                            String actIdentificationType = activationFormSips.get(selectedActivation).getIdentificationType();
+                            String actIdentificationType = activationSipController.getSipActivation().get(selectedActivation).getIdentificationType();
                             if (identificationType.equals(actIdentificationType))
                                 activationFormSIP.identificationType.setSelectedIndex(i);
                         }
-                        activationFormSIP.snbNumber.setText(activationFormSips.get(selectedActivation).getSnbNumber());
+                        activationFormSIP.snbNumber.setText(activationSipController.getSipActivation().get(selectedActivation).getSnbNumber());
 
                         //--WAN--//
                         String wan = "";
-                        for (int j = 0, i = 0; i < activationFormSips.get(selectedActivation).getWanAddress().length(); i++) {
-                            char a = activationFormSips.get(selectedActivation).getWanAddress().charAt(i);
-
+                        for (int j = 0, i = 0; i < activationSipController.getSipActivation().get(selectedActivation).getWanAddress().length(); i++) {
+                            char a = activationSipController.getSipActivation().get(selectedActivation).getWanAddress().charAt(i);
                             if (a != '.')
                                 wan += a;
                             if (a == '.') {
@@ -246,8 +183,8 @@ public class ListOfActivationView extends JDialog {
 
                         //--LAN--//
                         String lan = "";
-                        for (int j = 0, i = 0; i < activationFormSips.get(selectedActivation).getLanAddress().length(); i++) {
-                            char a = activationFormSips.get(selectedActivation).getLanAddress().charAt(i);
+                        for (int j = 0, i = 0; i < activationSipController.getSipActivation().get(selectedActivation).getLanAddress().length(); i++) {
+                            char a = activationSipController.getSipActivation().get(selectedActivation).getLanAddress().charAt(i);
 
                             if (a != '.')
                                 lan += a;
@@ -271,8 +208,8 @@ public class ListOfActivationView extends JDialog {
 
                         //--IP--//
                         String ip = "";
-                        for (int j = 0, i = 0; i < activationFormSips.get(selectedActivation).getIpAddress().length(); i++) {
-                            char a = activationFormSips.get(selectedActivation).getIpAddress().charAt(i);
+                        for (int j = 0, i = 0; i < activationSipController.getSipActivation().get(selectedActivation).getIpAddress().length(); i++) {
+                            char a = activationSipController.getSipActivation().get(selectedActivation).getIpAddress().charAt(i);
 
                             if (a != '.')
                                 ip += a;
@@ -293,43 +230,43 @@ public class ListOfActivationView extends JDialog {
                             }
                             activationFormSIP.ipAddressD.setText(ip);
                         }
-                        activationFormSIP.internetUser.setText(activationFormSips.get(selectedActivation).getInternetUser());
+                        activationFormSIP.internetUser.setText(activationSipController.getSipActivation().get(selectedActivation).getInternetUser());
 
                         for (int i = 0; i < activationFormSIP.signalAddress.getItemCount(); i++) {
                             String signalAddress = (String) activationFormSIP.signalAddress.getModel().getElementAt(i);
-                            String actSignalAddress = activationFormSips.get(selectedActivation).getSignalAddress();
+                            String actSignalAddress = activationSipController.getSipActivation().get(selectedActivation).getSignalAddress();
                             if (signalAddress.equals(actSignalAddress))
                                 activationFormSIP.signalAddress.setSelectedIndex(i);
                         }
 
                         for (int i = 0; i < activationFormSIP.mediaAddress.getItemCount(); i++) {
                             String mediaAddress = (String) activationFormSIP.mediaAddress.getModel().getElementAt(i);
-                            String actMediaAddress = activationFormSips.get(selectedActivation).getMediaAddress();
+                            String actMediaAddress = activationSipController.getSipActivation().get(selectedActivation).getMediaAddress();
                             if (mediaAddress.equals(actMediaAddress))
                                 activationFormSIP.mediaAddress.setSelectedIndex(i);
                         }
 
                         for (int i = 0; i < activationFormSIP.areaCode.getItemCount(); i++) {
                             String areaCode = (String) activationFormSIP.areaCode.getModel().getElementAt(i);
-                            String actAreaCode = activationFormSips.get(selectedActivation).getAreaCode();
+                            String actAreaCode = activationSipController.getSipActivation().get(selectedActivation).getAreaCode();
                             if (areaCode.equals(actAreaCode))
                                 activationFormSIP.areaCode.setSelectedIndex(i);
                         }
 
-                        activationFormSIP.emergencyCity.setText(activationFormSips.get(selectedActivation).getEmergencyCity());
+                        activationFormSIP.emergencyCity.setText(activationSipController.getSipActivation().get(selectedActivation).getEmergencyCity());
 
                         //-- DATE --//
                         DatePickerEdit(selectedActivation);
 
-                        String callOutSideCountry = activationFormSips.get(selectedActivation).getCallOutSideCountry();
+                        String callOutSideCountry = activationSipController.getSipActivation().get(selectedActivation).getCallOutSideCountry();
                         if (callOutSideCountry.equals("לא"))
                             activationFormSIP.callOutSideCountry.setSelected(activationFormSIP.callOutSideCountryNO.getModel(), true);
                         else
                             activationFormSIP.callOutSideCountry.setSelected(activationFormSIP.callOutSideCountryYES.getModel(), true);
 
-                        activationFormSIP.crNumber.setText(activationFormSips.get(selectedActivation).getCrNumber());
-                        activationFormSIP.trunkNumber.setText(activationFormSips.get(selectedActivation).getTrunkNumber());
-                        activationFormSIP.sbcPort.setValue(activationFormSips.get(selectedActivation).getSbcPort());
+                        activationFormSIP.crNumber.setText(activationSipController.getSipActivation().get(selectedActivation).getCrNumber());
+                        activationFormSIP.trunkNumber.setText(activationSipController.getSipActivation().get(selectedActivation).getTrunkNumber());
+                        activationFormSIP.sbcPort.setValue(activationSipController.getSipActivation().get(selectedActivation).getSbcPort());
 
                         activationFormSIP.setFormListener(new FormListener() {
                             @Override
@@ -339,14 +276,19 @@ public class ListOfActivationView extends JDialog {
 
                             @Override
                             public void formEventOccurredNumber(FormEvent e) {
-                                controller.clearNumberRange();
-                                controller.addNumberRange(e);
+                                numberRangeController.clearNumberRange();
+                                numberRangeController.addNumberRange(e);
                                 try {
-                                    controller.updateNumberRangeToDataBase(ActivationsMoves.FormId.getActivationId());
+                                    numberRangeController.connect();
+                                } catch (Exception exception) {
+                                    exception.printStackTrace();
+                                }
+                                try {
+                                    numberRangeController.updateNumberRangeToDataBase(ActivationsMoves.FormId.getActivationId());
                                 } catch (SQLException throwables) {
                                     throwables.printStackTrace();
                                 }
-
+                                numberRangeController.disconnect();
                             }
 
                             @Override
@@ -358,27 +300,26 @@ public class ListOfActivationView extends JDialog {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 try {
-                                    controller.connect();
+                                    activationSipController.connect();
                                 } catch (Exception exception) {
                                     exception.printStackTrace();
                                 }
                                 try {
-                                    controller.failActivation(ActivationsMoves.FormId.getActivationId());
-                                    controller.loadCalenderSipActivationToList();
+                                    activationSipController.failActivation(ActivationsMoves.FormId.getActivationId());
+                                    activationSipController.loadActivationSipToList();
                                 } catch (SQLException throwables) {
                                     throwables.printStackTrace();
                                 }
-                                String fails = "הבקשה בוצע מספר ההכשלות הוא : " + controller.getSipActivation().get(selectedActivation).getNumOfFails();
+                                String fails = "הבקשה בוצע מספר ההכשלות הוא : " + activationSipController.getSipActivation().get(selectedActivation).getNumOfFails();
                                 JOptionPane.showMessageDialog(ListOfActivationView.this, fails , "Info", JOptionPane.INFORMATION_MESSAGE);
-                                controller.disconnect();
-                                getDataFromSipListener.Update();
+                                activationSipController.disconnect();
+                                getDataFromSipListener.UpdateNumberRange();
 
 
                             }
                         });
-                        System.out.println(ActivationsMoves.FormId.getActivationId());
+                        activationFormSIP.templateActivaion.setEnabled(false);
                         activationFormSIP.setVisible(true);
-
                     }
                 }
             }
@@ -478,7 +419,7 @@ public class ListOfActivationView extends JDialog {
 
     }
 
-    //-- if str1 before str2 --//
+    //-- if str1 before str2 GUI CHECK--//
     private boolean isBefore (String str1 , String str2){
         //-- Trims --//
         char from,to;
@@ -565,8 +506,8 @@ public class ListOfActivationView extends JDialog {
     }
     private void DatePickerEdit(int selectedActivation){
         String dateStr="";
-        for(int j=0 ,  i = 0 ;i < activationFormSips.get(selectedActivation).getDatePicker().length() ; i ++ ) {
-            char a = activationFormSips.get(selectedActivation).getDatePicker().charAt(i);
+        for(int j=0 ,  i = 0 ;i < activationSipController.getSipActivation().get(selectedActivation).getDatePicker().length() ; i ++ ) {
+            char a = activationSipController.getSipActivation().get(selectedActivation).getDatePicker().charAt(i);
             if (a != '-')
                 dateStr += a;
             if (a == '-') {
@@ -587,5 +528,66 @@ public class ListOfActivationView extends JDialog {
 
     public void setDataFromSipListener(GetDataFromSipListener listener) {
         this.getDataFromSipListener = listener;
+    }
+
+    private void loadActivationToJlist(){
+        try {
+            activationSipController.connect();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        try {
+            activationSipController.loadActivationSipToList();
+            activationSipController.getSipActivation();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        activationSipController.disconnect();
+        int i = 0,flag=0;
+        actModel = new DefaultListModel();
+        actModel.removeAllElements();
+        //-- Date --//
+        //--From--//
+        try {
+            dateLabelFormatterFrom.valueToString((Date) fromDate.getModel().getValue());
+            datePickerEvFrom = dateLabelFormatterFrom.valueToString((Date) fromDate.getModel().getValue());
+        } catch (ParseException parseException) {
+            parseException.printStackTrace();
+        }
+
+        //--To--//
+        try {
+            dateLabelFormatterTo.valueToString((Date) toDate.getModel().getValue());
+            datePickerEvTo = dateLabelFormatterTo.valueToString((Date) toDate.getModel().getValue());
+        } catch (ParseException parseException) {
+            parseException.printStackTrace();
+        }
+        String from = datePickerEvFrom;
+        String to = datePickerEvTo;
+        if (!from.isEmpty() && !to.isEmpty()) {
+            activationsIdArrayList.clear();
+            if (isBefore(from, to)) {
+                for (i = 0; i < activationSipController.getSipActivation().size(); i++) {
+                    DateChoose = activationSipController.getSipActivation().get(i).getDatePicker();
+                    if (isBefore(from,to,DateChoose )) {
+                        actModel.addElement(activationSipController.getSipActivation().get(i).getCustomerName());
+                        activationsIdArrayList.add(activationSipController.getSipActivation().get(i).getId());
+                        activations.setModel(actModel);
+                        flag =1 ;
+                    }
+                }
+            } else
+                JOptionPane.showMessageDialog(ListOfActivationView.this, "זמן ההתחלה גדול מזמן הסיום", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        else {
+            JOptionPane.showMessageDialog(ListOfActivationView.this, "אנא הכנס תאריכים", "Error", JOptionPane.ERROR_MESSAGE);
+
+        }
+        //-- if flag==0 then the List is Empty --//
+        if (flag==0) {
+            actModel.removeAllElements();
+            activations.setModel(actModel);
+
+        }
     }
 }

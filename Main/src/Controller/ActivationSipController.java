@@ -7,31 +7,12 @@ import View.FormEvent;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.ArrayList;
 
-public class Controller {
+public class ActivationSipController {
     DataBase db = new DataBase();
 
     public List<ActivationFormSip> getSipActivation() {
         return db.getActivationSipFromList();
-    }
-
-    public Users getLoggedUser(){
-        return db.getLoggedUser();
-    }
-
-    public Connection getConnection() {
-        return db.getCon();
-    }
-
-    public void addNumberRange(FormEvent ev){
-        ArrayList from = ev.getFrom();
-        ArrayList to = ev.getTo();
-        String trunkNumber = ev.getTrunkNumber();
-
-        NumberRanges numberRanges = new NumberRanges(from,to,trunkNumber);
-        db.addNumberRangeToList(numberRanges);
-
     }
 
     public void addActivationSip(FormEvent ev) {
@@ -64,7 +45,7 @@ public class Controller {
         String signalAddress = ev.getSignalAddress();
         String mediaAddress = ev.getMediaAddress();
         int sbcPort = ev.getSbcPort();
-        String expertName = ev.getFirstName();
+        String expertName = ev.getExpertName();
         String connectionType = ev.getConnectionType();
         String projectManagerFirstName= ev.getProjectManagerFirstName();
         String activationType;
@@ -121,7 +102,7 @@ public class Controller {
         String signalAddress = ev.getSignalAddress();
         String mediaAddress = ev.getMediaAddress();
         int sbcPort = ev.getSbcPort();
-        String firstNAme = ev.getFirstName();
+        String expertFirstName = ev.getExpertName();
         String connectionType = ev.getConnectionType();
         String projectManagerFirstName= ev.getProjectManagerFirstName();
         String activationType;
@@ -129,11 +110,11 @@ public class Controller {
         int id = ActivationsMoves.FormId.getActivationId();
         int numOfFail = ev.getNumofFails();
         String status = ev.getStatus();
-        String lastUpate = ev.getLastUpdate();
+        String lastUpdate = ev.getLastUpdate();
 
 
         ActivationFormSip activationFormSip= new ActivationFormSip(id,customerID, customerName,contactName,customerPhoneNumber,customerEmail,customerTechName,customerTechPhoneNumber,pbxType,typeOfCalls,identificationType,totalNumbers,snbNumber,
-                areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,firstNAme,connectionType,projectManagerFirstName,activationType,status,numOfFail,lastUpate);
+                areaCode,emergencyCity,callOutSideCountry,crNumber,trunkNumber,datePicker,wanAddress,lanAddress,ipAddress,internetUser,infrastructure,routerType,CODEC,totalCalls,signalAddress,mediaAddress,sbcPort,expertFirstName,connectionType,projectManagerFirstName,activationType,status,numOfFail,lastUpdate);
         db.updateActivationSipToList(activationFormSip);
 
     }
@@ -150,14 +131,9 @@ public class Controller {
         db.insertingActivationSipToDataBase();
     }
 
-    public void loadCalenderSipActivationToList() throws SQLException {
-        db.loadCalenderSipActivationToList();
+    public void loadActivationSipToList() throws SQLException {
+        db.loadActivationSipToList();
     }
-
-    public void loadNumberRangeFromDataBaseToList(int activation_id) throws SQLException {
-        db.loadNumberRangeFromDataBaseToList(activation_id);
-    }
-
     public void disconnect(){
         //db.disconnect();
     }
@@ -165,27 +141,27 @@ public class Controller {
         db.connect();
     }
 
-    //-- Number Range to DataBse --//
-    public void insertingNumberRangeToDataBase() throws SQLException {
-        db.insertingNumberRangeToDataBase(ActivationsMoves.SessionId.getNewID());
-    }
-    public List<NumberRanges> getNumberRanges(){
-        return db.getNumberRanges();
-    }
-    public void updateNumberRangeToDataBase(int activation_id) throws SQLException {
-        db.updateNumberRangeToDataBase(activation_id);
-    }
-
     public void failActivation(int activationId) throws SQLException {
         db.failActivation(activationId);
     }
 
-    public void getNumOfFails(int id){
-        db.getNumOfFails(id);
+    public Connection getConnection() {
+        return db.getCon();
     }
 
-    public void clearNumberRange(){
-        db.clearNumberRange();
+    public String getExpertName(int id){
+        return db.getExpertName(id);
     }
 
+    public boolean checkIP(int a , int b , int c , int d){
+        if ((a >= 0 && a <= 255) && b >= 0 && b <= 255 && c >= 0 && c <= 255 && d >= 0 && d <= 255) {
+            if ((a == 10 && b != 142) || (a == 192 && b == 168) || (a == 172 && (b >= 16 && b <= 31)) || a == 127) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        return false;
+    }
 }

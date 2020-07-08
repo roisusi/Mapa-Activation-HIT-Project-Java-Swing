@@ -13,4 +13,8 @@ public class ExpertToFileController {
 
     }
 
+    public void exportToFile(){
+        expertListFile.exportToFile();
+    }
+
 }

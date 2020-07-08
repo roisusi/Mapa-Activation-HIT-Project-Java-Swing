@@ -1,27 +1,21 @@
 package View;
 
-
-import Controller.Controller;
-import Model.ListOfActivation;
+import Controller.ActivationSipController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
 import java.sql.SQLException;
 
 public class HomePage extends JFrame {
     private HomePageCalenderMenu cal;
     private HomePageMenu menu;
     private UpperMenu upperMenu;
-    private Controller controller;
+    private ActivationSipController activationSipController;
 
     public HomePage() {
         super("Mapa Activation");
-        //Test//
-
-
-        controller = new Controller();
+        activationSipController = new ActivationSipController();
         setJMenuBar(createMenubar());
         setLayout(new BorderLayout()); //set BorderLayout
 
@@ -31,69 +25,69 @@ public class HomePage extends JFrame {
         //-- Creation of Right side --//
         cal = new HomePageCalenderMenu();
         try {
-            controller.connect();
+            activationSipController.connect();
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            controller.loadCalenderSipActivationToList();
+            activationSipController.loadActivationSipToList();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("Home Page Create Calender I got Applications : " + controller.getSipActivation().size());
-        cal.setData(controller.getSipActivation());
+        System.out.println("Home Page Create Calender I got Applications : " + activationSipController.getSipActivation().size());
+        cal.setData(activationSipController);
         cal.refresh();
 
         menu.setDataToCalender(new GetDataFromSipListener() {
             @Override
             public void addActivation(FormEvent e) {
-                controller.addActivationSip(e);
+                activationSipController.addActivationSip(e);
                 try {
-                    controller.connect();
+                    activationSipController.connect();
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
                 try {
-                    controller.insertingActivationSipToDataBase();
+                    activationSipController.insertingActivationSipToDataBase();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
-                System.out.println("Home Page Create menu set data I got Applications : " + controller.getSipActivation().size());
+                System.out.println("Home Page Create menu set data I got Applications : " + activationSipController.getSipActivation().size());
                 cal.refresh();
-                controller.disconnect();
+                activationSipController.disconnect();
             }
 
             @Override
             public void updateActivation(FormEvent ev) {
-                controller.updateActivationSip(ev);
+                activationSipController.updateActivationSip(ev);
                 try {
-                    controller.connect();
+                    activationSipController.connect();
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
                 try {
-                    controller.updateActivationSipToDataBase(ActivationsMoves.FormId.getActivationId());
+                    activationSipController.updateActivationSipToDataBase(ActivationsMoves.FormId.getActivationId());
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
                 cal.refresh();
-                controller.disconnect();
+                activationSipController.disconnect();
             }
 
             @Override
-            public void Update() {
+            public void UpdateNumberRange() {
                 try {
-                    controller.connect();
+                    activationSipController.connect();
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
                 try {
-                    controller.loadCalenderSipActivationToList();
+                    activationSipController.loadActivationSipToList();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
                 cal.refresh();
-                controller.disconnect();
+                activationSipController.disconnect();
             }
         });
 
@@ -104,54 +98,52 @@ public class HomePage extends JFrame {
             public void rowDelete(int row)
             {
                 try {
-                    controller.connect();
+                    activationSipController.connect();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                controller.removeActivation(row);
-                cal.setData(controller.getSipActivation());
-                System.out.println("Home Page setCalenderTableListener I got Applications : " + controller.getSipActivation().size());
-                controller.disconnect();
+                activationSipController.removeActivation(row);
+                cal.setData(activationSipController);
+                System.out.println("Home Page setCalenderTableListener I got Applications : " + activationSipController.getSipActivation().size());
+                activationSipController.disconnect();
             }
             //-- Set right click mouse first name to activation --//
             @Override
             public void addExpertUser(int row, String firstName) {
-                controller.addFirstNameToActivationList(row,firstName);
-                System.out.println("Home Page addExpertUser I got Applications : " + controller.getSipActivation().size());
+                activationSipController.addFirstNameToActivationList(row,firstName);
+                System.out.println("Home Page addExpertUser I got Applications : " + activationSipController.getSipActivation().size());
                 try {
-                    controller.connect();
+                    activationSipController.connect();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 try {
-                    controller.updateUserExpertFirstName(row, firstName);
+                    activationSipController.updateUserExpertFirstName(row, firstName);
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
-                cal.setData(controller.getSipActivation());
-                controller.disconnect();
+                cal.setData(activationSipController);
+                activationSipController.disconnect();
             }
 
             @Override
             public void setStatus(String status,int row) {
-                controller.addStatusToActivationList(status,row);
+                activationSipController.addStatusToActivationList(status,row);
                 try {
-                    controller.connect();
+                    activationSipController.connect();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 try {
-                    controller.updateStatus(status,row);
+                    activationSipController.updateStatus(status,row);
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
-                cal.setData(controller.getSipActivation());
-                System.out.println("Status is : "+controller.getSipActivation().get(row).getStatus());
-                controller.disconnect();
+                cal.setData(activationSipController);
+                System.out.println("Status is : "+ activationSipController.getSipActivation().get(row).getStatus());
+                activationSipController.disconnect();
             }
         });
-
-
 
         //-- Creation of UpperMenu --//
         upperMenu = new UpperMenu("Welcome to Mapa Activation");
@@ -167,7 +159,7 @@ public class HomePage extends JFrame {
         setLocationRelativeTo(null); //Center the Frame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //when i press X it will close
         setVisible(true); //show Frame
-        controller.disconnect();
+        activationSipController.disconnect();
     }
     private JMenuBar createMenubar() {
         JMenuBar menuBar = new JMenuBar(); // create the menu bar

@@ -3,7 +3,6 @@ package View;
 import Model.Reports;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,7 +31,7 @@ public class ReportView extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 reports.InstallReport();
-
+                dispose();
             }
         });
 
@@ -40,6 +39,7 @@ public class ReportView extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 reports.ActivationReport();
+                dispose();
             }
         });
 
@@ -47,6 +47,7 @@ public class ReportView extends JDialog {
         setModal(true);
         setSize(550, 500); // Size the Frame
         setLocationRelativeTo(parent);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     private void FormControl()
