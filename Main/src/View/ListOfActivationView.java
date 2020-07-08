@@ -34,12 +34,10 @@ public class ListOfActivationView extends JDialog {
     private String datePickerEvTo;
     private JLabel expertName;
     private JLabel projectManagerName;
-    private JLabel numberOfSuccess;
     private  GetDataFromSipListener getDataFromSipListener;
     private DefaultListModel actModel;
     private List<Integer> activationsIdArrayList;
     private Controller controller;
-    private NumberRangeController numberRangeController;
 
     private int currentId;
 
@@ -348,6 +346,7 @@ public class ListOfActivationView extends JDialog {
                                 } catch (SQLException throwables) {
                                     throwables.printStackTrace();
                                 }
+
                             }
 
                             @Override

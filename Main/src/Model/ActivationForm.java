@@ -15,7 +15,6 @@ public abstract class ActivationForm  {
     protected String identificationType;
     protected int totalNumbers;
     protected String snbNumber;
-    protected String numberRange;
     protected String areaCode;
     protected String emergencyCity; //need to change by all Cities of EMS
     protected String callOutSideCountry;
@@ -26,9 +25,10 @@ public abstract class ActivationForm  {
     protected String projectManagerFirstName;
     protected String activationType;
     protected int numOfFails;
+    protected String lastUpdate;
 
     //-- Without id For Saving --//
-    public ActivationForm(String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String numberRange, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker,String firstName, String projectManagerFirstName,String activationType , int numOfFails) {
+    public ActivationForm(String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker,String firstName, String projectManagerFirstName,String activationType , int numOfFails,String lastUpdate) {
         this.customerID = customerID;
         this.customerName = customerName;
         this.contactName = contactName;
@@ -41,7 +41,6 @@ public abstract class ActivationForm  {
         this.identificationType = identificationType;
         this.totalNumbers = totalNumbers;
         this.snbNumber = snbNumber;
-        this.numberRange = numberRange;
         this.areaCode = areaCode;
         this.emergencyCity = emergencyCity;
         this.callOutSideCountry = callOutSideCountry;
@@ -52,6 +51,11 @@ public abstract class ActivationForm  {
         this.projectManagerFirstName = projectManagerFirstName;
         this.activationType = activationType;
         this.numOfFails = numOfFails;
+        this.lastUpdate = lastUpdate;
+    }
+
+    public String getLastUpdate() {
+        return lastUpdate;
     }
 
     public String getActivationType() {
@@ -116,10 +120,6 @@ public abstract class ActivationForm  {
 
     public String getSnbNumber() {
         return snbNumber;
-    }
-
-    public String getNumberRange() {
-        return numberRange;
     }
 
     public String getAreaCode() {
@@ -198,9 +198,6 @@ public abstract class ActivationForm  {
         this.snbNumber = snbNumber;
     }
 
-    public void setNumberRange(String numberRange) {
-        this.numberRange = numberRange;
-    }
 
     public void setAreaCode(String areaCode) {
         this.areaCode = areaCode;
@@ -237,5 +234,7 @@ public abstract class ActivationForm  {
         this.numOfFails = numOfFails;
     }
 
-
+    public void setLastUpdate(String lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 }

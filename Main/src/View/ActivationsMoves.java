@@ -12,23 +12,28 @@ public class ActivationsMoves {
 
     public static class SessionId{
         private static String userName;
-        private static String isApproved;
         private static ArrayList fromRange;
         private static ArrayList toRange;
-        private static ArrayList difference;
         public static int newID;
-        private static SessionId sessionId;
+        public static String expertName;
 
         private SessionId(){
         }
-        public static SessionId getSessionId() {
-            return sessionId;
-        }
-        public static String setUserName(String userName){
-            return SessionId.userName = userName;
+        public static String setUserName(String name){
+            return SessionId.userName = name;
         }
         public static String getUserName(){
             return SessionId.userName;
+        }
+
+        public static String getExpertName(){
+            return SessionId.expertName;
+        }
+        public static String setExpertName(String name){
+            return SessionId.expertName = name;
+        }
+        public static String removeExpertName(){
+            return SessionId.expertName = "";
         }
 
         public static int getNewID() {
@@ -66,9 +71,6 @@ public class ActivationsMoves {
 
     public static class FormId{
         private static int activationId;
-
-        public static void setActivationId() {
-        }
 
         public static int getActivationId() {
             return FormId.activationId;

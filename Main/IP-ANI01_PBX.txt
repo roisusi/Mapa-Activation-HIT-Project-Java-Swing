@@ -1,0 +1,13 @@
+Trunk Name : IP-ANI01_PBX
+SBC Port : 7500
+Total Calls : 1
+SNB Number : 1
+WAN Address : 1.1.1.1
+LAN Address : 1.1.1.1
+IP Address : 1.1.1.1
+SIG Address : 212.199.220.21
+RTP Address : 212.199.220.22
+Area Code : 03
+Emergency City : 1
+CR-Number : 1
+Call Outside Country allowed : כן

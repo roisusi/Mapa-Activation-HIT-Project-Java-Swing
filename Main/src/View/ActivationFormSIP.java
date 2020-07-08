@@ -1,8 +1,6 @@
 package View;
 
-import Controller.Controller;
-import Controller.NumberRangeController;
-import Model.NumberRanges;
+import Controller.*;
 import com.mysql.jdbc.StringUtils;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.UtilDateModel;
@@ -12,11 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Observable;
 
 public class ActivationFormSIP extends JDialog {
     private JPanel formPanelTop = new JPanel();
@@ -44,7 +40,6 @@ public class ActivationFormSIP extends JDialog {
     protected JTextField totalNumbers;
     protected JTextField totalCalls;
     protected JTextField snbNumber;
-    protected JTextField numberRange;
     protected JTextField wanAddressA;
     protected JTextField wanAddressB;
     protected JTextField wanAddressC;
@@ -70,12 +65,13 @@ public class ActivationFormSIP extends JDialog {
     protected JSpinner sbcPort;
     protected JDatePicker datePicker;
     private FormListener formListener;
-    private JLabel welcom;
+    private JLabel wellcome;
     private JButton addToSchedule;
     protected JButton editToSchedule;
     protected JButton failActivation;
-    private JButton activationToFile;
+    protected JButton activationToFile;
     protected JButton numberRangeButton;
+    protected JButton templateActivaion;
     private Controller controller;
 
     //-- Labels --//
@@ -140,14 +136,13 @@ public class ActivationFormSIP extends JDialog {
         totalCalls = new JTextField(15);
         routerTypeTextField = new JTextField(15);
         snbNumber = new JTextField(15);
-        numberRange = new JTextField(15);
         internetUser = new JTextField(15);
         emergencyCity = new JTextField(15);
         crNumber = new JTextField(15);
         trunkNumber = new JTextField(15);
-        welcom = new JLabel("טופס הפעלת SIP");
+        wellcome = new JLabel("טופס הפעלת SIP");
         this.inedxOfButton = inedxOfButton;
-        numberRangeButton = new JButton("הוסף טווחים");
+
 
         controller = new Controller();
 
@@ -284,6 +279,8 @@ public class ActivationFormSIP extends JDialog {
         editToSchedule = new JButton("עדכן הפעלה");
         failActivation = new JButton("הכשל הפעלה");
         activationToFile = new JButton("הוצא נתונים");
+        numberRangeButton = new JButton("הוסף טווחים");
+        templateActivaion = new JButton("טופס מוכן");
 
 
 
@@ -352,6 +349,38 @@ public class ActivationFormSIP extends JDialog {
 
             }
         });
+        activationToFile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String wan = ChainIpAddress(wanAddressA.getText(),wanAddressB.getText(),wanAddressC.getText(),wanAddressD.getText());
+                String lan = ChainIpAddress(lanAddressA.getText(),lanAddressB.getText(),lanAddressC.getText(),lanAddressD.getText());
+                String ipExternal = ChainIpAddress(ipAddressA.getText(),ipAddressB.getText(),ipAddressC.getText(),ipAddressD.getText());
+                //-- get Radio from callOutSideCountry --//
+                String callOutSideCountryEv;
+                String getcallOutSideCountryChoice = callOutSideCountry.getSelection().getActionCommand();
+                if (getcallOutSideCountryChoice.equals("YES"))
+                    callOutSideCountryEv = "כן";
+                else
+                    callOutSideCountryEv = "לא";
+                ExpertToFileController controller = new ExpertToFileController(trunkNumber.getText(),(Integer)sbcPort.getValue(),Integer.parseInt(totalCalls.getText()),snbNumber.getText(),
+                        wan,lan,ipExternal,(String)signalAddress.getSelectedItem(),(String)mediaAddress.getSelectedItem(),(String)areaCode.getSelectedItem(),emergencyCity.getText(),crNumber.getText(),callOutSideCountryEv);
+                controller.exportToFile();
+                JOptionPane.showMessageDialog(ActivationFormSIP.this,"הקובץ נוצר בהצלחה","INFO",JOptionPane.INFORMATION_MESSAGE);
+
+
+            }
+        });
+        templateActivaion.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CODEC.setSelectedIndex(5);
+                typeOfCalls.setSelectedIndex(3);
+                identificationType.setSelectedIndex(1);
+                signalAddress.setSelectedIndex(4);
+                mediaAddress.setSelectedIndex(4);
+
+            }
+        });
 
 
         addWindowListener(new WindowAdapter() {
@@ -373,6 +402,10 @@ public class ActivationFormSIP extends JDialog {
     }
     public void setFormListener(FormListener listener) {
         this.formListener = listener;
+    }
+    private String ChainIpAddress(String a , String b , String c , String d){
+        return a + "." + b + "." + c + "." + d ;
+
     }
     private boolean CheckIP(){
         boolean allGood = true;
@@ -1109,6 +1142,7 @@ public class ActivationFormSIP extends JDialog {
 
         //-- Buttons Panel --//
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        buttonsPanel.add(templateActivaion);
         buttonsPanel.add(activationToFile);
         buttonsPanel.add(failActivation);
         setAddOrEditBotton(inedxOfButton);
@@ -1117,8 +1151,8 @@ public class ActivationFormSIP extends JDialog {
         //-- Title Panel Top --//
         formPanelTop.setLayout(new FlowLayout(FlowLayout.CENTER));
         formPanelTop.setBorder(BorderFactory.createLineBorder(Color.black));
-        welcom.setFont(new Font("Arial",Font.PLAIN,36));
-        formPanelTop.add(welcom);
+        wellcome.setFont(new Font("Arial",Font.PLAIN,36));
+        formPanelTop.add(wellcome);
 
 
         // Add sub panels //
@@ -1148,7 +1182,6 @@ public class ActivationFormSIP extends JDialog {
         String identificationTypeEv;
         int totalNumbersEv;
         String snbNumberEv;
-        String numberRangeEv;
         String areaCodeEv;
         String emergencyCityEv;
         String callOutSideCountryEv;
@@ -1165,16 +1198,21 @@ public class ActivationFormSIP extends JDialog {
         String signalAddressEv;
         String mediaAddressEv;
         int sbcPortEv;
-        String firstName;
+        String expertName;
         String connectionTypeEv;
         String projectManagerEv;
         int idSession = ActivationsMoves.FormId.getActivationId();
+
+        // -- Date Handle --//
 
         try {
             datePickerEv = dateLabelFormatter.valueToString((Date)datePicker.getModel().getValue());
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        String lastUpdateEv = formatter.format(date);
 
 
         if (checkEmptyCells()) {
@@ -1197,7 +1235,6 @@ public class ActivationFormSIP extends JDialog {
                 connectionTypeEv = (String)connectionType.getSelectedItem();
 
                 snbNumberEv = snbNumber.getText();
-                numberRangeEv = numberRange.getText();
                 areaCodeEv = (String)areaCode.getSelectedItem();
                 emergencyCityEv = emergencyCity.getText();
                 int numofFailsEv = 1;
@@ -1220,17 +1257,19 @@ public class ActivationFormSIP extends JDialog {
                 CODECEv = (String)CODEC.getSelectedItem();
                 signalAddressEv = (String)signalAddress.getSelectedItem();
                 mediaAddressEv = (String)mediaAddress.getSelectedItem();
-                firstName = "";
+                expertName = ActivationsMoves.SessionId.getExpertName();
                 projectManagerEv = ActivationsMoves.SessionId.getUserName();
+                String status = "לא";
 
                 FormEvent evForm;
                 FormEvent evNumbers;
 
                 if (inedxOfButton==0){
                     //--Create New --//
+                    expertName="";
                     evForm= new FormEvent(this,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
-                        totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
-                        infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv,numofFailsEv);
+                        totalNumbersEv,snbNumberEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
+                        infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,expertName,connectionTypeEv,projectManagerEv,numofFailsEv,status,lastUpdateEv);
 
                     evNumbers = new FormEvent(this,ActivationsMoves.SessionId.getFromRange(),ActivationsMoves.SessionId.getToRange(),trunkNumberEv );
 
@@ -1240,8 +1279,8 @@ public class ActivationFormSIP extends JDialog {
                     //--Edited --//
 
                     evForm = new FormEvent(this,idSession,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
-                            totalNumbersEv,snbNumberEv,numberRangeEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
-                            infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,firstName,connectionTypeEv,projectManagerEv);
+                            totalNumbersEv,snbNumberEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
+                            infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,expertName,connectionTypeEv,projectManagerEv,status,lastUpdateEv);
 
                     evNumbers = new FormEvent(this,ActivationsMoves.SessionId.getFromRange(),ActivationsMoves.SessionId.getToRange(),trunkNumberEv);
                 }
