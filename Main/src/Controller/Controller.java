@@ -23,15 +23,7 @@ public class Controller {
         return db.getCon();
     }
 
-    public void addNumberRange(FormEvent ev){
-        ArrayList from = ev.getFrom();
-        ArrayList to = ev.getTo();
-        String trunkNumber = ev.getTrunkNumber();
 
-        NumberRanges numberRanges = new NumberRanges(from,to,trunkNumber);
-        db.addNumberRangeToList(numberRanges);
-
-    }
 
     public void addActivationSip(FormEvent ev) {
         String customerID = ev.getCustomerID();

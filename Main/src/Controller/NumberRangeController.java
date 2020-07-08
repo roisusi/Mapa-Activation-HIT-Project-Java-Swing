@@ -1,11 +1,14 @@
 package Controller;
 
+import Model.DataBase;
 import Model.NumberRanges;
+import View.FormEvent;
 
 import java.util.ArrayList;
 
 public class NumberRangeController {
 
+    DataBase db = new DataBase();
     NumberRanges numberRanges;
     ArrayList from;
     ArrayList to;
@@ -14,6 +17,15 @@ public class NumberRangeController {
         numberRanges = new NumberRanges(from,to);
         this.from = from;
         this.to = to;
+    }
+
+    public void addNumberRange(FormEvent ev){
+        from = ev.getFrom();
+        to = ev.getTo();
+        String trunkNumber = ev.getTrunkNumber();
+
+        numberRanges = new NumberRanges(from,to,trunkNumber);
+        db.addNumberRangeToList(numberRanges);
     }
 
     public String checkList(String list){
@@ -46,9 +58,9 @@ public class NumberRangeController {
         return numberRanges.getToRange();
     }
 
-    public void clear(){
+/*    public void clear(){
         numberRanges.clearList();
-    }
+    }*/
 
     public void setFromRange (ArrayList from){
         this.from = from;
