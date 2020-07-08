@@ -4,11 +4,6 @@ import Model.Users;
 import Model.Login;
 import Model.UsersType;
 
-import com.mysql.jdbc.StringUtils;
-import org.jdatepicker.JDatePanel;
-import org.jdatepicker.JDatePicker;
-import org.jdatepicker.UtilDateModel;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,7 +19,6 @@ public class CreateUserForm extends JDialog {
     protected JComboBox authenticationType;
     protected  JTextField userName;
     protected  JTextField password;
-    protected JDatePicker datePicker;
     private JButton buttonOK;
     private CreateUserFormListener createUserFormListener;
 

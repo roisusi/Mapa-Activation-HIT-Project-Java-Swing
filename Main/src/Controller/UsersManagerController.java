@@ -2,6 +2,7 @@ package Controller;
 
 import Model.*;
 
+import java.sql.Connection;
 import java.util.LinkedList;
 import java.util.List;
 import java.sql.SQLException;
@@ -130,5 +131,9 @@ public class UsersManagerController {
 
     public void updateLoginUsers(List loginList) throws SQLException {
         db.updateLoginUser(loginList);
+    }
+
+    public Connection getConnection() {
+        return db.getCon();
     }
 }

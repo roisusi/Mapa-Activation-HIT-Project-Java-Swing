@@ -1,7 +1,6 @@
 package View;
 
 import Controller.*;
-import Model.NumberRanges;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;

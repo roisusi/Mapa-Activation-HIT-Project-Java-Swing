@@ -1,12 +1,6 @@
 package View;
 
-import Controller.Controller;
-import Model.ActivationFormSip;
-
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 public class ActivationsMoves {
 
@@ -31,9 +25,6 @@ public class ActivationsMoves {
         }
         public static String setExpertName(String name){
             return SessionId.expertName = name;
-        }
-        public static String removeExpertName(){
-            return SessionId.expertName = "";
         }
 
         public static int getNewID() {

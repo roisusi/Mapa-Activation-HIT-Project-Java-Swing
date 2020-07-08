@@ -3,7 +3,7 @@ package Test;
 import Controller.UsersManagerController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.Assert.*;
+//import static org.junit.Assert.*;
 
 public class UsersManagerControllerTest {
     private UsersManagerController usersManagerController;

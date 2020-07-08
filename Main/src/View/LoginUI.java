@@ -68,7 +68,6 @@ public class LoginUI extends JDialog {
 
                 else
                     JOptionPane.showMessageDialog(LoginUI.this,"Login Failed","Login",JOptionPane.ERROR_MESSAGE);
-                    //JOptionPane.showMessageDialog(LoginUI.this,"Illegal Input","Login",JOptionPane.ERROR_MESSAGE);
             }
         });
 

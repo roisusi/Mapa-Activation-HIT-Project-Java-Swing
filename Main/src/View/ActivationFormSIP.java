@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,6 +21,7 @@ public class ActivationFormSIP extends JDialog {
     private JPanel formPanelRight = new JPanel();
     private JPanel buttonsPanel = new JPanel();
 
+    // JTextField //
     protected JTextField customerID;
     protected JTextField customerName;
     protected JTextField contactName;
@@ -28,15 +30,8 @@ public class ActivationFormSIP extends JDialog {
     protected JTextField customerTechName;
     protected JTextField customerTechPhoneNumber;
     protected JTextField pbxType;
-    protected JComboBox connectionType;
     protected JTextField infrastructure;
-    protected JRadioButton routerTypeYES;
-    protected JRadioButton routerTypeNO;
-    protected ButtonGroup routerTypeGroup;
     protected JTextField routerTypeTextField;
-    protected JComboBox CODEC;
-    protected JComboBox typeOfCalls;
-    protected JComboBox identificationType;
     protected JTextField totalNumbers;
     protected JTextField totalCalls;
     protected JTextField snbNumber;
@@ -53,28 +48,36 @@ public class ActivationFormSIP extends JDialog {
     protected JTextField ipAddressC;
     protected JTextField ipAddressD;
     protected JTextField internetUser;
-    protected JComboBox signalAddress;
-    protected JComboBox mediaAddress;
-    protected JComboBox areaCode;
     protected JTextField emergencyCity;
+    protected JTextField crNumber;
+    protected JTextField trunkNumber;
+
+    // Radio Buttons //
     protected ButtonGroup callOutSideCountry;
     protected JRadioButton callOutSideCountryYES;
     protected JRadioButton callOutSideCountryNO;
-    protected JTextField crNumber;
-    protected JTextField trunkNumber;
+    protected ButtonGroup routerTypeGroup;
+    protected JRadioButton routerTypeYES;
+    protected JRadioButton routerTypeNO;
+
+    // Spinners
     protected JSpinner sbcPort;
-    protected JDatePicker datePicker;
+
+
+    // Observers //
     private FormListener formListener;
-    private JLabel wellcome;
-    private JButton addToSchedule;
-    protected JButton editToSchedule;
-    protected JButton failActivation;
-    protected JButton activationToFile;
-    protected JButton numberRangeButton;
-    protected JButton templateActivaion;
-    private Controller controller;
+
+    // ComboBox //
+    protected JComboBox connectionType;
+    protected JComboBox signalAddress;
+    protected JComboBox mediaAddress;
+    protected JComboBox areaCode;
+    protected JComboBox CODEC;
+    protected JComboBox typeOfCalls;
+    protected JComboBox identificationType;
 
     //-- Labels --//
+    private JLabel wellcome;
     private JLabel customerIDLabel = new JLabel("מספר לקוח : ");
     private JLabel customerNameLabel = new JLabel("שם לקוח : ");
     private JLabel contactNameLabel = new JLabel("שם איש קשר : ");
@@ -108,21 +111,36 @@ public class ActivationFormSIP extends JDialog {
     private JLabel dateLabel = new JLabel("תאריך : ");
     private JLabel fireWallLabel = new JLabel("נתב בניהולנו ? : ");
 
+    // Buttons //
+    protected JButton editToSchedule;
+    protected JButton failActivation;
+    protected JButton activationToFile;
+    protected JButton numberRangeButton;
+    protected JButton templateActivaion;
+    private JButton addToSchedule;
 
+    // Controllers //
+    private ActivationSipController activationSipController;
+
+    // DatePicker //
     private String datePickerEv;
-    private LoginUI loginUI;
-    private int inedxOfButton;
     private DateLabelFormatter dateLabelFormatter;
+    protected JDatePicker datePicker;
+
+    // Other Forms //
     private NumberRangesView numberRangesView;
+    private LoginUI loginUI;
 
+    private int indexOfButton;
 
-    public ActivationFormSIP(JPanel parent,int inedxOfButton,int activationId) {
+    public ActivationFormSIP(JPanel parent, int indexOfButton, int activationId) {
+
+        //-----------------------------------------------------//
+        //--------------- Start of Initialization -------------//
+        //-----------------------------------------------------//
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
-        mainPanel.setBorder(BorderFactory.createTitledBorder("טופס התקנה"));
-        add(mainPanel,BorderLayout.CENTER);
 
-        //-- Initialization --//
+        // TextField //
         customerID = new JTextField(15);
         customerName = new JTextField(15);
         contactName = new JTextField(15);
@@ -141,12 +159,10 @@ public class ActivationFormSIP extends JDialog {
         crNumber = new JTextField(15);
         trunkNumber = new JTextField(15);
         wellcome = new JLabel("טופס הפעלת SIP");
-        this.inedxOfButton = inedxOfButton;
+        this.indexOfButton = indexOfButton;
 
-
-        controller = new Controller();
-
-
+        // Controller //
+        activationSipController = new ActivationSipController();
 
         //-- Spinner --//
         sbcPort = new JSpinner();
@@ -223,7 +239,7 @@ public class ActivationFormSIP extends JDialog {
         signalAddressCb.addElement("212.199.220.21");
         signalAddress.setPreferredSize(dim);
         signalAddress.setModel(signalAddressCb);
-        signalAddress.setSelectedIndex(0);
+
 
         mediaAddress = new JComboBox();
         DefaultComboBoxModel mediaAddressCb = new DefaultComboBoxModel();
@@ -296,6 +312,10 @@ public class ActivationFormSIP extends JDialog {
             parseException.printStackTrace();
         }
 
+        //-----------------------------------------------------//
+        //--------------- End of Initialization ---------------//
+        //-----------------------------------------------------//
+
 
         //-------------------------------- Listeners --------------------------------//
 
@@ -318,21 +338,34 @@ public class ActivationFormSIP extends JDialog {
         loginUI.setUserLoggedListener(new UserLoggedListener() {
             @Override
             public void setUserFirstNameLogged(String User) {
-                System.out.println("SIP : " + User);
             }
         });
         addToSchedule.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 uploadFormToDataBase();
+                clearForm();
             }
 
         });
         editToSchedule.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                try {
+                    activationSipController.connect();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                try {
+                    activationSipController.loadActivationSipToList();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                String expertName = activationSipController.getExpertName(ActivationsMoves.FormId.getActivationId());
+                if (ActivationsMoves.SessionId.getExpertName() == null)
+                    ActivationsMoves.SessionId.setExpertName(expertName);
                 uploadFormToDataBase();
-                System.out.println(ActivationsMoves.FormId.getActivationId());
+                activationSipController.disconnect();
             }
         });
         numberRangeButton.addActionListener(new ActionListener() {
@@ -340,13 +373,6 @@ public class ActivationFormSIP extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 numberRangesView = new NumberRangesView(mainPanel,activationId);
                 numberRangesView.setVisible(true);
-            }
-        });
-        failActivation.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-
             }
         });
         activationToFile.addActionListener(new ActionListener() {
@@ -366,8 +392,6 @@ public class ActivationFormSIP extends JDialog {
                         wan,lan,ipExternal,(String)signalAddress.getSelectedItem(),(String)mediaAddress.getSelectedItem(),(String)areaCode.getSelectedItem(),emergencyCity.getText(),crNumber.getText(),callOutSideCountryEv);
                 controller.exportToFile();
                 JOptionPane.showMessageDialog(ActivationFormSIP.this,"הקובץ נוצר בהצלחה","INFO",JOptionPane.INFORMATION_MESSAGE);
-
-
             }
         });
         templateActivaion.addActionListener(new ActionListener() {
@@ -378,10 +402,8 @@ public class ActivationFormSIP extends JDialog {
                 identificationType.setSelectedIndex(1);
                 signalAddress.setSelectedIndex(4);
                 mediaAddress.setSelectedIndex(4);
-
             }
         });
-
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -392,12 +414,12 @@ public class ActivationFormSIP extends JDialog {
             }
         });
 
-
-
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createTitledBorder("טופס התקנה"));
+        add(mainPanel,BorderLayout.CENTER);
         FormControl();
         setModal(true);
         setSize(750, 700); // Size the Frame
-        //setLocation(300,600); //Center the Frame
         setLocationRelativeTo(parent);
     }
     public void setFormListener(FormListener listener) {
@@ -405,44 +427,43 @@ public class ActivationFormSIP extends JDialog {
     }
     private String ChainIpAddress(String a , String b , String c , String d){
         return a + "." + b + "." + c + "." + d ;
-
     }
     private boolean CheckIP(){
-        boolean allGood = true;
-            Integer wanA = Integer.parseInt(wanAddressA.getText());
-            Integer wanB = Integer.parseInt(wanAddressB.getText());
-            Integer wanC = Integer.parseInt(wanAddressC.getText());
-            Integer wanD = Integer.parseInt(wanAddressD.getText());
-            if (wanA >= 0 && wanA <= 255 && wanB >= 0 && wanB <= 255 && wanC >= 0 && wanC <= 255 && wanD >= 0 && wanD <= 255) {
-                if ((wanA == 10 && wanB != 142) || (wanA == 192 && wanB == 168) || (wanA == 172 && (wanB >= 16 && wanB <= 31)) || wanA == 127) {
-                    wanAddressLabel.setForeground(Color.red);
-                    allGood = false;
-                }
-            }
 
-            Integer lanA = Integer.parseInt(lanAddressA.getText());
-            Integer lanB = Integer.parseInt(lanAddressB.getText());
-            Integer lanC = Integer.parseInt(lanAddressC.getText());
-            Integer lanD = Integer.parseInt(lanAddressD.getText());
-            if (lanA >= 0 && lanA <= 255 && lanB >= 0 && lanB <= 255 && lanC >= 0 && lanC <= 255 && lanD >= 0 && lanD <= 255) {
-                if ((lanA == 10 && lanB != 142) || (lanA == 192 && lanB == 168) || (lanA == 172 && (lanB >= 16 && lanB <= 31)) || lanA == 127) {
-                    lanAddressLabel.setForeground(Color.red);
-                    allGood = false;
-                }
-                ;
-            }
+        boolean allGood;
+        boolean finalResult = true;
+        Integer wanA = Integer.parseInt(wanAddressA.getText());
+        Integer wanB = Integer.parseInt(wanAddressB.getText());
+        Integer wanC = Integer.parseInt(wanAddressC.getText());
+        Integer wanD = Integer.parseInt(wanAddressD.getText());
+        allGood = activationSipController.checkIP(wanA,wanB,wanC,wanD);
+        if (!allGood) {
+            wanAddressLabel.setForeground(Color.red);
+            finalResult= false;
+        }
 
-            Integer ipA = Integer.parseInt(ipAddressA.getText());
-            Integer ipB = Integer.parseInt(ipAddressB.getText());
-            Integer ipC = Integer.parseInt(ipAddressC.getText());
-            Integer ipD = Integer.parseInt(ipAddressD.getText());
-            if (ipA >= 0 && ipA <= 255 && ipB >= 0 && ipB <= 255 && ipC >= 0 && ipC <= 255 && ipD >= 0 && ipD <= 255) {
-                if ((ipA == 10 && ipB != 142) || (ipA == 192 && ipB == 168) || (ipA == 172 && (ipB >= 16 && ipB <= 31)) || ipA == 127) {
-                    ipAddressLabel.setForeground(Color.red);
-                    allGood = false;
-                }
-            }
-        return allGood;
+        Integer lanA = Integer.parseInt(lanAddressA.getText());
+        Integer lanB = Integer.parseInt(lanAddressB.getText());
+        Integer lanC = Integer.parseInt(lanAddressC.getText());
+        Integer lanD = Integer.parseInt(lanAddressD.getText());
+
+        allGood = activationSipController.checkIP(lanA,lanB,lanC,lanD);
+        if (!allGood) {
+            lanAddressLabel.setForeground(Color.red);
+            finalResult= false;
+        }
+
+        Integer ipA = Integer.parseInt(ipAddressA.getText());
+        Integer ipB = Integer.parseInt(ipAddressB.getText());
+        Integer ipC = Integer.parseInt(ipAddressC.getText());
+        Integer ipD = Integer.parseInt(ipAddressD.getText());
+
+        allGood = activationSipController.checkIP(ipA,ipB,ipC,ipD);
+        if (!allGood) {
+            ipAddressLabel.setForeground(Color.red);
+            finalResult= false;
+        }
+        return finalResult;
     }
     private boolean CheckInputDigits(){
         boolean flag=true;
@@ -1145,7 +1166,7 @@ public class ActivationFormSIP extends JDialog {
         buttonsPanel.add(templateActivaion);
         buttonsPanel.add(activationToFile);
         buttonsPanel.add(failActivation);
-        setAddOrEditBotton(inedxOfButton);
+        setAddOrEditBotton(indexOfButton);
 
 
         //-- Title Panel Top --//
@@ -1264,7 +1285,8 @@ public class ActivationFormSIP extends JDialog {
                 FormEvent evForm;
                 FormEvent evNumbers;
 
-                if (inedxOfButton==0){
+                if (indexOfButton ==0){
+
                     //--Create New --//
                     expertName="";
                     evForm= new FormEvent(this,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
@@ -1276,8 +1298,8 @@ public class ActivationFormSIP extends JDialog {
 
                 }
                 else {
-                    //--Edited --//
 
+                    //--Edited --//
                     evForm = new FormEvent(this,idSession,customerIDEv,customerNameEv,contactNameEv,customerPhoneNumberEv,customerEmailEv,customerTechNameEv,customerTechPhoneNumberEv,pbxTypeEv,typeOfCallsEv,identificationTypeEv,
                             totalNumbersEv,snbNumberEv,areaCodeEv,emergencyCityEv,callOutSideCountryEv,crNumberEv,trunkNumberEv,datePickerEv,wanAddressEv,lanAddressEv,ipAddressEv,internetUserEv,
                             infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,expertName,connectionTypeEv,projectManagerEv,status,lastUpdateEv);
@@ -1303,5 +1325,51 @@ public class ActivationFormSIP extends JDialog {
         }
         else
             JOptionPane.showMessageDialog(ActivationFormSIP.this,"נא השלם את הנתונים באדום","Error",JOptionPane.ERROR_MESSAGE);
+    }
+
+    private void clearForm(){
+        customerID.setText("");
+        totalNumbers.setText("");
+        sbcPort.setValue(7500);
+        totalCalls.setText("");
+        customerName.setText("");
+        contactName.setText("");
+        customerPhoneNumber.setText("");
+        customerEmail.setText("");
+        customerTechName.setText("");
+        customerTechPhoneNumber.setText("");
+        connectionType.setSelectedIndex(0);
+        typeOfCalls.setSelectedIndex(0);
+        pbxType.setText("");
+        typeOfCalls.setSelectedIndex(0);
+        identificationType.setSelectedIndex(0);
+        connectionType.setSelectedItem(0);
+        snbNumber.setText("");
+        areaCode.setSelectedIndex(0);
+        emergencyCity.setText("");
+        routerTypeGroup.setSelected(routerTypeNO.getModel(),true);
+        routerTypeTextField.setText("");
+        callOutSideCountry.setSelected(callOutSideCountryNO.getModel(),true);
+        crNumber.setText("");
+        trunkNumber.setText("");
+        wanAddressA.setText("");
+        wanAddressB.setText("");
+        wanAddressC.setText("");
+        wanAddressD.setText("");
+        lanAddressA.setText("");
+        lanAddressB.setText("");
+        lanAddressC.setText("");
+        lanAddressD.setText("");
+        ipAddressA.setText("");
+        ipAddressB.setText("");
+        ipAddressC.setText("");
+        ipAddressD.setText("");
+        internetUser.setText("");
+        infrastructure.setText("");
+        routerTypeTextField.setText("");
+        CODEC.setSelectedIndex(0);
+        signalAddress.setSelectedIndex(0);
+        mediaAddress.setSelectedIndex(0);
+        datePicker.getModel().setSelected(false);
     }
 }

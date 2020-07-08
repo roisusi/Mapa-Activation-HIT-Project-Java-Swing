@@ -24,7 +24,49 @@ public class DataBase {
         this.numberRanges = new LinkedList<NumberRanges>();
     }
 
-    public Connection getCon() { return con; }
+
+    //                          //
+    //  User Manager DataBase   //
+    //                          //
+    public List<Login> loadSystemUsersFromDataBaseToList() throws SQLException {
+        int id=0;
+        List<Login> loginList = new LinkedList<Login>();
+        String selectSql = "select * from SystemUsers";
+        Statement selectStatement = con.createStatement();
+        ResultSet results = selectStatement.executeQuery(selectSql);
+
+        while (results.next()) {
+            id = results.getInt("id");
+            String userName = results.getString("Username");
+            String password = results.getString("Password");
+
+            Login login = new Login(id,userName, password);
+            loginList.add(login);
+        }
+        selectStatement.close();
+        return loginList;
+    }
+    public List<Users> loadUsersFromDataBaseToList() throws SQLException {
+        List<Users> usersList = new LinkedList<Users>();
+        String selectSql = "select * from Users";
+        Statement selectStatement = con.createStatement();
+        ResultSet results = selectStatement.executeQuery(selectSql);
+
+        while (results.next()) {
+            int id = results.getInt("id");
+            String firstName = results.getString("FirstName");
+            String lastName = results.getString("LastName");
+            String email = results.getString("Email");
+            String phoneNumber = results.getString("PhoneNumber");
+            UsersType type = UsersType.valueOf(results.getString("Type"));
+            int userNameId = results.getInt("UserNameId");
+
+            Users user = new Users(id, firstName, lastName, email, phoneNumber, type, userNameId);
+            usersList.add(user);
+        }
+        selectStatement.close();
+        return usersList;
+    }
     public void setLoggedUser(Users user) {
         loggedUser = user;
     }
@@ -37,30 +79,195 @@ public class DataBase {
     public Login getLoginUser(){
         return LoginUser;
     }
-    public void addActivationSipToList(ActivationFormSip sipAct) {
-        sipActivation.add(sipAct);
+    public void updateSystemUser(List usersList) throws SQLException {
+        int size = usersList.size();
+        String updateSql = "update Users set id = ?, FirstName = ?, LastName = ?, Email = ?, PhoneNumber = ?, Type = ?, UserNameId = ? where id = ?;";
+        PreparedStatement preparedStatement = con.prepareStatement(updateSql);
+
+        for (int i = 0; i < size; i++)
+        {
+            Users user = (Users) usersList.get(i);
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setString(2, user.getFirstName());
+            preparedStatement.setString(3, user.getLastName());
+            preparedStatement.setString(4, user.getEmail());
+            preparedStatement.setString(5, user.getPhoneNumber());
+            preparedStatement.setString(6, user.getUsersType().toString());
+            preparedStatement.setInt(7, user.getUserNameId());
+            preparedStatement.setInt(8, user.getId());
+            preparedStatement.executeUpdate();
+        }
+        preparedStatement.close();
+    }
+    public void updateLoginUser(List loginList) throws SQLException {
+        int size = loginList.size();
+        String updateSql = "update SystemUsers set id = ?, Username = ?, Password = ? where id = ?;";
+        PreparedStatement preparedStatement = con.prepareStatement(updateSql);
+
+        for (int i = 0; i < size; i++)
+        {
+            Login login = (Login)loginList.get(i);
+            preparedStatement.setInt(1, login.getId());
+            preparedStatement.setString(2, login.getUserName());
+            preparedStatement.setString(3, login.getPassword());
+            preparedStatement.setInt(4, login.getId());
+            preparedStatement.executeUpdate();
+        }
+        preparedStatement.close();
+    }
+    public void deleteUserFromDataBase(int id) throws SQLException {
+
+        String selectSql = "select id from Users where id=?";
+        PreparedStatement checkStatement = con.prepareStatement(selectSql);
+
+        String deleteSql = "delete from Users where id=?";
+        PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
+
+        checkStatement.setInt(1, id);
+        ResultSet checkResult = checkStatement.executeQuery();
+        checkResult.next();
+        deleteStmt.setInt(1, id);
+        deleteStmt.executeUpdate();
+
+        deleteStmt.close();
+    }
+    public void deleteLoginUserFromDataBase(int id) throws SQLException {
+
+        String selectSql = "select id from SystemUsers where id=?";
+        PreparedStatement checkStatement = con.prepareStatement(selectSql);
+
+        String deleteSql = "delete from SystemUsers where id=?";
+        PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
+
+        checkStatement.setInt(1, id);
+        ResultSet checkResult = checkStatement.executeQuery();
+        checkResult.next();
+        deleteStmt.setInt(1, id);
+        deleteStmt.executeUpdate();
+
+        deleteStmt.close();
+    }
+    public void removeUserFromList(int id, int userNameId) {
+        try {
+            deleteUserFromDataBase(id);
+            deleteLoginUserFromDataBase(userNameId);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+
+    //                          //
+    //  Number Range DataBase   //
+    //                          //
+    public List<NumberRanges> getNumberRanges(){
+        //return Collections.unmodifiableList(numberRanges);
+        return numberRanges;
     }
     public void addNumberRangeToList(NumberRanges sipNR) {
         numberRanges.add(sipNR);
     }
-    public void addFirstNameToActivationList(int row, String firstName){
-        sipActivation.get(row).setFirstName(firstName);
+    public void insertingNumberRangeToDataBase(int activation_id) throws SQLException {
+        for (NumberRanges numberRanges : numberRanges){
+            String insertSql = "insert into NumberRange (numFrom,numTo,TrunkName,Activation_Id) values(?,?,?,?)";
+            PreparedStatement insertStmt = con.prepareStatement(insertSql);
+            int i=0;
+            if (activation_id == 0)
+                activation_id = ActivationsMoves.SessionId.getNewID();
+            String trunkNumber = numberRanges.getTrunk();
+            while (numberRanges.getFromRange() != null && i<numberRanges.getFromRange().size() ){
+                System.out.println("Inserting Numbers Line : " + i + "With id : " + activation_id);
+                int col = 1;
+                insertStmt.setString(col++, numberRanges.getFromRange().get(i));
+                insertStmt.setString(col++,  numberRanges.getToRange().get(i));
+                insertStmt.setString(col++, trunkNumber);
+                insertStmt.setInt(col++,activation_id);
+                insertStmt.executeUpdate();
+                i++;
+            }
+            insertStmt.close();
+        }
     }
-    public void addFirstNameToActivationList(String status,int row){
-        sipActivation.get(row).setStatus(status);
+    public void loadNumberRangeFromDataBaseToList(int activation_id) throws SQLException {
+        numberRanges.clear();
+        String selectSql = "select NumFrom,NumTo,TrunkName from NumberRange where Activation_id=" + activation_id;
+        Statement selectStatement = con.createStatement();
+        ResultSet results = selectStatement.executeQuery(selectSql);
+
+        ArrayList<String> from = new ArrayList<>();
+        ArrayList<String> to = new ArrayList<>();
+        String trunkName="";
+        while (results.next()) {
+            from.add(results.getString("NumFrom"));
+            to.add(results.getString("NumTo"));
+            trunkName = results.getString("TrunkName");
+            NumberRanges numberRange = new NumberRanges(from,to,trunkName);
+            numberRanges.add(numberRange);
+        }
+
+        selectStatement.close();
     }
+    public void updateNumberRangeToDataBase(int activation_id) throws SQLException {
+        for (NumberRanges numberRanges : numberRanges) {
+            if (numberRanges.getFromRange() != null) {
+                String deleteSql = "delete from NumberRange where activation_id=?";
+                PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
+                deleteStmt.setInt(1, activation_id);
+                deleteStmt.executeUpdate();
+                deleteStmt.close();
+            }
+            String insertSql = "insert into NumberRange (numFrom,numTo,TrunkName,Activation_Id) values(?,?,?,?)";
+            PreparedStatement insertStmt = con.prepareStatement(insertSql);
+            int i = 0;
+            if (activation_id == 0) {
+                activation_id = ActivationsMoves.SessionId.getNewID();
+            }
+            String trunkNumber = numberRanges.getTrunk();
+            while (numberRanges.getFromRange() != null && i < numberRanges.getFromRange().size()) {
+                System.out.println("Inserting Numbers with Activation ID " + activation_id);
+                int col = 1;
+                insertStmt.setString(col++, numberRanges.getFromRange().get(i));
+                insertStmt.setString(col++, numberRanges.getToRange().get(i));
+                insertStmt.setString(col++, trunkNumber);
+                insertStmt.setInt(col++, activation_id);
+                insertStmt.executeUpdate();
+                i++;
+            }
+            insertStmt.close();
+        }
+    }
+
+
+    //                           //
+    //  Activation Sip DataBase  //
+    //                           //
     public List<ActivationFormSip> getActivationSipFromList(){
         return Collections.unmodifiableList(sipActivation);
     }
-    public List<NumberRanges> getNumberRanges(){
-        //return Collections.unmodifiableList(numberRanges);
-        return numberRanges;
+    public String getExpertName(int id){
+        String expertName="";
+        int i=0;
+        for (ActivationFormSip actSip : sipActivation){
+            if (actSip.getId() == id)
+                expertName =sipActivation.get(i).getExpertFirstName();
+            i++;
+        }
+        return expertName;
+    }
+    public void addActivationSipToList(ActivationFormSip sipAct) {
+        sipActivation.add(sipAct);
+    }
+    public void addFirstNameToActivationList(int row, String firstName){
+        sipActivation.get(row).setExpertName(firstName);
+    }
+    public void addFirstNameToActivationList(String status,int row){
+        sipActivation.get(row).setStatus(status);
     }
     public void updateActivationSipToList(ActivationFormSip sipAct) {
         int i=0;
         for (ActivationFormSip activationFormSip : sipActivation ){
             if (sipAct.getId() == activationFormSip.getId()){
-                sipActivation.get(i).setFirstName(sipAct.getFirstName());
+                sipActivation.get(i).setExpertName(sipAct.getExpertFirstName());
                 sipActivation.get(i).setStatus(sipAct.getStatus());
                 sipActivation.get(i).setActivationType(sipAct.getActivationType());
                 sipActivation.get(i).setAreaCode(sipAct.getAreaCode());
@@ -99,42 +306,6 @@ public class DataBase {
             }
             i++;
         }
-    }
-    public void updateSystemUser(List usersList) throws SQLException {
-        int size = usersList.size();
-        String updateSql = "update Users set id = ?, FirstName = ?, LastName = ?, Email = ?, PhoneNumber = ?, Type = ?, UserNameId = ? where id = ?;";
-        PreparedStatement preparedStatement = con.prepareStatement(updateSql);
-
-        for (int i = 0; i < size; i++)
-        {
-            Users user = (Users) usersList.get(i);
-            preparedStatement.setInt(1, user.getId());
-            preparedStatement.setString(2, user.getFirstName());
-            preparedStatement.setString(3, user.getLastName());
-            preparedStatement.setString(4, user.getEmail());
-            preparedStatement.setString(5, user.getPhoneNumber());
-            preparedStatement.setString(6, user.getUsersType().toString());
-            preparedStatement.setInt(7, user.getUserNameId());
-            preparedStatement.setInt(8, user.getId());
-            preparedStatement.executeUpdate();
-        }
-        preparedStatement.close();
-    }
-    public void updateLoginUser(List loginList) throws SQLException {
-        int size = loginList.size();
-        String updateSql = "update SystemUsers set id = ?, Username = ?, Password = ? where id = ?;";
-        PreparedStatement preparedStatement = con.prepareStatement(updateSql);
-
-        for (int i = 0; i < size; i++)
-        {
-            Login login = (Login)loginList.get(i);
-            preparedStatement.setInt(1, login.getId());
-            preparedStatement.setString(2, login.getUserName());
-            preparedStatement.setString(3, login.getPassword());
-            preparedStatement.setInt(4, login.getId());
-            preparedStatement.executeUpdate();
-        }
-        preparedStatement.close();
     }
     public void updateUserExpertFirstName(int row , String firstName) throws SQLException {
         ActivationFormSip activationFormSip = sipActivation.get(row);
@@ -202,7 +373,7 @@ public class DataBase {
                 String connectionType = activationFormSip.getConnectionType();
                 String activationType = activationFormSip.getActivationType();
                 String status = activationFormSip.getStatus();
-                String expertFirstName = activationFormSip.getFirstName();
+                String expertFirstName = activationFormSip.getExpertFirstName();
                 String projectManagerFirstName = activationFormSip.getProjectManagerFirstName();
                 String lastUpdate = activationFormSip.getLastUpdate();
 
@@ -257,13 +428,68 @@ public class DataBase {
         updateStmt.close();
         checkStmt.close();
     }
+    public void loadActivationSipToList() throws SQLException {
+        sipActivation.clear();
+        String selectSql = "select id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
+                "SNBnumber,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,Date,WanAddress,LanAddress,IPpbx,InternetUser,Infrastructure," +
+                "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,ExpertFirstName,ConnectionType,ProjectManagerFirstName,ActivationType,Status,ActivationFailCounter,LastUpdate from Activation_SIP order by id";
+        Statement selectStatment = con.createStatement();
+
+        ResultSet results = selectStatment.executeQuery(selectSql);
+
+        while (results.next()) {
+            int id = results.getInt("id");
+            String CustomerID = results.getString("CustomerID");
+            String CustomerName = results.getString("CustomerName");
+            String contactName = results.getString("ContactName");
+            String CustomerPhoneNumber = results.getString("CustomerPhoneNumber");
+            String CustomerEmail = results.getString("CustomerEmail");
+            String TechnicanName = results.getString("TechnicanName");
+            String TechnicanPhone = results.getString("TechnicanPhone");
+            String SwitchType = results.getString("SwitchType");
+            String TypeOfCalls = results.getString("TypeOfCalls");
+            String IdenteficationType = results.getString("IdenteficationType");
+            int TotalNumbers = results.getInt("TotalNumbers");
+            String SNBnumber = results.getString("SNBnumber");
+            String AreaCode = results.getString("AreaCode");
+            String EmergancyCity = results.getString("EmergancyCity");
+            String CallOutCountry = results.getString("CallOutCountry");
+            String CRnumber = results.getString("CRnumber");
+            String TrunkNumber = results.getString("TrunkNumber");
+            String date = results.getString("Date");
+            String WanAddress = results.getString("WanAddress");
+            String LanAddress = results.getString("LanAddress");
+            String IPpbx = results.getString("IPpbx");
+            String InternetUser = results.getString("InternetUser");
+            String Infrastructure = results.getString("Infrastructure");
+            String RouterType = results.getString("RouterType");
+            String Codec = results.getString("Codec");
+            int TotalCalls = results.getInt("TotalCalls");
+            String SignalIP = results.getString("SignalIP");
+            String MediaIP = results.getString("MediaIP");
+            int port = results.getInt("SBCport");
+            String firstName = results.getString("ExpertFirstName");
+            String connectionType = results.getString("ConnectionType");
+            String projectManagerFirstName = results.getString("ProjectManagerFirstName");
+            String activationType = results.getString("ActivationType");
+            String status = results.getString("Status");
+            int activationFailCounter = results.getInt("ActivationFailCounter");
+            String lastUpdate = results.getString("LastUpdate");
+
+            ActivationFormSip activation = new ActivationFormSip(id,CustomerID,CustomerName,contactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,
+                    TypeOfCalls,IdenteficationType,TotalNumbers,SNBnumber,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,date,WanAddress,LanAddress,IPpbx,InternetUser,
+                    Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName,connectionType,projectManagerFirstName,activationType,status,activationFailCounter,lastUpdate);
+            sipActivation.add(activation);
+        }
+        selectStatment.close();
+    }
     public void insertingActivationSipToDataBase() throws SQLException {
         String checkSql = "select count(*) as count from Activation_SIP where id=?";
         PreparedStatement checkStmt = con.prepareStatement(checkSql);
 
         String insertSql = "insert into Activation_SIP (id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,Infrastructure," +
                 "TotalNumbers,TypeOfCalls,IdenteficationType,SNBnumber,InternetUser,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,RouterType,Codec," +
-                "WanAddress,LanAddress,IPpbx,SignalIP,MediaIP,SBCport,Date,TotalCalls,ConnectionType,ActivationType,ExpertFirstName,ProjectManagerFirstName,ActivationFailCounter,LastUpdate) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                "WanAddress,LanAddress,IPpbx,SignalIP,MediaIP,SBCport,Date,TotalCalls,ConnectionType,ActivationType,ExpertFirstName,ProjectManagerFirstName,ActivationFailCounter,LastUpdate) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement insertStmt = con.prepareStatement(insertSql);
 
         for (ActivationFormSip activationFormSip : sipActivation) {
@@ -299,7 +525,7 @@ public class DataBase {
             int totalCalls = activationFormSip.getTotalCalls();
             String connectionType = activationFormSip.getConnectionType();
             String activationType = ActivationType.Sip.toString();
-            String expertFirstName = activationFormSip.getFirstName();
+            String expertFirstName = activationFormSip.getExpertFirstName();
             String projectManagerFirstName = activationFormSip.getProjectManagerFirstName();
             int ActivationFailCounter = activationFormSip.getNumOfFails();
             String lastUpdate = activationFormSip.getLastUpdate();
@@ -437,166 +663,6 @@ public class DataBase {
         insertStatement.close();
         checkStatement.close();
     }
-    public void insertingNumberRangeToDataBase(int activation_id) throws SQLException {
-
-
-        String insertSql = "insert into NumberRange (numFrom,numTo,TrunkName,Activation_Id) values(?,?,?,?)";
-        PreparedStatement insertStmt = con.prepareStatement(insertSql);
-
-        if (activation_id == 0)
-            activation_id = ActivationsMoves.SessionId.getNewID();
-            for (NumberRanges numberRanges : numberRanges){
-            ArrayList<String> fromRange = numberRanges.getFromRange();
-            ArrayList<String> toRange = numberRanges.getToRange();
-            String trunkNumber = numberRanges.getTrunk();
-                int i=0;
-                while (i<fromRange.size() && fromRange != null && !fromRange.get(i).equals("") && toRange != null && !toRange.get(i).equals("")){
-                    System.out.println("Inserting people with ID " + trunkNumber);
-                    int col = 1;
-                    insertStmt.setString(col++, fromRange.get(i));
-                    insertStmt.setString(col++, toRange.get(i));
-                    insertStmt.setString(col++, trunkNumber);
-                    insertStmt.setInt(col++,activation_id);
-                    insertStmt.executeUpdate();
-                    i++;
-                }
-        }
-        insertStmt.close();
-    }
-    public List<Login> loadSystemUsersFromDataBaseToList() throws SQLException {
-        int id=0;
-        List<Login> loginList = new LinkedList<Login>();
-        String selectSql = "select * from SystemUsers";
-        Statement selectStatement = con.createStatement();
-        ResultSet results = selectStatement.executeQuery(selectSql);
-
-        while (results.next()) {
-            id = results.getInt("id");
-            String userName = results.getString("Username");
-            String password = results.getString("Password");
-
-            Login login = new Login(id,userName, password);
-            loginList.add(login);
-        }
-        selectStatement.close();
-        return loginList;
-    }
-    public void loadCalenderSipActivationToList() throws SQLException {
-        sipActivation.clear();
-        String selectSql = "select id,CustomerID,CustomerName,ContactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,TypeOfCalls,IdenteficationType,TotalNumbers," +
-                "SNBnumber,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,Date,WanAddress,LanAddress,IPpbx,InternetUser,Infrastructure," +
-                "RouterType,Codec,TotalCalls,SignalIP,MediaIP,SBCport,ExpertFirstName,ConnectionType,ProjectManagerFirstName,ActivationType,Status,ActivationFailCounter,LastUpdate from Activation_SIP order by id";
-        Statement selectStatment = con.createStatement();
-
-        ResultSet results = selectStatment.executeQuery(selectSql);
-
-        while (results.next()) {
-            int id = results.getInt("id");
-            String CustomerID = results.getString("CustomerID");
-            String CustomerName = results.getString("CustomerName");
-            String contactName = results.getString("ContactName");
-            String CustomerPhoneNumber = results.getString("CustomerPhoneNumber");
-            String CustomerEmail = results.getString("CustomerEmail");
-            String TechnicanName = results.getString("TechnicanName");
-            String TechnicanPhone = results.getString("TechnicanPhone");
-            String SwitchType = results.getString("SwitchType");
-            String TypeOfCalls = results.getString("TypeOfCalls");
-            String IdenteficationType = results.getString("IdenteficationType");
-            int TotalNumbers = results.getInt("TotalNumbers");
-            String SNBnumber = results.getString("SNBnumber");
-            String AreaCode = results.getString("AreaCode");
-            String EmergancyCity = results.getString("EmergancyCity");
-            String CallOutCountry = results.getString("CallOutCountry");
-            String CRnumber = results.getString("CRnumber");
-            String TrunkNumber = results.getString("TrunkNumber");
-            String date = results.getString("Date");
-            String WanAddress = results.getString("WanAddress");
-            String LanAddress = results.getString("LanAddress");
-            String IPpbx = results.getString("IPpbx");
-            String InternetUser = results.getString("InternetUser");
-            String Infrastructure = results.getString("Infrastructure");
-            String RouterType = results.getString("RouterType");
-            String Codec = results.getString("Codec");
-            int TotalCalls = results.getInt("TotalCalls");
-            String SignalIP = results.getString("SignalIP");
-            String MediaIP = results.getString("MediaIP");
-            int port = results.getInt("SBCport");
-            String firstName = results.getString("ExpertFirstName");
-            String connectionType = results.getString("ConnectionType");
-            String projectManagerFirstName = results.getString("ProjectManagerFirstName");
-            String activationType = results.getString("ActivationType");
-            String status = results.getString("Status");
-            int activationFailCounter = results.getInt("ActivationFailCounter");
-            String lastUpdate = results.getString("LastUpdate");
-
-            ActivationFormSip activation = new ActivationFormSip(id,CustomerID,CustomerName,contactName,CustomerPhoneNumber,CustomerEmail,TechnicanName,TechnicanPhone,SwitchType,
-                    TypeOfCalls,IdenteficationType,TotalNumbers,SNBnumber,AreaCode,EmergancyCity,CallOutCountry,CRnumber,TrunkNumber,date,WanAddress,LanAddress,IPpbx,InternetUser,
-                    Infrastructure,RouterType,Codec,TotalCalls,SignalIP,MediaIP,port,firstName,connectionType,projectManagerFirstName,activationType,status,activationFailCounter,lastUpdate);
-            sipActivation.add(activation);
-        }
-        selectStatment.close();
-    }
-    public List<Users> loadUsersFromDataBaseToList() throws SQLException {
-        List<Users> usersList = new LinkedList<Users>();
-        String selectSql = "select * from Users";
-        Statement selectStatement = con.createStatement();
-        ResultSet results = selectStatement.executeQuery(selectSql);
-
-        while (results.next()) {
-            int id = results.getInt("id");
-            String firstName = results.getString("FirstName");
-            String lastName = results.getString("LastName");
-            String email = results.getString("Email");
-            String phoneNumber = results.getString("PhoneNumber");
-            UsersType type = UsersType.valueOf(results.getString("Type"));
-            int userNameId = results.getInt("UserNameId");
-
-            Users user = new Users(id, firstName, lastName, email, phoneNumber, type, userNameId);
-            usersList.add(user);
-        }
-        selectStatement.close();
-        return usersList;
-    }
-    public void loadNumberRangeFromDataBaseToList(int activation_id) throws SQLException {
-        numberRanges.clear();
-        String selectSql = "select NumFrom,NumTo,TrunkName from NumberRange where Activation_id=" + activation_id;
-        Statement selectStatement = con.createStatement();
-        ResultSet results = selectStatement.executeQuery(selectSql);
-
-        ArrayList<String> from = new ArrayList<>();
-        ArrayList<String> to = new ArrayList<>();
-        String trunkName="";
-        while (results.next()) {
-            from.add(results.getString("NumFrom"));
-            to.add(results.getString("NumTo"));
-            trunkName = results.getString("TrunkName");
-            NumberRanges numberRange = new NumberRanges(from,to,trunkName);
-            numberRanges.add(numberRange);
-        }
-
-        selectStatement.close();
-    }
-    public void removeActivationFromList(int row) {
-        ActivationFormSip activationFormSip = sipActivation.get(row);
-        int id = activationFormSip.getId();
-        try {
-            deleteActivationFromDataBase(id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        sipActivation.remove(row);
-    }
-    public void removeUserFromList(int id, int userNameId) {
-        try {
-            deleteUserFromDataBase(id);
-            deleteLoginUserFromDataBase(userNameId);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
-    public void clearListofNumberRange(){
-        numberRanges.clear();
-    }
     public void deleteActivationFromDataBase(int id) throws SQLException {
 
         String selectSql = "select id from Activation_SIP where id=?";
@@ -613,109 +679,15 @@ public class DataBase {
 
         deleteStmt.close();
     }
-    public void deleteUserFromDataBase(int id) throws SQLException {
-
-        String selectSql = "select id from Users where id=?";
-        PreparedStatement checkStatement = con.prepareStatement(selectSql);
-
-        String deleteSql = "delete from Users where id=?";
-        PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
-
-        checkStatement.setInt(1, id);
-        ResultSet checkResult = checkStatement.executeQuery();
-        checkResult.next();
-        deleteStmt.setInt(1, id);
-        deleteStmt.executeUpdate();
-
-        deleteStmt.close();
-    }
-    public void deleteLoginUserFromDataBase(int id) throws SQLException {
-
-        String selectSql = "select id from SystemUsers where id=?";
-        PreparedStatement checkStatement = con.prepareStatement(selectSql);
-
-        String deleteSql = "delete from SystemUsers where id=?";
-        PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
-
-        checkStatement.setInt(1, id);
-        ResultSet checkResult = checkStatement.executeQuery();
-        checkResult.next();
-        deleteStmt.setInt(1, id);
-        deleteStmt.executeUpdate();
-
-        deleteStmt.close();
-    }
-    public void connect() throws Exception {
-/*        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            new Exception("Driver Not Found");
+    public void removeActivationFromList(int row) {
+        ActivationFormSip activationFormSip = sipActivation.get(row);
+        int id = activationFormSip.getId();
+        try {
+            deleteActivationFromDataBase(id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-        //String connectionUrl = "jdbc:mysql://localhost:3306/swingtest?autoReconnect=true&useSSL=false";
-        String connectionUrl = "jdbc:mysql://mysql-9407-0.cloudclusters.net:9407/swingtest?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf8";
-        con = DriverManager.getConnection(connectionUrl, "Roi", "prnm4400$");
-        //System.out.println("Connected to : " + con);*/
-        con = DatabaseConnection.getInstance().getConnection();
-    }
-    public void disconnect() {
-        if (con != null) {
-            try {
-                con.close();
-            } catch (SQLException throwables) {
-                System.out.println("Connection Closed");
-            }
-        }
-    }
-    public void updateNumberRangeToDataBase(int activation_id) throws SQLException {
-
-
-
-        for (NumberRanges numberRanges : numberRanges){
-            if(numberRanges.getFromRange() != null) {
-                String deleteSql = "delete from NumberRange where activation_id=?";
-                PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
-                deleteStmt.setInt(1, activation_id);
-                deleteStmt.executeUpdate();
-                deleteStmt.close();
-            }
-
-      /*  String checkSql = "select * from NumberRange where id=?";
-        checkStmt = con.prepareStatement(checkSql);*/
-
-        String insertSql = "insert into NumberRange (numFrom,numTo,TrunkName,Activation_Id) values(?,?,?,?)";
-        PreparedStatement insertStmt = con.prepareStatement(insertSql);
-        int i=0;
-        if (activation_id == 0)
-            activation_id = ActivationsMoves.SessionId.getNewID();
-
-/*            ArrayList<String> fromRange = numberRanges.getFromRange();
-            ArrayList<String> toRange = numberRanges.getToRange();*/
-            String trunkNumber = numberRanges.getTrunk();
-
-/*            checkStmt.setInt(1, Integer.parseInt(fromRange.get(0).toString()));
-            checkResult = checkStmt.executeQuery();
-            checkResult.next();*/
-
-           // int count = checkResult.getInt(1);
-            // &&
-           // if (count == 0) {
-            //&& !fromRange.get(i).equals("")  && !toRange.get(i).equals("")
-            //fromRange != null && toRange != null &&
-
-                while (numberRanges.getFromRange() != null && i<numberRanges.getFromRange().size() ){
-                    System.out.println("Inserting Numbers with Activation ID " + activation_id);
-                    int col = 1;
-                    insertStmt.setString(col++, numberRanges.getFromRange().get(i));
-                    insertStmt.setString(col++,  numberRanges.getToRange().get(i));
-                    insertStmt.setString(col++, trunkNumber);
-                    insertStmt.setInt(col++,activation_id);
-                    insertStmt.executeUpdate();
-                    i++;
-                }
-            insertStmt.close();
-            }
-        //}
-
+        sipActivation.remove(row);
     }
     public void failActivation(int activationId) throws SQLException {
 
@@ -738,11 +710,27 @@ public class DataBase {
         updateStmt.close();
 
     }
-    public void getNumOfFails(int id){
-        sipActivation.get(id).getNumOfFails();
-    }
     public void clearNumberRange(){
         numberRanges.removeAll(numberRanges);
     }
 
+
+    //                          //
+    //  Connection To DataBase  //
+    //                          //
+    public void connect() throws Exception {
+        con = DatabaseConnection.getInstance().getConnection();
+    }
+    public void disconnect() {
+        if (con != null) {
+            try {
+                con.close();
+            } catch (SQLException throwables) {
+                System.out.println("Connection Closed");
+            }
+        }
+    }
+    public Connection getCon() {
+        return con;
+    }
 }

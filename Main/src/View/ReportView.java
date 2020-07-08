@@ -3,7 +3,6 @@ package View;
 import Model.Reports;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,7 +32,6 @@ public class ReportView extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 reports.InstallReport();
                 dispose();
-
             }
         });
 
