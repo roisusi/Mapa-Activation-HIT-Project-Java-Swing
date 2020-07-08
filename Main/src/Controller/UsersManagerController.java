@@ -28,7 +28,13 @@ public class UsersManagerController {
         return loginList;
     }
 
+    //-- Using only for tests --//
+    public void setSystemUsers(List loginList) { this.loginList = loginList; }
+
     public List<Users> getUsers() { return usersList; }
+
+    //-- Using only for tests --//
+    public void setUsers(List usersList) { this.usersList = usersList; }
 
     public void addUserToUsersList(Users user) { usersList.add(user); }
 

@@ -1,6 +1,7 @@
 package View;
 
 import Controller.Controller;
+import Controller.UsersManagerController;
 import Model.Users;
 
 import javax.swing.*;
@@ -27,6 +28,7 @@ public class HomePageMenu extends JPanel {
     private ManageUsers manageUsersForm;
     private ReportView reportsForm;
     private Controller controller;
+    private UsersManagerController usersManagerController;
     private GetDataFromSipListener getDataFromSipListener;
     private ListOfActivationView listOfActivationView;
 
@@ -46,6 +48,7 @@ public class HomePageMenu extends JPanel {
         parent = new JFrame();
         loginUI = new LoginUI(parent);
         controller = new Controller();
+        usersManagerController = new UsersManagerController();
 
         //-- Login -> get the logged user that logged --//
         loginUI.setUserLoggedListener(new UserLoggedListener() {
@@ -127,15 +130,27 @@ public class HomePageMenu extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e)
             {
+<<<<<<< Updated upstream
                 if(controller.getLoggedUser().createForm())
+=======
+                if(usersManagerController.getUserFirstNameLogged().createForm())
+>>>>>>> Stashed changes
                 {
                     if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
                         ActivationsMoves.SessionId.remove();
                     activationFormSIPDialog.failActivation.setEnabled(false);
+<<<<<<< Updated upstream
                     activationFormSIPDialog.setVisible(true);
                 }
                 else
                     JOptionPane.showMessageDialog(HomePageMenu.this,"למשתמש זה אין הרשאות ליצירת טופס התקנה","Error",JOptionPane.ERROR_MESSAGE);
+=======
+                    activationFormSIPDialog.activationToFile.setEnabled(false);
+                    activationFormSIPDialog.setVisible(true);
+                }
+                else
+                    JOptionPane.showMessageDialog(HomePageMenu.this, "למשתמש זה אין הרשאות ליצירת טופס התקנה", "Error", JOptionPane.ERROR_MESSAGE);
+>>>>>>> Stashed changes
             }
 
         });
@@ -143,14 +158,22 @@ public class HomePageMenu extends JPanel {
         editForm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+<<<<<<< Updated upstream
                 if(controller.getLoggedUser().editForm())
+=======
+                if(usersManagerController.getUserFirstNameLogged().editForm())
+>>>>>>> Stashed changes
                 {
                     if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
                         ActivationsMoves.SessionId.remove();
                     listOfActivationView.setVisible(true);
                 }
                 else
+<<<<<<< Updated upstream
                     JOptionPane.showMessageDialog(HomePageMenu.this,"למשתמש זה אין הרשאות לעריכת טופס התקנה","Error",JOptionPane.ERROR_MESSAGE);
+=======
+                    JOptionPane.showMessageDialog(HomePageMenu.this, "למשתמש זה אין הרשאות לעריכת טופס התקנה", "Error", JOptionPane.ERROR_MESSAGE);
+>>>>>>> Stashed changes
             }
         });
 
@@ -206,7 +229,11 @@ public class HomePageMenu extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e)
             {
+<<<<<<< Updated upstream
                 if(controller.getLoggedUser().manageUsers()) {
+=======
+                if(usersManagerController.getUserFirstNameLogged().manageUsers()) {
+>>>>>>> Stashed changes
                     manageUsersForm = ManageUsers.getInstance();
                     manageUsersForm.setVisible(true);
                 }
@@ -217,8 +244,12 @@ public class HomePageMenu extends JPanel {
 
         reports.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                reportsForm.setVisible(true);
+            public void actionPerformed(ActionEvent e)
+            {
+                if(usersManagerController.getUserFirstNameLogged().getReports())
+                    reportsForm.setVisible(true);
+                else
+                    JOptionPane.showMessageDialog(HomePageMenu.this, "למשתמש זה אין הרשאות לקבלת דוחות", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
     }
