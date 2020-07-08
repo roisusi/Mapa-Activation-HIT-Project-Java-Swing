@@ -344,7 +344,6 @@ public class ActivationFormSIP extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 uploadFormToDataBase();
-                clearForm();
             }
 
         });
@@ -411,6 +410,7 @@ public class ActivationFormSIP extends JDialog {
                 super.windowClosing(e);
                 if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
                     ActivationsMoves.SessionId.remove();
+                clearForm();
             }
         });
 
@@ -1311,6 +1311,7 @@ public class ActivationFormSIP extends JDialog {
 
                 if (ActivationsMoves.SessionId.getFromRange() != null && ActivationsMoves.SessionId.getToRange() != null)
                     ActivationsMoves.SessionId.remove();
+                clearForm();
                 dispose();
 
             }
@@ -1329,47 +1330,78 @@ public class ActivationFormSIP extends JDialog {
 
     private void clearForm(){
         customerID.setText("");
+        customerIDLabel.setForeground(Color.black);
         totalNumbers.setText("");
+        totalNumbersLabel.setForeground(Color.black);
         sbcPort.setValue(7500);
+        sbcPortLabel.setForeground(Color.black);
         totalCalls.setText("");
+        totalCallsLabel.setForeground(Color.black);
         customerName.setText("");
+        customerNameLabel.setForeground(Color.black);
         contactName.setText("");
+        contactNameLabel.setForeground(Color.black);
         customerPhoneNumber.setText("");
+        customerPhoneNumberLabel.setForeground(Color.black);
         customerEmail.setText("");
+        customerEmailLabel.setForeground(Color.black);
         customerTechName.setText("");
+        customerTechNameLabel.setForeground(Color.black);
         customerTechPhoneNumber.setText("");
+        customerTechPhoneNumberLabel.setForeground(Color.black);
         connectionType.setSelectedIndex(0);
+        connectionTypeLabel.setForeground(Color.black);
         typeOfCalls.setSelectedIndex(0);
+        typeOfCallsLabel.setForeground(Color.black);
         pbxType.setText("");
+        pbxTypeLabel.setForeground(Color.black);
         typeOfCalls.setSelectedIndex(0);
+        typeOfCallsLabel.setForeground(Color.black);
         identificationType.setSelectedIndex(0);
-        connectionType.setSelectedItem(0);
+        identificationTypeLabel.setForeground(Color.black);
         snbNumber.setText("");
+        snbNumberLabel.setForeground(Color.black);
         areaCode.setSelectedIndex(0);
+        areaCodeLabel.setForeground(Color.black);
         emergencyCity.setText("");
+        emergencyCityLabel.setForeground(Color.black);
         routerTypeGroup.setSelected(routerTypeNO.getModel(),true);
+        routerTypeLabel.setForeground(Color.black);
         routerTypeTextField.setText("");
         callOutSideCountry.setSelected(callOutSideCountryNO.getModel(),true);
+        callOutSideCountryLabel.setForeground(Color.black);
         crNumber.setText("");
+        crNumberLabel.setForeground(Color.black);
         trunkNumber.setText("");
+        trunkNumberLabel.setForeground(Color.black);
         wanAddressA.setText("");
         wanAddressB.setText("");
         wanAddressC.setText("");
         wanAddressD.setText("");
+        wanAddressLabel.setForeground(Color.black);
         lanAddressA.setText("");
         lanAddressB.setText("");
         lanAddressC.setText("");
         lanAddressD.setText("");
+        lanAddressLabel.setForeground(Color.black);
         ipAddressA.setText("");
         ipAddressB.setText("");
         ipAddressC.setText("");
         ipAddressD.setText("");
+        ipAddressLabel.setForeground(Color.black);
         internetUser.setText("");
+        internetUserLabel.setForeground(Color.black);
         infrastructure.setText("");
+        infrastructureLabel.setForeground(Color.black);
         routerTypeTextField.setText("");
+        routerTypeLabel.setForeground(Color.black);
         CODEC.setSelectedIndex(0);
+        CODECLabel.setForeground(Color.black);
         signalAddress.setSelectedIndex(0);
+        signalAddressLabel.setForeground(Color.black);
         mediaAddress.setSelectedIndex(0);
+        mediaAddressLabel.setForeground(Color.black);
         datePicker.getModel().setSelected(false);
+        dateLabel.setForeground(Color.black);
     }
 }
