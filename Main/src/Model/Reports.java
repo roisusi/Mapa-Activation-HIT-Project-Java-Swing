@@ -28,7 +28,7 @@ public class Reports{
                 JasperReport report = JasperCompileManager.compileReport("D:\\OneDrive - Holon Institute of Technology\\Java\\Project\\Main\\src\\Report\\InstallationReport.jrxml");
                 JasperPrint print = JasperFillManager.fillReport(report,null, activationSipController.getConnection());
                // JasperExportManager.exportReportToPdfFile(print,"C:\\Users\\vinos\\JaspersoftWorkspace\\MyReports\\report1.pdf");
-                JasperViewer.viewReport(print);
+                JasperViewer.viewReport(print,false);
                 activationSipController.disconnect();
             } catch (Exception e) {
                 System.out.println(e);
@@ -49,7 +49,7 @@ public class Reports{
             JasperReport report = JasperCompileManager.compileReport("D:\\OneDrive - Holon Institute of Technology\\Java\\Project\\Main\\src\\Report\\ActivationReport.jrxml");
             JasperPrint print = JasperFillManager.fillReport(report,null, activationSipController.getConnection());
             // JasperExportManager.exportReportToPdfFile(print,"C:\\Users\\vinos\\JaspersoftWorkspace\\MyReports\\report1.pdf")
-            JasperViewer.viewReport(print);
+            JasperViewer.viewReport(print,false);
             activationSipController.disconnect();
         } catch (Exception e) {
             System.out.println(e);
