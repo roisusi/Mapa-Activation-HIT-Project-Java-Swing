@@ -27,6 +27,11 @@ public class NumberRanges {
         this.toRange = toRange;
     }
 
+    public NumberRanges() {
+
+    }
+
+
     public ArrayList<String> getFromRange() {
         return fromRange;
     }

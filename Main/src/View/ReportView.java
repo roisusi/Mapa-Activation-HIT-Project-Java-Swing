@@ -49,6 +49,7 @@ public class ReportView extends JDialog {
         setModal(true);
         setSize(550, 500); // Size the Frame
         setLocationRelativeTo(parent);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     private void FormControl()
