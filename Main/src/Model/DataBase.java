@@ -1,10 +1,12 @@
 package Model;
 
-import Controller.NumberRangeController;
 import View.ActivationsMoves;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class DataBase {
     private List<Users> systemUsers;
@@ -743,10 +745,7 @@ public class DataBase {
         }
         sipActivation.remove(row);
     }
-    public void removeUserFromList(int row) {
-        Users user = systemUsers.get(row);
-        int id = user.getId();
-        int userNameId = user.getUserNameId();
+    public void removeUserFromList(int id, int userNameId) {
         try {
             deleteUserFromDataBase(id);
             deleteLoginUserFromDataBase(userNameId);

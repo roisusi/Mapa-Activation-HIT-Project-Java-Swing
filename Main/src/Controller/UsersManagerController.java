@@ -113,9 +113,15 @@ public class UsersManagerController {
     }
 
     public void removeUser(int row) {
-        db.removeUserFromList(row);
+        Users user = usersList.get(row);
+        db.removeUserFromList(user.getId(), user.getUserNameId());
         usersList.remove(row);
-        loginList.remove(row);
+
+        for(Login login: loginList)
+        {
+            if(user.getUserNameId() == login.getId())
+                loginList.remove(row);
+        }
     }
 
     public void updateSystemUsers(List usersList) throws SQLException {
