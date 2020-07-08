@@ -24,9 +24,6 @@ public class ManageUsersTableMenu extends JPanel {
     private JButton buttonSave;
     private JPopupMenu popupMenu;
     private UsersTableListener usersTableListener;
-    private ArrayList rowsList;
-    private ArrayList columnsList;
-    private ArrayList valuesList;
 
     public ManageUsersTableMenu() {
         JFrame parent = new JFrame();
@@ -36,11 +33,6 @@ public class ManageUsersTableMenu extends JPanel {
         popupMenu = new JPopupMenu();
         JMenuItem removeItem = new JMenuItem("מחק שורה");
         popupMenu.add(removeItem);
-
-        //--Create lists for table changes--//
-        rowsList = new ArrayList<Integer>();
-        columnsList = new ArrayList<Integer>();
-        valuesList = new ArrayList<String>();
 
         //--Create Table Cell Change Detector--//
         table.setCellSelectionEnabled(true);
@@ -97,34 +89,8 @@ public class ManageUsersTableMenu extends JPanel {
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
-
-                //usersTableListener.rowEdit(rowsList, columnsList, valuesList);
             }
         });
-
-/*
-        ListSelectionModel model = table.getSelectionModel();
-        model.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public  void valueChanged(ListSelectionEvent listSelectionEvent) {
-
-                //if(!model.isSelectionEmpty())
-                //{
-
-                    //JOptionPane.showConfirmDialog(parent, "Change detected ", "Message", JOptionPane.INFORMATION_MESSAGE);
-                    String value = null;
-                    int row = listSelectionEvent.getFirstIndex();
-                    int column = table.getSelectedColumn();
-                    value = table.getCellEditor(row,column).getCellEditorValue().toString();
-
-                    boolean flag = table.getCellEditor(row,column).stopCellEditing();
-                    rowsList.add(row);
-                    columnsList.add(column);
-                    valuesList.add(value);
-                //}
-            }
-        });
-*/
 
         //-- Buttons Panel --//
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
