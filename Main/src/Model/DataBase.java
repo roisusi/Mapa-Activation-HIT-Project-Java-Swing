@@ -25,23 +25,18 @@ public class DataBase {
     }
 
     public Connection getCon() { return con; }
-
     public void setLoggedUser(Users user) {
         loggedUser = user;
     }
-
     public Users getLoggedUser() {
         return loggedUser;
     }
-
     public void setLoginUser(Login login) {
         LoginUser = login;
     }
-
     public Login getLoginUser(){
         return LoginUser;
     }
-
     public void addActivationSipToList(ActivationFormSip sipAct) {
         sipActivation.add(sipAct);
     }
@@ -54,68 +49,13 @@ public class DataBase {
     public void addFirstNameToActivationList(String status,int row){
         sipActivation.get(row).setStatus(status);
     }
-    public void addUserToList(Users user) {
-        systemUsers.add(user);
-    }
-
-    public List<Login> getLoginUsersFromList() {
-        return Collections.unmodifiableList(users);//prevent for other to change the list when they get REF , just get it
-    }
-    public List<Users> getUsersFromList() {
-        return Collections.unmodifiableList(systemUsers);
-    }
     public List<ActivationFormSip> getActivationSipFromList(){
         return Collections.unmodifiableList(sipActivation);
     }
-
     public List<NumberRanges> getNumberRanges(){
         //return Collections.unmodifiableList(numberRanges);
         return numberRanges;
     }
-
-  /*  public boolean loginUserAuthentication(String username, String password) throws SQLException {
-        boolean flag = false;
-        String selectSql = "select * from SystemUsers where Username = ? and Password = ?;";
-        PreparedStatement preparedStatement = con.prepareStatement(selectSql);
-        preparedStatement.setString(1, username);
-        preparedStatement.setString(2, password);
-        ResultSet result = preparedStatement.executeQuery();
-
-        while(result.next()) {
-            String loginUserName = result.getString("Username");
-            String loginPassword = result.getString("Password");
-            int id = result.getInt("id");
-
-            if(loginUserName.equals(username) && loginPassword.equals(password)) {
-                flag = true;
-                LoginUser = new Login(id, loginUserName, loginPassword);
-            }
-        }
-
-        preparedStatement.close();
-        result.close();
-        return flag;
-    }
-
-    public boolean isUserAlreadyExists(Users user){
-        boolean flag = false;
-
-        for(Users systemUser : systemUsers) {
-            if(systemUser.getFirstName().equals(user.getFirstName()) && systemUser.getLastName().equals(user.getLastName()))
-                flag = true;
-        }
-        return flag;
-    }
-    public boolean isLoginUserAlreadyExists(Login login){
-        boolean flag = false;
-
-        for(Login user : users) {
-            if(user.getUserName().equals(login.getUserName()))
-                flag = true;
-        }
-        return flag;
-    }
-*/
     public void updateActivationSipToList(ActivationFormSip sipAct) {
         int i=0;
         for (ActivationFormSip activationFormSip : sipActivation ){
@@ -160,66 +100,6 @@ public class DataBase {
             i++;
         }
     }
-    /*
-    public void updateSystemUser(ArrayList rowsList, ArrayList columnsList, ArrayList valuesList) throws SQLException {
-        String updateSql = null;
-        int size = rowsList.size();
-        Users user;
-
-        for (int i = 0; i < size; i++) {
-            user = systemUsers.get((int) rowsList.get(i));
-
-            switch ((int)columnsList.get(i)) {
-            case 0:
-                updateSql = "update Users set FirstName = ? where id = ?;";
-                break;
-            case 1:
-                updateSql = "update Users set LastName = ? where id = ?;";
-                break;
-            case 2:
-                updateSql = "update Users set Email = ? where id = ?;";
-                break;
-            case 3:
-                updateSql = "update Users set PhoneNumber = ? where id = ?;";
-                break;
-            case 4:
-                updateSql = "update Users set UserType = ? where id = ?;";
-                break;
-        }
-
-            PreparedStatement preparedStatement = con.prepareStatement(updateSql);
-            preparedStatement.setString(1, valuesList.get(i).toString());
-            preparedStatement.setInt(2, user.getId());
-            preparedStatement.executeUpdate();
-            preparedStatement.close();
-        }
-    }
-
-    public void updateLoginUser(ArrayList rowsList, ArrayList columnsList, ArrayList valuesList) throws SQLException {
-        String updateSql = null;
-        int size = rowsList.size();
-        Login login;
-
-        for (int i = 0; i < size; i++) {
-            login = users.get((int) rowsList.get(i));
-
-            switch ((int)columnsList.get(i)) {
-                case 5:
-                    updateSql = "update SystemUsers set Usersname = ? where id = ?;";
-                    break;
-                case 6:
-                    updateSql = "update SystemUsers set Password = ? where id = ?;";
-                    break;
-            }
-
-            PreparedStatement preparedStatement = con.prepareStatement(updateSql);
-            preparedStatement.setString(1, valuesList.get(i).toString());
-            preparedStatement.setInt(2, login.getId());
-            preparedStatement.executeUpdate();
-            preparedStatement.close();
-        }
-    }*/
-
     public void updateSystemUser(List usersList) throws SQLException {
         int size = usersList.size();
         String updateSql = "update Users set id = ?, FirstName = ?, LastName = ?, Email = ?, PhoneNumber = ?, Type = ?, UserNameId = ? where id = ?;";
@@ -240,7 +120,6 @@ public class DataBase {
         }
         preparedStatement.close();
     }
-
     public void updateLoginUser(List loginList) throws SQLException {
         int size = loginList.size();
         String updateSql = "update SystemUsers set id = ?, Username = ?, Password = ? where id = ?;";
@@ -257,7 +136,6 @@ public class DataBase {
         }
         preparedStatement.close();
     }
-
     public void updateUserExpertFirstName(int row , String firstName) throws SQLException {
         ActivationFormSip activationFormSip = sipActivation.get(row);
         String updateSql = "update Activation_SIP set ExpertFirstName=? where id=?";
@@ -379,7 +257,6 @@ public class DataBase {
         updateStmt.close();
         checkStmt.close();
     }
-
     public void insertingActivationSipToDataBase() throws SQLException {
         String checkSql = "select count(*) as count from Activation_SIP where id=?";
         PreparedStatement checkStmt = con.prepareStatement(checkSql);
@@ -586,39 +463,6 @@ public class DataBase {
         }
         insertStmt.close();
     }
-
- /*   public void loadLoggedUser(int id) throws SQLException {
-        String selectSql2 = "select id,FirstName,LastName,Email,PhoneNumber,Type,UserNameId from Users where UserNameId in (select id from SystemUsers where id="+id+")";
-        Statement selectStatment2 = con.createStatement();
-
-        ResultSet results2 = selectStatment2.executeQuery(selectSql2);
-
-        while (results2.next()) {
-            id = results2.getInt("id");
-            String firstName = results2.getString("FirstName");
-            String lastName = results2.getString("LastName");
-            String email = results2.getString("Email");
-            String phoneNumber = results2.getString("PhoneNumber");
-            String usersType = results2.getString("Type");
-            int userNameId = results2.getInt("UserNameId");
-
-            switch (usersType)
-            {
-                case "PrimaryManager":
-                    loggedUser = new PrimaryManager(id,firstName,lastName,email,phoneNumber,UsersType.PrimaryManager,userNameId);
-                    break;
-                case "ProjectManager":
-                    loggedUser = new ProjectManager(id,firstName,lastName,email,phoneNumber,UsersType.ProjectManager,userNameId);
-                    break;
-                case "Expert":
-                    loggedUser = new Expert(id,firstName,lastName,email,phoneNumber,UsersType.Expert,userNameId);
-                    break;
-            }
-        }
-        selectStatment2.close();
-    }
-
-  */
     public List<Login> loadSystemUsersFromDataBaseToList() throws SQLException {
         int id=0;
         List<Login> loginList = new LinkedList<Login>();
@@ -713,7 +557,6 @@ public class DataBase {
         selectStatement.close();
         return usersList;
     }
-
     public void loadNumberRangeFromDataBaseToList(int activation_id) throws SQLException {
         numberRanges.clear();
         String selectSql = "select NumFrom,NumTo,TrunkName from NumberRange where Activation_id=" + activation_id;
@@ -733,8 +576,6 @@ public class DataBase {
 
         selectStatement.close();
     }
-
-
     public void removeActivationFromList(int row) {
         ActivationFormSip activationFormSip = sipActivation.get(row);
         int id = activationFormSip.getId();
@@ -756,7 +597,6 @@ public class DataBase {
     public void clearListofNumberRange(){
         numberRanges.clear();
     }
-
     public void deleteActivationFromDataBase(int id) throws SQLException {
 
         String selectSql = "select id from Activation_SIP where id=?";
@@ -805,7 +645,6 @@ public class DataBase {
 
         deleteStmt.close();
     }
-
     public void connect() throws Exception {
 /*        try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -827,7 +666,6 @@ public class DataBase {
             }
         }
     }
-
     public void updateNumberRangeToDataBase(int activation_id) throws SQLException {
 
 
@@ -879,7 +717,6 @@ public class DataBase {
         //}
 
     }
-
     public void failActivation(int activationId) throws SQLException {
 
         String updateSql = "update Activation_SIP set ActivationFailCounter=? where id=?";
@@ -901,11 +738,9 @@ public class DataBase {
         updateStmt.close();
 
     }
-
     public void getNumOfFails(int id){
         sipActivation.get(id).getNumOfFails();
     }
-
     public void clearNumberRange(){
         numberRanges.removeAll(numberRanges);
     }
