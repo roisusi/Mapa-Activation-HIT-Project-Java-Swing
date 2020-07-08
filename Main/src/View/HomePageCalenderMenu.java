@@ -1,6 +1,7 @@
 package View;
 
-import Model.ActivationFormSip;
+
+import Controller.ActivationSipController;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -9,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 
 public class HomePageCalenderMenu extends JPanel{
     private JTable table;
@@ -17,12 +17,14 @@ public class HomePageCalenderMenu extends JPanel{
     private JPopupMenu popupMenu;
     private CalenderTableListener calenderTableListener;
     private ChooseExpertDialog expert;
+    private ActivationSipController activationSipController;
 
     public HomePageCalenderMenu() {
 
         JFrame parent = new JFrame();
         tableModel = new CalenderPanelModel();
         table = new JTable(tableModel);
+        activationSipController = new ActivationSipController();
 
 
         popupMenu = new JPopupMenu();
@@ -98,7 +100,7 @@ public class HomePageCalenderMenu extends JPanel{
         add(new JScrollPane(table), BorderLayout.CENTER);
 
     }
-    public void setData(List<ActivationFormSip> db)
+    public void setData(ActivationSipController db)
     {
         tableModel.setData(db);
     }

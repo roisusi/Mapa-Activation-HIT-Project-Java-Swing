@@ -15,9 +15,7 @@ public class UpperMenu extends JPanel {
         welcome.setPreferredSize(dim);
         welcome.setFont(new Font("Arial",Font.PLAIN,36));
 
-
         add(welcome,BorderLayout.CENTER);
-
 
         //-- Graphic Option --//
         setBorder(BorderFactory.createLineBorder(Color.red));//color border

@@ -16,6 +16,9 @@ public class NumberRanges {
     private ArrayList<String> toRange;
     private String trunk;
 
+    public NumberRanges() {
+    }
+
     public NumberRanges(ArrayList<String> fromRange, ArrayList<String> toRange, String trunk) {
         this.fromRange = fromRange;
         this.toRange = toRange;
@@ -81,29 +84,15 @@ public class NumberRanges {
             String str1 = iter1.next();
             String str2 = iter2.next();
 
-/*            if (str1.equals(""))
-                iter1.remove();
-            if (str2.equals(""))
-                iter2.remove();*/
-
             if (str1.equals("") || str2.equals("")){
                 iter1.remove();
                 iter2.remove();
             }
         }
-
-/*        iter = to.iterator();
-        while (iter.hasNext()) {
-            String str = iter.next();
-
-            if (str.equals(""))
-                iter.remove();
-        }*/
     }
     public List<Integer> fnrBreakToSingles(String from, String to){
         int startRange = Integer.parseInt(from);
         int endRange = Integer.parseInt(to);
-        //int totalNumbers = endRange - startRange +1;
         int i=0;
         List<Integer> listOfNumbers = new ArrayList<>();
 
@@ -125,7 +114,7 @@ public class NumberRanges {
 
         int i=0,j=0;
         for (i=0 ; i < size ; i ++) {
-            strRange = (Integer.parseInt(from.get(i)));
+            //strRange = (Integer.parseInt(from.get(i)));
             range = fnrBreakToSingles(from.get(i),to.get(i));
 
             // Display the FNR for Ericsson
@@ -196,8 +185,6 @@ public class NumberRanges {
             ) )
                 return true;
             }
-
-
         return false;
     }
 

@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.ArrayList;
 
 public class ManageUsers extends JFrame {
     private static ManageUsers single_instance = null;
@@ -27,6 +26,7 @@ public class ManageUsers extends JFrame {
 
         //-- Creation of Right side --//
         cal = new ManageUsersTableMenu();
+
         try {
             controller.connect();
         } catch (Exception e) {
@@ -43,7 +43,7 @@ public class ManageUsers extends JFrame {
             e.printStackTrace();
         }
 
-        cal.setData(controller.getSystemUsers(), controller.getUsers());
+        cal.setData(controller.getUsers(), controller.getSystemUsers());
         cal.refresh();
 
         menu.setUsersToTable(new GetUserFromUsersListener() {
@@ -61,7 +61,9 @@ public class ManageUsers extends JFrame {
                     }
                     controller.insertingLoginUserToDataBase(login);
                     controller.insertingUserToDataBase(user, login.getId());
-                    controller.addSystemUser(user);
+                    controller.addUserToUsersList(user);
+                    controller.addLoginToLoginList(login);
+                    cal.setData(controller.getUsers() ,controller.getSystemUsers());
                     cal.refresh();
                     controller.disconnect();
                 }
@@ -79,7 +81,7 @@ public class ManageUsers extends JFrame {
                     e.printStackTrace();
                 }
                 controller.removeUser(row);
-                cal.setData(controller.getSystemUsers(), controller.getUsers());
+                cal.setData(controller.getUsers(), controller.getSystemUsers());
                 controller.disconnect();
             }
 
@@ -103,7 +105,7 @@ public class ManageUsers extends JFrame {
                             controller.updateLoginUser(rowsList, columnsList, valuesList);
                     }*/
 
-                cal.setData(controller.getSystemUsers(), controller.getUsers());
+                cal.setData(controller.getUsers(), controller.getSystemUsers());
                 controller.disconnect();
             }
         });
