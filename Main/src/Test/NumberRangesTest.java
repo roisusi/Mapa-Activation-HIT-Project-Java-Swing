@@ -11,8 +11,6 @@ import static org.junit.Assert.*;
 
 public class NumberRangesTest {
     private NumberRanges numberRanges;
-    private final static int MOCK_POSITIVE = 1;
-    private final static int MOCK_NEGATIVE = -5;
 
     @Before
     public void init() {

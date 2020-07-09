@@ -14,8 +14,8 @@ public class DataBase {
     private List<Login> users;
     private List<ActivationFormSip> sipActivation;
     private List<NumberRanges> numberRanges;
-    private static Users loggedUser;
-    private static Login LoginUser;
+    private  static Users loggedUser;
+    private  static Login LoginUser;
     private Connection con;
     private NumberRangeController numberRangeController;
 
@@ -600,7 +600,8 @@ public class DataBase {
         checkStmt.close();
     }
     public void insertingUserToDataBase(Users user, int userNameId, List<Users> usersList) throws SQLException {
-        int lastMinId = 0;
+        int lastMinId = 1;
+        int size = usersList.size();
         String checkSql = "select count(*) as count from Users where id = ?;";
         PreparedStatement checkStatement = con.prepareStatement(checkSql);
 
@@ -610,8 +611,9 @@ public class DataBase {
         for (Users systemUser: usersList) {
             int id = systemUser.getId();
 
-            if(id - lastMinId > 1) {
-                lastMinId++;
+            if(id - lastMinId > 0 || id == size) {
+                if(id - lastMinId == 0)
+                    lastMinId++;
                 id = lastMinId;
                 user.setUserNameId(userNameId);
                 user.setId(id);
@@ -641,7 +643,8 @@ public class DataBase {
         checkStatement.close();
     }
     public void insertingLoginUserToDataBase(Login login, List<Login> loginList) throws SQLException {
-        int lastMinId = 0;
+        int lastMinId = 1;
+        int size = loginList.size();
         String checkSql = "select count(*) as count from SystemUsers where id = ?;";
         PreparedStatement checkStatement = con.prepareStatement(checkSql);
 
@@ -651,8 +654,9 @@ public class DataBase {
         for (Login loginUser: loginList) {
             int id = loginUser.getId();
 
-            if(id - lastMinId > 1) {
-                lastMinId++;
+            if(id - lastMinId > 0 || id == size) {
+                if(id - lastMinId == 0)
+                    lastMinId++;
                 id = lastMinId;
                 login.setId(id);
 
