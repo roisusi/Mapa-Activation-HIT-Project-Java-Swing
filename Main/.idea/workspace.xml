@@ -2,21 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b1e4548b-2da3-47b5-8f15-6c90845a46f9" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FNR-.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/IP-ANI01_PBX.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/Model/DataBase.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/Model/DataBase.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/Model/NumberRanges.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/Model/NumberRanges.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/Model/Reports.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/Model/Reports.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/View/NumberRangesView$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/View/NumberRangesView$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/View/NumberRangesView$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/View/NumberRangesView$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/View/NumberRangesView.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/View/NumberRangesView.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Main/View/NumberRangesViewModel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Main/View/NumberRangesViewModel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/DataBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/DataBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/NumberRangeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/NumberRangeController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/NumberRanges.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/NumberRanges.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model/Reports.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Reports.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/ActivationFormSIP.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/ActivationFormSIP.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/View/NumberRangesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/NumberRangesView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/View/NumberRangesViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/View/NumberRangesViewModel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -112,7 +99,7 @@
       <workItem from="1593966336756" duration="6868000" />
       <workItem from="1594306021797" duration="1054000" />
       <workItem from="1594308315339" duration="5822000" />
-      <workItem from="1594314612361" duration="215000" />
+      <workItem from="1594314612361" duration="553000" />
     </task>
     <servers />
   </component>

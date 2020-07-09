@@ -108,5 +108,8 @@ public class NumberRangeController {
     public Connection getConnection() {
         return db.getCon();
     }
+    public int removeViewCells(ArrayList from ,ArrayList to){
+        return numberRanges.removeUnbalanceRangesCells(from,to);
+    }
 
 }

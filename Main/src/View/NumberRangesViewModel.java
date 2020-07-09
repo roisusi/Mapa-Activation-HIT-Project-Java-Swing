@@ -38,42 +38,14 @@ public class NumberRangesViewModel extends AbstractTableModel {
     }
 
     public void removeViewCells(){
-        size1 = fromRange.size();
-        size2 = toRange.size();
-        int i=0,index1=0,index2=0;
-        while(i<size1){
-            if(fromRange.get(i).equals(""))
-                index1++;
-            i++;
-        }
-        i=0;
-        while(i<size2){
-            if(toRange.get(i).equals(""))
-                index2++;
-            i++;
-        }
-        i=0;
-        while (index1<index2){
-            fromRange.set(i,"");
-            index1++;
-            i++;
-            moreRows = index2;
-        }
-        i=0;
-        while (index1>index2){
-            toRange.set(i,"");
-            index2++;
-            i++;
-            moreRows = index1;
-        }
-
+        moreRows = controller.removeViewCells(fromRange,toRange);
     }
+
 
     public void showEditRows(){
         for (int i=0 ; i < fromRange.size() ; i ++){
             moreRows++;
         }
-
     }
 
     public ArrayList fromTableList(){

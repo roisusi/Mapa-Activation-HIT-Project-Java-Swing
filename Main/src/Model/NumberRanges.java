@@ -194,8 +194,39 @@ public class NumberRanges {
         return true;
     }
 
-    public void clearList(){
-        fromRange.removeAll(fromRange);
-        toRange.removeAll(toRange);
+
+
+    public int removeUnbalanceRangesCells(ArrayList from , ArrayList to){
+        int moreRows = 0;
+        int size1 = from.size();
+        int size2 = to.size();
+        int i=0,index1=0,index2=0;
+        while(i<size1){
+            if(from.get(i).equals(""))
+                index1++;
+            i++;
+        }
+        i=0;
+        while(i<size2){
+            if(to.get(i).equals(""))
+                index2++;
+            i++;
+        }
+        i=0;
+        while (index1<index2){
+            from.set(i,"");
+            index1++;
+            i++;
+            moreRows = index2;
+        }
+        i=0;
+        while (index1>index2){
+            to.set(i,"");
+            index2++;
+            i++;
+            moreRows = index1;
+        }
+
+        return moreRows;
     }
 }
