@@ -140,11 +140,12 @@ public class NumberRanges {
 
                 DT += fnrCreate.get(j) + "\n" ;
             }
+            fnrCreate.removeAll(fnrCreate);
+            range.removeAll(range);
         }
             /*
              * DT to File
              */
-            System.out.println(DT);
             String text = DT;
             try {
                 File file = new File("FNR-" + ".txt");

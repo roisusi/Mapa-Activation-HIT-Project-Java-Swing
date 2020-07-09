@@ -1261,7 +1261,7 @@ public class ActivationFormSIP extends JDialog {
 
 
         if (CheckEmptyCells()) {
-            if (CheckInputDigits() && CheckEmail() && CheckEmptyCells() && CheckPhoneNumber() && CheckSnb())
+            if (CheckInputDigits() && CheckIP() && CheckEmail() && CheckEmptyCells() && CheckPhoneNumber() && CheckSnb())
             {
                 customerIDEv = customerID.getText();
                 totalNumbersEv = Integer.parseInt(totalNumbers.getText());

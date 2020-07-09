@@ -9,13 +9,13 @@ import java.util.ArrayList;
 
 public class NumberRangesViewModel extends AbstractTableModel {
 
-    private final int MAXNUMBERS = 1000;
     private String[] colName = {"From", "To", "Count"};
     private int moreRows = 0;
     private ArrayList<String> fromRange = new ArrayList<>();
     private ArrayList<String> toRange = new ArrayList<>();
     private int difference;
-    private int size;
+    private int size1;
+    private int size2;
     private NumberRangeController controller;
 
 
@@ -38,14 +38,35 @@ public class NumberRangesViewModel extends AbstractTableModel {
     }
 
     public void removeViewCells(){
-        size = fromRange.size();
-        int i=0,index=0;
-        while(i<size){
-            if(!fromRange.get(i).equals("") && !toRange.get(i).equals(""))
-                index++;
+        size1 = fromRange.size();
+        size2 = toRange.size();
+        int i=0,index1=0,index2=0;
+        while(i<size1){
+            if(fromRange.get(i).equals(""))
+                index1++;
             i++;
         }
-        moreRows = index;
+        i=0;
+        while(i<size2){
+            if(toRange.get(i).equals(""))
+                index2++;
+            i++;
+        }
+        i=0;
+        while (index1<index2){
+            fromRange.set(i,"");
+            index1++;
+            i++;
+            moreRows = index2;
+        }
+        i=0;
+        while (index1>index2){
+            toRange.set(i,"");
+            index2++;
+            i++;
+            moreRows = index1;
+        }
+
     }
 
     public void showEditRows(){

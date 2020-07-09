@@ -92,6 +92,7 @@ public class NumberRangesView extends JDialog implements ActionListener {
                 to = tableModel.toTableList();
                 numberRangeController = new NumberRangeController(from,to);
                 tableModel.removeViewCells();
+
                 numberRangeController.removeEmptyCells(from,to);
                 numberRangeController.setFromRange(from);
                 numberRangeController.setToRange(to);

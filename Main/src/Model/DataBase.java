@@ -189,7 +189,6 @@ public class DataBase {
                 activation_id = ActivationsMoves.SessionId.getNewID();
             String trunkNumber = numberRanges.getTrunk();
             while (numberRanges.getFromRange() != null && i<numberRanges.getFromRange().size() ){
-                System.out.println("Inserting Numbers Line : " + i + "With id : " + activation_id);
                 int col = 1;
                 insertStmt.setString(col++, numberRanges.getFromRange().get(i));
                 insertStmt.setString(col++,  numberRanges.getToRange().get(i));
@@ -237,7 +236,6 @@ public class DataBase {
             }
             String trunkNumber = numberRanges.getTrunk();
             while (numberRanges.getFromRange() != null && i < numberRanges.getFromRange().size()) {
-                System.out.println("Inserting Numbers with Activation ID " + activation_id);
                 int col = 1;
                 insertStmt.setString(col++, numberRanges.getFromRange().get(i));
                 insertStmt.setString(col++, numberRanges.getToRange().get(i));
@@ -324,7 +322,6 @@ public class DataBase {
         ActivationFormSip activationFormSip = sipActivation.get(row);
         String updateSql = "update Activation_SIP set ExpertFirstName=? where id=?";
         PreparedStatement updateStmt = con.prepareStatement(updateSql);
-        System.out.println("Updating people with ID " + activationFormSip.getId());
         int col = 1;
         updateStmt.setString(col++, firstName);
         updateStmt.setInt(col++, activationFormSip.getId());
@@ -335,7 +332,6 @@ public class DataBase {
         ActivationFormSip activationFormSip = sipActivation.get(row);
         String updateSql = "update Activation_SIP set Status=? where id=?";
         PreparedStatement updateStmt = con.prepareStatement(updateSql);
-        System.out.println("Updating people with ID " + activationFormSip.getId());
         int col = 1;
         updateStmt.setString(col++, status);
         updateStmt.setInt(col++, activationFormSip.getId());
@@ -395,7 +391,6 @@ public class DataBase {
                 ResultSet checkResult = checkStmt.executeQuery();
                 checkResult.next();
 
-                System.out.println("Updating people with ID " + id);
                 int col = 1;
                 updateStmt.setString(col++, customerID);
                 updateStmt.setString(col++, customerName);
@@ -550,7 +545,6 @@ public class DataBase {
             int count = checkResult.getInt(1);
 
             if (count == 0) {
-                System.out.println("Inserting Activation with ID " + id);
                 int col = 1;
                 //-- get ID --//
                 ActivationsMoves.SessionId.setNewID(id);
@@ -720,7 +714,6 @@ public class DataBase {
                 int numOfFails = activationFormSip.getNumOfFails();
                 numOfFails++;
 
-                System.out.println("Updating FailActivation with ID " + activationId);
                 int col = 1;
 
                 updateStmt.setInt(col++, numOfFails);
@@ -747,6 +740,7 @@ public class DataBase {
             try {
                 con.close();
             } catch (SQLException throwables) {
+
                 System.out.println("Connection Closed");
             }
         }

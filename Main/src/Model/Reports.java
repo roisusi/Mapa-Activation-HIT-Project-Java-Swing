@@ -17,7 +17,6 @@ public class Reports{
         public void InstallReport()
         {
             activationSipController = new ActivationSipController();
-            //System.out.println("Report Generating");
             try {
                     try {
                         activationSipController.connect();
@@ -38,7 +37,6 @@ public class Reports{
     public void ActivationReport()
     {
         activationSipController = new ActivationSipController();
-        //System.out.println("Report Generating");
         try {
             try {
                 activationSipController.connect();
