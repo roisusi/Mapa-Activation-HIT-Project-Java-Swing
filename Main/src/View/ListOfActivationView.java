@@ -95,6 +95,7 @@ public class ListOfActivationView extends JDialog {
                     selectedActivation = index;
                     if (e.getButton() == MouseEvent.BUTTON1) //Click Once
                     {
+                        loadActivationToJlist();
                         expertName.setText(activationSipController.getSipActivation().get(selectedActivation).getExpertFirstName());
                         expertName.setForeground(Color.BLUE);
                         projectManagerName.setText(activationSipController.getSipActivation().get(selectedActivation).getProjectManagerFirstName());
@@ -103,6 +104,7 @@ public class ListOfActivationView extends JDialog {
                     }
                     if (e.getClickCount() == 2) //Double click
                     {
+                        loadActivationToJlist();
                         currentId = activationSipController.getSipActivation().get(selectedActivation).getId();
                         ActivationsMoves.FormId.setActivationId(currentId);
                         activationFormSIP = new ActivationFormSIP(panel,1,currentId);

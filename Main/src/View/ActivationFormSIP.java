@@ -1,7 +1,6 @@
 package View;
 
 import Controller.*;
-import com.mysql.jdbc.StringUtils;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.UtilDateModel;
 import javax.swing.*;
@@ -121,6 +120,7 @@ public class ActivationFormSIP extends JDialog {
 
     // Controllers //
     private ActivationSipController activationSipController;
+    private UsersManagerController usersManagerController;
 
     // DatePicker //
     private String datePickerEv;
@@ -163,6 +163,18 @@ public class ActivationFormSIP extends JDialog {
 
         // Controller //
         activationSipController = new ActivationSipController();
+        usersManagerController = new UsersManagerController();
+        try {
+            usersManagerController.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            usersManagerController.loadUsersFromDataBaseToList();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        usersManagerController.disconnect();
 
         //-- Spinner --//
         sbcPort = new JSpinner();
@@ -403,6 +415,12 @@ public class ActivationFormSIP extends JDialog {
                 mediaAddress.setSelectedIndex(4);
             }
         });
+        signalAddress.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mediaAddress.setSelectedIndex(signalAddress.getSelectedIndex());
+            }
+        });
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -413,7 +431,7 @@ public class ActivationFormSIP extends JDialog {
                 clearForm();
             }
         });
-
+        disablePortAndTrunk();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createTitledBorder("טופס התקנה"));
         add(mainPanel,BorderLayout.CENTER);
@@ -465,41 +483,46 @@ public class ActivationFormSIP extends JDialog {
         }
         return finalResult;
     }
+
+    private boolean CheckEmail(){
+        return activationSipController.checkEmail(customerEmail.getText());
+    }
+
     private boolean CheckInputDigits(){
         boolean flag=true;
 
-        if (!StringUtils.isStrictlyNumeric(totalNumbers.getText())) {
+        if (!activationSipController.checkInputDigits(totalNumbers.getText())) {
             totalNumbersLabel.setForeground(Color.red);
             flag = false;
         }
         else
             totalNumbersLabel.setForeground(Color.black);
 
-        if (!StringUtils.isStrictlyNumeric(totalCalls.getText())){
+        if (!activationSipController.checkInputDigits(totalCalls.getText())){
             totalCallsLabel.setForeground(Color.red);
             flag = false;
         }
         else
             totalCallsLabel.setForeground(Color.black);
 
-        if (!StringUtils.isStrictlyNumeric(wanAddressA.getText()) || !StringUtils.isStrictlyNumeric(wanAddressB.getText()) ||
-                !StringUtils.isStrictlyNumeric(wanAddressC.getText()) || !StringUtils.isStrictlyNumeric(wanAddressD.getText())) {
+        if (!activationSipController.checkInputDigits(wanAddressA.getText()) || !activationSipController.checkInputDigits(wanAddressB.getText()) ||
+                !activationSipController.checkInputDigits(wanAddressC.getText()) || !activationSipController.checkInputDigits(wanAddressD.getText())) {
             wanAddressLabel.setForeground(Color.red);
             flag = false;
         }
         else
             wanAddressLabel.setForeground(Color.black);
 
-        if (!StringUtils.isStrictlyNumeric(lanAddressA.getText()) || !StringUtils.isStrictlyNumeric(lanAddressB.getText()) ||
-                !StringUtils.isStrictlyNumeric(lanAddressC.getText()) || !StringUtils.isStrictlyNumeric(lanAddressD.getText())) {
+        if (!activationSipController.checkInputDigits(lanAddressA.getText()) || !activationSipController.checkInputDigits(lanAddressB.getText()) ||
+                !activationSipController.checkInputDigits(lanAddressC.getText()) || !activationSipController.checkInputDigits(lanAddressD.getText())) {
             lanAddressLabel.setForeground(Color.red);
             flag = false;
         }
         else
             lanAddressLabel.setForeground(Color.black);
 
-        if (!StringUtils.isStrictlyNumeric(ipAddressA.getText()) || !StringUtils.isStrictlyNumeric(ipAddressB.getText()) ||
-                !StringUtils.isStrictlyNumeric(ipAddressC.getText()) || !StringUtils.isStrictlyNumeric(ipAddressD.getText())) {
+        if (!activationSipController.checkInputDigits(ipAddressA.getText()) || !activationSipController.checkInputDigits(ipAddressB.getText()) ||
+                !activationSipController.checkInputDigits(ipAddressC.getText()) || !activationSipController.checkInputDigits(ipAddressD.getText())) {
             ipAddressLabel.setForeground(Color.red);
             flag = false;
         }
@@ -508,7 +531,8 @@ public class ActivationFormSIP extends JDialog {
 
         return flag;
     }
-    private boolean checkEmptyCells(){
+    //check that cells arent empty
+    private boolean CheckEmptyCells(){
         boolean allGood = true;
 
         if (datePickerEv.isEmpty()) {
@@ -518,7 +542,7 @@ public class ActivationFormSIP extends JDialog {
         else
             dateLabel.setForeground(Color.black);
 
-        if (customerID.getText().isEmpty() || customerID.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(customerID.getText())){
             customerIDLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -526,7 +550,7 @@ public class ActivationFormSIP extends JDialog {
             customerIDLabel.setForeground(Color.black);
         }
 
-        if (customerName.getText().isEmpty() || customerName.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(customerName.getText())) {
             customerNameLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -534,7 +558,7 @@ public class ActivationFormSIP extends JDialog {
             customerNameLabel.setForeground(Color.black);
         }
 
-        if (contactName.getText().isEmpty() || contactName.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(contactName.getText())) {
             contactNameLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -542,7 +566,7 @@ public class ActivationFormSIP extends JDialog {
             contactNameLabel.setForeground(Color.black);
         }
 
-        if (customerPhoneNumber.getText().isEmpty() || customerPhoneNumber.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(customerPhoneNumber.getText())) {
             customerPhoneNumberLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -550,7 +574,7 @@ public class ActivationFormSIP extends JDialog {
             customerPhoneNumberLabel.setForeground(Color.black);
         }
 
-        if (customerEmail.getText().isEmpty() || customerEmail.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(customerEmail.getText())) {
             customerEmailLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -558,7 +582,7 @@ public class ActivationFormSIP extends JDialog {
             customerEmailLabel.setForeground(Color.black);
         }
 
-        if (customerTechName.getText().isEmpty() || customerTechName.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(customerTechName.getText())) {
             customerTechNameLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -566,7 +590,7 @@ public class ActivationFormSIP extends JDialog {
             customerTechNameLabel.setForeground(Color.black);
         }
 
-        if (customerTechPhoneNumber.getText().isEmpty() || customerTechPhoneNumber.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(customerTechPhoneNumber.getText())) {
             customerTechPhoneNumberLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -574,7 +598,7 @@ public class ActivationFormSIP extends JDialog {
             customerTechPhoneNumberLabel.setForeground(Color.black);
         }
 
-        if (pbxType.getText().isEmpty() || pbxType.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(pbxType.getText())) {
             pbxTypeLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -590,7 +614,7 @@ public class ActivationFormSIP extends JDialog {
             connectionTypeLabel.setForeground(Color.black);
         }
 
-        if (infrastructure.getText().isEmpty() || infrastructure.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(infrastructure.getText())) {
             infrastructureLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -598,7 +622,7 @@ public class ActivationFormSIP extends JDialog {
             infrastructureLabel.setForeground(Color.black);
         }
 
-        if (totalNumbers.getText().isEmpty() || totalNumbers.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(totalNumbers.getText())) {
             totalNumbersLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -606,7 +630,7 @@ public class ActivationFormSIP extends JDialog {
             totalNumbersLabel.setForeground(Color.black);
         }
 
-        if (totalCalls.getText().isEmpty() || totalCalls.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(totalCalls.getText())) {
             totalCallsLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -615,7 +639,7 @@ public class ActivationFormSIP extends JDialog {
         }
 
         if (routerTypeTextField.isEnabled()) {
-            if (routerTypeTextField.getText().isEmpty() || routerTypeTextField.getText().trim().isEmpty()) {
+            if (activationSipController.checkEmptyCells(routerTypeTextField.getText())) {
                 routerTypeLabel.setForeground(Color.red);
                 allGood = false;
             } else {
@@ -649,7 +673,7 @@ public class ActivationFormSIP extends JDialog {
             identificationTypeLabel.setForeground(Color.black);
         }
 
-        if (internetUser.getText().isEmpty() || internetUser.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(internetUser.getText())) {
             internetUserLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -657,7 +681,7 @@ public class ActivationFormSIP extends JDialog {
             internetUserLabel.setForeground(Color.black);
         }
 
-        if (snbNumber.getText().isEmpty() || snbNumber.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(snbNumber.getText())) {
             snbNumberLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -665,7 +689,7 @@ public class ActivationFormSIP extends JDialog {
             snbNumberLabel.setForeground(Color.black);
         }
 
-        if (totalCalls.getText().isEmpty() || totalCalls.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(totalCalls.getText())) {
             totalCallsLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -697,7 +721,7 @@ public class ActivationFormSIP extends JDialog {
             areaCodeLabel.setForeground(Color.black);
         }
 
-        if (emergencyCity.getText().isEmpty() || emergencyCity.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(emergencyCity.getText())) {
             emergencyCityLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -705,7 +729,7 @@ public class ActivationFormSIP extends JDialog {
             emergencyCityLabel.setForeground(Color.black);
         }
 
-        if (crNumber.getText().isEmpty() || crNumber.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(crNumber.getText())) {
             crNumberLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -713,24 +737,24 @@ public class ActivationFormSIP extends JDialog {
             crNumberLabel.setForeground(Color.black);
         }
 
-        if (crNumber.getText().isEmpty() || crNumber.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(crNumber.getText())) {
             crNumberLabel.setForeground(Color.red);
             allGood = false;
         }
         else {
             crNumberLabel.setForeground(Color.black);
         }
-
-        if (trunkNumber.getText().isEmpty() || trunkNumber.getText().trim().isEmpty()) {
-            trunkNumberLabel.setForeground(Color.red);
-            allGood = false;
+        if (!usersManagerController.getUserFirstNameLogged().getUsersType().toString().equals("ProjectManager")) {
+            if (trunkNumber.getText().isEmpty() || trunkNumber.getText().trim().isEmpty()) {
+                trunkNumberLabel.setForeground(Color.red);
+                allGood = false;
+            } else {
+                trunkNumberLabel.setForeground(Color.black);
+            }
         }
-        else {
-            trunkNumberLabel.setForeground(Color.black);
-        }
 
-        if (wanAddressA.getText().isEmpty() || wanAddressA.getText().trim().isEmpty() || wanAddressB.getText().isEmpty() || wanAddressB.getText().trim().isEmpty()
-           || wanAddressC.getText().isEmpty() || wanAddressC.getText().trim().isEmpty() || wanAddressD.getText().isEmpty() || wanAddressD.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(wanAddressA.getText()) || activationSipController.checkEmptyCells(wanAddressB.getText())
+           || activationSipController.checkEmptyCells(wanAddressC.getText()) || activationSipController.checkEmptyCells(wanAddressD.getText())) {
             wanAddressLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -738,8 +762,8 @@ public class ActivationFormSIP extends JDialog {
             wanAddressLabel.setForeground(Color.black);
         }
 
-        if (lanAddressA.getText().isEmpty() || lanAddressA.getText().trim().isEmpty() || lanAddressB.getText().isEmpty() || lanAddressB.getText().trim().isEmpty()
-                || lanAddressC.getText().isEmpty() || lanAddressC.getText().trim().isEmpty() || lanAddressD.getText().isEmpty() || lanAddressD.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(lanAddressA.getText()) || activationSipController.checkEmptyCells(lanAddressB.getText())
+                || activationSipController.checkEmptyCells(lanAddressC.getText()) || activationSipController.checkEmptyCells(lanAddressD.getText())) {
             lanAddressLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -747,8 +771,8 @@ public class ActivationFormSIP extends JDialog {
             lanAddressLabel.setForeground(Color.black);
         }
 
-        if (ipAddressA.getText().isEmpty() || ipAddressA.getText().trim().isEmpty() || ipAddressB.getText().isEmpty() || ipAddressB.getText().trim().isEmpty()
-                || ipAddressC.getText().isEmpty() || ipAddressC.getText().trim().isEmpty() || ipAddressD.getText().isEmpty() || ipAddressD.getText().trim().isEmpty()) {
+        if (activationSipController.checkEmptyCells(ipAddressA.getText()) || activationSipController.checkEmptyCells(ipAddressB.getText())
+                || activationSipController.checkEmptyCells(ipAddressC.getText()) || activationSipController.checkEmptyCells(ipAddressD.getText())) {
             ipAddressLabel.setForeground(Color.red);
             allGood = false;
         }
@@ -1236,8 +1260,8 @@ public class ActivationFormSIP extends JDialog {
         String lastUpdateEv = formatter.format(date);
 
 
-        if (checkEmptyCells()) {
-            if (CheckInputDigits() && CheckIP())
+        if (CheckEmptyCells()) {
+            if (CheckInputDigits() && CheckEmail() && CheckEmptyCells() && CheckPhoneNumber() && CheckSnb())
             {
                 customerIDEv = customerID.getText();
                 totalNumbersEv = Integer.parseInt(totalNumbers.getText());
@@ -1284,7 +1308,6 @@ public class ActivationFormSIP extends JDialog {
 
                 FormEvent evForm;
                 FormEvent evNumbers;
-
                 if (indexOfButton ==0){
 
                     //--Create New --//
@@ -1294,8 +1317,6 @@ public class ActivationFormSIP extends JDialog {
                         infrastructureEv,routerTypeEv,CODECEv,totalCallsEv,signalAddressEv,mediaAddressEv,sbcPortEv,expertName,connectionTypeEv,projectManagerEv,numofFailsEv,status,lastUpdateEv);
 
                     evNumbers = new FormEvent(this,ActivationsMoves.SessionId.getFromRange(),ActivationsMoves.SessionId.getToRange(),trunkNumberEv );
-
-
                 }
                 else {
 
@@ -1313,15 +1334,9 @@ public class ActivationFormSIP extends JDialog {
                     ActivationsMoves.SessionId.remove();
                 clearForm();
                 dispose();
-
             }
             else {
-                if (CheckInputDigits()) {
-                    if (!CheckIP())
-                        JOptionPane.showMessageDialog(ActivationFormSIP.this, "כתובת IP אינה תקינה", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                else
-                    JOptionPane.showMessageDialog(ActivationFormSIP.this, "יש להזין ערך מספרי בלבד", "Error", JOptionPane.ERROR_MESSAGE);
+                massages();
             }
         }
         else
@@ -1403,5 +1418,39 @@ public class ActivationFormSIP extends JDialog {
         mediaAddressLabel.setForeground(Color.black);
         datePicker.getModel().setSelected(false);
         dateLabel.setForeground(Color.black);
+    }
+
+    private void massages(){
+        if (CheckEmptyCells()) {
+            if (!CheckIP())
+                JOptionPane.showMessageDialog(ActivationFormSIP.this, "כתובת IP אינה תקינה", "Error", JOptionPane.ERROR_MESSAGE);
+            if (!CheckInputDigits())
+                JOptionPane.showMessageDialog(ActivationFormSIP.this, "יש להזין ערך מספרי בלבד", "Error", JOptionPane.ERROR_MESSAGE);
+            if (!CheckEmail())
+                JOptionPane.showMessageDialog(ActivationFormSIP.this, "כתובת email אינה תקינה", "Error", JOptionPane.ERROR_MESSAGE);
+            if (!CheckPhoneNumber())
+                JOptionPane.showMessageDialog(ActivationFormSIP.this, "מספר טלפון אינו תקין", "Error", JOptionPane.ERROR_MESSAGE);
+            if (!CheckSnb())
+                JOptionPane.showMessageDialog(ActivationFormSIP.this, "מספר מוביל אינו תקין", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private boolean CheckPhoneNumber(){
+        if (activationSipController.checkPhoneNumber(customerPhoneNumber.getText()) && activationSipController.checkPhoneNumber(customerTechPhoneNumber.getText()))
+            return true;
+        return false;
+    }
+
+    private boolean CheckSnb(){
+        return activationSipController.checkSnb(snbNumber.getText());
+    }
+
+    public void disablePortAndTrunk(){
+        String user = usersManagerController.getUserFirstNameLogged().getUsersType().toString();
+        if (user.equals("ProjectManager")){
+            ((JSpinner.DefaultEditor) sbcPort.getEditor()).getTextField().setEditable(false);
+            sbcPort.setEnabled(false);
+            trunkNumber.setEnabled(false);
+        }
     }
 }

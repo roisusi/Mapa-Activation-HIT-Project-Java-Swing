@@ -1,6 +1,12 @@
 package Model;
 
+import Controller.NumberRangeController;
+import com.mysql.jdbc.StringUtils;
+
 public abstract class ActivationForm  {
+    private NumberRangeController numberRangeController;
+
+
     protected String customerID;
     protected String customerName;
     protected String contactName;
@@ -24,6 +30,10 @@ public abstract class ActivationForm  {
     protected String activationType;
     protected int numOfFails;
     protected String lastUpdate;
+
+    public ActivationForm(){
+
+    }
 
     //-- Without id For Saving --//
     public ActivationForm(String customerID ,String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber, String pbxType, String typeOfCalls, String identificationType, int totalNumbers, String snbNumber, String areaCode, String emergencyCity, String callOutSideCountry, String crNumber, String trunkNumber, String datePicker,String expertName, String projectManagerFirstName,String activationType , int numOfFails,String lastUpdate) {
@@ -234,5 +244,57 @@ public abstract class ActivationForm  {
 
     public void setLastUpdate(String lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+
+    public boolean checkSnb(String snb){
+        numberRangeController = new NumberRangeController();
+        return numberRangeController.trueNumberIsraelPhoneCheck(snb);
+    }
+
+    public boolean checkPhoneNumber(String phone){
+        String text = phone;
+        int count=0;
+        int firstThreeDigs=3;
+        if (text.length() != 11)
+            return false;
+        if (text.contains("-"))
+            count ++;
+        // check 050,052,054,055,058
+        if (count != 1 || text.indexOf("-") - firstThreeDigs != 0)
+            return false;
+        char ch = text.charAt(2);
+        if (text.charAt(0) == '0'  && text.charAt(1) == '5' && (text.charAt(2) == '0' || text.charAt(2) == '2' || text.charAt(2) == '4' || text.charAt(2) == '5' || text.charAt(2) == '8' ))
+            return true;
+        return false;
+    }
+
+    public boolean checkEmail(String email){
+        String text = email;
+        int count =0;
+        if (text.contains("@")){
+            count++;
+        }
+        if (text.contains(".co.il") || text.contains(".com") || text.contains(".net")){
+            if (count == 1)
+                return true;
+        }
+
+        return false;
+    }
+
+    public boolean checkInputDigits(String text) {
+        boolean flag = true;
+        if (!StringUtils.isStrictlyNumeric(text)) {
+            return flag = false;
+        }
+        return flag;
+    }
+
+    public boolean checkEmptyCells(String text){
+        if (text.isEmpty() || text.trim().isEmpty()) {
+            return true;
+        }
+        return false;
     }
 }

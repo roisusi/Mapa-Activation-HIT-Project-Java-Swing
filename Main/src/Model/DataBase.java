@@ -1,5 +1,6 @@
 package Model;
 
+import Controller.NumberRangeController;
 import View.ActivationsMoves;
 
 import java.sql.*;
@@ -16,6 +17,7 @@ public class DataBase {
     private static Users loggedUser;
     private static Login LoginUser;
     private Connection con;
+    private NumberRangeController numberRangeController;
 
     public DataBase() {
         this.users = new LinkedList<Login>();
@@ -166,6 +168,17 @@ public class DataBase {
     }
     public void addNumberRangeToList(NumberRanges sipNR) {
         numberRanges.add(sipNR);
+    }
+    public void removeNumberingRangeFromList(int id) throws SQLException {
+        for (NumberRanges numberRanges : numberRanges) {
+            if (numberRanges.getFromRange() != null) {
+                String deleteSql = "delete from NumberRange where activation_id=?";
+                PreparedStatement deleteStmt = con.prepareStatement(deleteSql);
+                deleteStmt.setInt(1, id);
+                deleteStmt.executeUpdate();
+                deleteStmt.close();
+            }
+        }
     }
     public void insertingNumberRangeToDataBase(int activation_id) throws SQLException {
         for (NumberRanges numberRanges : numberRanges){
@@ -683,11 +696,15 @@ public class DataBase {
 
         deleteStmt.close();
     }
-    public void removeActivationFromList(int row) {
+    public void removeActivationFromList(int row) throws Exception {
         ActivationFormSip activationFormSip = sipActivation.get(row);
         int id = activationFormSip.getId();
         try {
             deleteActivationFromDataBase(id);
+            numberRangeController = new NumberRangeController();
+            numberRangeController.connect();
+            numberRangeController.loadNumberRangeFromDataBaseToList(id);
+            numberRangeController.removeNumberingRangeFromList(id);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

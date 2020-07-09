@@ -50,6 +50,10 @@ public class NumberRangeController {
         db.loadNumberRangeFromDataBaseToList(activation_id);
     }
 
+    public void removeNumberingRangeFromList(int id) throws SQLException {
+        db.removeNumberingRangeFromList(id);
+    }
+
     public String checkList(String list){
         return numberRanges.checkList(list);
     }
