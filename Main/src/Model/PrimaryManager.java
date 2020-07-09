@@ -9,7 +9,7 @@ public class PrimaryManager extends Users {
         super(other);
     }
 
-    public boolean getReports() { return true; }
+    public boolean reports() { return true; }
 
     public boolean deleteForm() { return true; }
 

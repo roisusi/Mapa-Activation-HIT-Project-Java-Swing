@@ -9,7 +9,7 @@ public class Expert extends Users {
         super(other);
     }
 
-    public boolean getReports() { return false; }
+    public boolean reports() { return false; }
 
     public boolean deleteForm() { return true; }
 

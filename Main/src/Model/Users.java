@@ -78,7 +78,7 @@ public class Users implements UserFunctionality{
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
     @Override
-    public boolean getReports() { return false; }
+    public boolean reports() { return false; }
 
     @Override
     public boolean deleteForm() { return false; }

@@ -219,7 +219,7 @@ public class HomePageMenu extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                if(usersManagerController.getUserFirstNameLogged().getReports())
+                if(usersManagerController.getUserFirstNameLogged().reports())
                     reportsForm.setVisible(true);
                 else
                     JOptionPane.showMessageDialog(HomePageMenu.this, "למשתמש זה אין הרשאות לקבלת דוחות", "Error", JOptionPane.ERROR_MESSAGE);
