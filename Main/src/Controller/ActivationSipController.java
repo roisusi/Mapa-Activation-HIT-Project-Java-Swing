@@ -3,7 +3,6 @@ package Controller;
 import Model.*;
 import View.ActivationsMoves;
 import View.FormEvent;
-import com.mysql.jdbc.StringUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -61,10 +60,10 @@ public class ActivationSipController {
         db.addActivationSipToList(activationFormSip);
     }
     public void addFirstNameToActivationList(int row, String firstName){
-        db.addFirstNameToActivationList(row, firstName);
+        db.addStatusToActivationList(row, firstName);
     }
     public void addStatusToActivationList(String status, int row){
-        db.addFirstNameToActivationList(status, row);
+        db.addStatusToActivationList(status, row);
     }
 
     public void updateUserExpertFirstName(int row , String firstName) throws SQLException {

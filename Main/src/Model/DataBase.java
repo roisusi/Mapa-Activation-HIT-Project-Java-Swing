@@ -268,10 +268,10 @@ public class DataBase {
     public void addActivationSipToList(ActivationFormSip sipAct) {
         sipActivation.add(sipAct);
     }
-    public void addFirstNameToActivationList(int row, String firstName){
+    public void addStatusToActivationList(int row, String firstName){
         sipActivation.get(row).setExpertName(firstName);
     }
-    public void addFirstNameToActivationList(String status,int row){
+    public void addStatusToActivationList(String status, int row){
         sipActivation.get(row).setStatus(status);
     }
     public void updateActivationSipToList(ActivationFormSip sipAct) {
