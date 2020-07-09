@@ -1,8 +1,6 @@
 package View;
 
-import Model.Users;
-import Model.Login;
-import Model.UsersType;
+import Controller.UsersManagerController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,6 +18,7 @@ public class CreateUserForm extends JDialog {
     protected  JTextField userName;
     protected  JTextField password;
     private JButton buttonOK;
+    private UsersManagerController usersManagerController;
     private CreateUserFormListener createUserFormListener;
 
     //-- Labels --//
@@ -48,6 +47,8 @@ public class CreateUserForm extends JDialog {
         password = new JTextField(15);
         welcome = new JLabel("טופס יצירת משתמש חדש");
 
+        usersManagerController = new UsersManagerController();
+
         //-- ComboBox Configuration --//
         Dimension dim = new Dimension();
         dim.setSize(168,22);
@@ -55,8 +56,8 @@ public class CreateUserForm extends JDialog {
         authenticationType = new JComboBox();
         DefaultComboBoxModel type = new DefaultComboBoxModel();
         type.addElement("נא לבחור");
-        type.addElement("primaryManager");
-        type.addElement("projectManager");
+        type.addElement("PrimaryManager");
+        type.addElement("ProjectManager");
         type.addElement("Expert");
         authenticationType.setPreferredSize(dim);
         authenticationType.setModel(type);
@@ -68,39 +69,7 @@ public class CreateUserForm extends JDialog {
         buttonOK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String firstNameEv;
-                String lastNameEv;
-                String emailEv;
-                String phoneNumberEv;
-                UsersType typeEv;
-                String userNameEv;
-                String passwordEv;
-
-                if (CheckEmptyCells()) {
-                    firstNameEv = firstName.getText();
-                    lastNameEv = lastName.getText();
-                    emailEv = email.getText();
-                    phoneNumberEv = phoneNumber.getText();
-                    typeEv = UsersType.valueOf(authenticationType.getSelectedItem().toString());
-                    userNameEv = userName.getText();
-                    passwordEv = password.getText();
-
-                    if(isString(firstNameEv, firstNameEv.length()) && isString(lastNameEv, lastNameEv.length()) && isNumeric(phoneNumberEv, phoneNumberEv.length())) {
-                        Login login = new Login(userNameEv, passwordEv);
-                        Users user = new Users(firstNameEv, lastNameEv, emailEv, phoneNumberEv, typeEv);
-
-                        try {
-                            createUserFormListener.formEventOccurred(user, login);
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
-                        }
-                        dispose();
-                    }
-                    else
-                        JOptionPane.showMessageDialog(CreateUserForm.this, "אחד או יותר מהערכים אשר הוזנו אינו תקין", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                else
-                    JOptionPane.showMessageDialog(CreateUserForm.this,"נא השלם את הנתונים באדום","Error",JOptionPane.ERROR_MESSAGE);
+                uploadFormToDataBase();
             }
         });
 
@@ -115,28 +84,65 @@ public class CreateUserForm extends JDialog {
         this.createUserFormListener = listener;
     }
 
-    private boolean isString(String str, int size) {
-        boolean flag = true;
-        char[] strArray = str.toCharArray();
+    public void uploadFormToDataBase()
+    {
+        String firstNameEv;
+        String lastNameEv;
+        String emailEv;
+        String phoneNumberEv;
+        String typeEv;
+        String userNameEv;
+        String passwordEv;
 
-        for (int i = 0; i < size; i++) {
-            if(!Character.isAlphabetic(strArray[i]))
-                flag = false;
+        if (CheckEmptyCells()) {
+            firstNameEv = firstName.getText();
+            lastNameEv = lastName.getText();
+            emailEv = email.getText();
+            phoneNumberEv = phoneNumber.getText();
+            typeEv = authenticationType.getSelectedItem().toString();
+            userNameEv = userName.getText();
+            passwordEv = password.getText();
+
+            if(checkInput()) {
+                try {
+                    CreateFormEvent formEvent = new CreateFormEvent(firstNameEv, lastNameEv, emailEv, phoneNumberEv, typeEv, userNameEv, passwordEv);
+                    createUserFormListener.formEventOccurred(formEvent);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+                clearForm();
+                dispose();
+            }
+            else
+                JOptionPane.showMessageDialog(CreateUserForm.this, "אחד או יותר מהערכים אשר הוזנו אינו תקין", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        return flag;
+        else
+            JOptionPane.showMessageDialog(CreateUserForm.this,"נא השלם את הנתונים באדום","Error",JOptionPane.ERROR_MESSAGE);
     }
 
-    private boolean isNumeric(String str, int size) {
-        boolean flag = true;
-        char[] intArray = str.toCharArray();
+    private boolean checkInput()
+    {
+        boolean flag;
+        boolean resultFlag= true;
 
-        for (int i = 0; i < size; i++) {
-            if((intArray[i] >= '0' && intArray[i] <= '9') || intArray[i] != '-')
-                flag = true;
-            else
-                flag = false;
+        flag = usersManagerController.isString(firstName.getText(), firstName.getText().length());
+        if (!flag) {
+            firstNameLabel.setForeground(Color.red);
+            resultFlag= false;
         }
-        return flag;
+
+        flag = usersManagerController.isString(lastName.getText(), lastName.getText().length());
+        if (!flag) {
+            lastNameLabel.setForeground(Color.red);
+            resultFlag= false;
+        }
+
+        flag = usersManagerController.isNumeric(phoneNumber.getText(), phoneNumber.getText().length());
+        if (!flag) {
+            phoneNumberLabel.setForeground(Color.red);
+            resultFlag= false;
+        }
+        return resultFlag;
     }
 
     private boolean CheckEmptyCells() {
@@ -300,5 +306,22 @@ public class CreateUserForm extends JDialog {
         add(formPanelTop,BorderLayout.NORTH);
         add(formPanelRight,BorderLayout.EAST);
         add(buttonsPanel,BorderLayout.SOUTH);
+    }
+
+    private void clearForm() {
+        firstName.setText("");
+        firstNameLabel.setForeground(Color.black);
+        lastName.setText("");
+        lastNameLabel.setForeground(Color.black);
+        email.setText("");
+        emailLabel.setForeground(Color.black);
+        phoneNumber.setText("");
+        phoneNumberLabel.setForeground(Color.black);
+        authenticationType.setSelectedIndex(0);
+        typeLabel.setForeground(Color.black);
+        userName.setText("");
+        userNameLabel.setForeground(Color.black);
+        password.setText("");
+        passwordLabel.setForeground(Color.black);
     }
 }

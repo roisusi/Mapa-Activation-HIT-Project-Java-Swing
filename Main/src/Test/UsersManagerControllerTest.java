@@ -4,7 +4,7 @@ import Controller.UsersManagerController;
 import Model.Login;
 import Model.Users;
 import Model.UsersType;
-
+import View.CreateFormEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 //import static org.mockito.junit.jupiter.MockitoExtension;
 
@@ -26,13 +27,15 @@ public class UsersManagerControllerTest {
     private String lastName = "lastname";
     private String email = "email";
     private String phoneNumber = "phonenumber";
-    private UsersType type = UsersType.Expert;
+    private String type = "Expert";
     private int userNameId = 1;
 
-    private Users user = new Users(id, firstName, lastName, email, phoneNumber, type, userNameId);
+    private Users user = new Users(id, firstName, lastName, email, phoneNumber, UsersType.valueOf(type), userNameId);
     private List<Users> usersList;
     private Login login = new Login(id, userName, password);
     private List<Login> loginList;
+
+    private CreateFormEvent event = new CreateFormEvent(firstName, lastName, email, phoneNumber, type, userName, password);
     private UsersManagerController usersManagerController;
 
     @BeforeEach
@@ -69,23 +72,29 @@ public class UsersManagerControllerTest {
     }
 
     @Test
+    public void createUserFailt()
+    {
+        assertThrows(Exception.class, () -> { usersManagerController.createUser(null);});
+    }
+
+    @Test
     public void isLoginUserAlreadyExistsSuccess()
     {
-        loginList = usersManagerController.getSystemUsers();
-        loginList.add(login);
-        usersManagerController.setSystemUsers(loginList);
+        usersManagerController.createUser(event);
+        usersManagerController.addLoginToLoginList();
 
-        assertTrue(usersManagerController.isLoginUserAlreadyExists(login));
+        assertFalse(usersManagerController.getSystemUsers().isEmpty());
+        assertTrue(usersManagerController.isLoginUserAlreadyExists());
     }
 
     @Test
     public void isUserAlreadyExistSuccess()
     {
-        usersList = usersManagerController.getUsers();
-        usersList.add(user);
-        usersManagerController.setUsers(usersList);
+        usersManagerController.createUser(event);
+        usersManagerController.addUserToUsersList();
 
-        assertTrue(usersManagerController.isUserAlreadyExists(user));
+        assertFalse(usersManagerController.getUsers().isEmpty());
+        assertTrue(usersManagerController.isUserAlreadyExists());
     }
 
     @Test

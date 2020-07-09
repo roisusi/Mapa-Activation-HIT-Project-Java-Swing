@@ -1,8 +1,5 @@
 package View;
 
-import Model.Users;
-import Model.Login;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -56,8 +53,8 @@ public class ManageUsersMenu extends JPanel {
             // ---- this Listener gets from Child Dialog the event of creating Activation Sip                         ---- //
             // ---- after the creation it adds the event to the DataBase, it send it to ManageUsers to show it on Table ----//
             @Override
-            public void formEventOccurred(Users user, Login login) throws SQLException {
-                getUserFromUsersListener.setUsers(user, login);
+            public void formEventOccurred(CreateFormEvent e) throws SQLException {
+                getUserFromUsersListener.setUsers(e);
             }
         });
     }

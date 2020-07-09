@@ -1,22 +1,16 @@
 package View;
 
-import Model.Users;
-import Model.Login;
-import jdk.net.SocketFlow;
+import Controller.UsersManagerController;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.*;
-import java.beans.PropertyChangeListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ManageUsersTableMenu extends JPanel {
     private JTable table;
@@ -75,7 +69,7 @@ public class ManageUsersTableMenu extends JPanel {
                 {
                     usersTableListener.rowDelete(row);
                 }
-                tableModel.fireTableRowsDeleted(row,row);//tell him more efficent that what exact row deleted
+                tableModel.fireTableRowsDeleted(row,row);
             }
         });
 
@@ -85,10 +79,11 @@ public class ManageUsersTableMenu extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    usersTableListener.rowEdit(tableModel.getUserList(), tableModel.getLoginList());
+                    usersTableListener.rowEdit();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
+
             }
         });
 
@@ -102,10 +97,7 @@ public class ManageUsersTableMenu extends JPanel {
         add(buttonPanel,BorderLayout.SOUTH);
     }
 
-    public void setData(List<Users> user, List<Login> login)
-    {
-        tableModel.setData(user, login);
-    }
+    public void setData(UsersManagerController db) { tableModel.setData(db); }
 
     public void refresh ()
     {

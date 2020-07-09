@@ -1,14 +1,16 @@
 package Controller;
 
 import Model.*;
+import View.CreateFormEvent;
 
-import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import java.sql.SQLException;
 
 public class UsersManagerController {
     DataBase db;
+    Users user;
+    Login login;
     List<Users> usersList;
     List<Login> loginList;
 
@@ -37,15 +39,73 @@ public class UsersManagerController {
     //-- Using only for tests --//
     public void setUsers(List usersList) { this.usersList = usersList; }
 
-    public void addUserToUsersList(Users user) { usersList.add(user); }
+    public void addUserToUsersList() { usersList.add(user); }
 
-    public void addLoginToLoginList(Login login) { loginList.add(login); }
+    public void addLoginToLoginList() { loginList.add(login); }
 
     public void connect () throws Exception { db.connect(); }
 
-    public void disconnect() { db.disconnect(); }
+    public void disconnect(){
+        //db.disconnect();
+    }
 
-    public boolean isUserAlreadyExists(Users user) {
+    public void createUser(CreateFormEvent event)
+    {
+        String firstName = event.getFirstName();
+        String lastName = event.getLastName();
+        String email = event.getEmail();
+        String phoneNumber = event.getPhoneNumber();
+        UsersType authenticationType = UsersType.valueOf(event.getAuthenticationType());
+        String userName = event.getUserName();
+        String password = event.getPassword();
+
+        user = new Users(firstName, lastName, email, phoneNumber, authenticationType);
+        login = new Login(userName, password);
+    }
+
+    public int getLoginUserIndex(Users user)
+    {
+        int index = 0;
+        int size = loginList.size();
+
+        for(int i = 0; i < size; i++)
+        {
+            if(loginList.get(i).getId() == user.getUserNameId())
+                index = i;
+        }
+        return index;
+    }
+
+    public boolean isString(String str, int size)
+    {
+        boolean flag = true;
+        char[] strArray = str.toCharArray();
+
+        for (int i = 0; i < size; i++) {
+            if(!Character.isAlphabetic(strArray[i]))
+                flag = false;
+        }
+        return flag;
+    }
+
+    public boolean isNumeric(String str, int size)
+    {
+        boolean flag =  false;
+        char[] intArray = str.toCharArray();
+
+        for (int i = 0; i < size; i++) {
+            if( (intArray[i] >= '0' && intArray[i] <= '9') || intArray[i] == '-')
+                flag = true;
+            else
+            {
+                flag = false;
+                break;
+            }
+        }
+        return flag;
+    }
+
+    public boolean isUserAlreadyExists() {
         boolean flag = false;
 
         for (Users userList : usersList)
@@ -56,7 +116,7 @@ public class UsersManagerController {
         return flag;
     }
 
-    public boolean isLoginUserAlreadyExists(Login login) {
+    public boolean isLoginUserAlreadyExists() {
         boolean flag = false;
 
         for (Login loginUser : loginList)
@@ -67,11 +127,11 @@ public class UsersManagerController {
         return flag;
     }
 
-    public void insertingUserToDataBase(Users user, int id) throws SQLException {
-        db.insertingUserToDataBase(user, id, usersList);
+    public void insertingUserToDataBase() throws SQLException {
+        db.insertingUserToDataBase(user, login.getId(), usersList);
     }
 
-    public void insertingLoginUserToDataBase(Login login) throws SQLException {
+    public void insertingLoginUserToDataBase() throws SQLException {
         db.insertingLoginUserToDataBase(login, loginList);
     }
 
@@ -120,26 +180,26 @@ public class UsersManagerController {
     }
 
     public void removeUser(int row) {
+        int size = loginList.size();
         Users user = usersList.get(row);
         db.removeUserFromList(user.getId(), user.getUserNameId());
         usersList.remove(row);
 
-        for(Login login: loginList)
+        for(int i = 0; i < size; i++)
         {
-            if(user.getUserNameId() == login.getId())
-                loginList.remove(row);
+            if(user.getUserNameId() == loginList.get(i).getId())
+            {
+                loginList.remove(i);
+                break;
+            }
         }
     }
 
-    public void updateSystemUsers(List usersList) throws SQLException {
+    public void updateSystemUsers() throws SQLException {
         db.updateSystemUser(usersList);
     }
 
-    public void updateLoginUsers(List loginList) throws SQLException {
+    public void updateLoginUsers() throws SQLException {
         db.updateLoginUser(loginList);
-    }
-
-    public Connection getConnection() {
-        return db.getCon();
     }
 }

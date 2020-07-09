@@ -1,13 +1,10 @@
 package View;
 
-import Model.Users;
-import Model.Login;
 import Controller.UsersManagerController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
-import java.util.List;
 
 public class ManageUsers extends JFrame {
     private static ManageUsers single_instance = null;
@@ -43,13 +40,14 @@ public class ManageUsers extends JFrame {
             e.printStackTrace();
         }
 
-        cal.setData(controller.getUsers(), controller.getSystemUsers());
+        cal.setData(controller);
         cal.refresh();
 
         menu.setUsersToTable(new GetUserFromUsersListener() {
             @Override
-            public void setUsers(Users user, Login login) throws SQLException {
-                if(controller.isUserAlreadyExists(user) || controller.isLoginUserAlreadyExists(login))
+            public void setUsers(CreateFormEvent e) throws SQLException {
+                controller.createUser(e);
+                if(controller.isUserAlreadyExists() || controller.isLoginUserAlreadyExists())
                     JOptionPane.showMessageDialog(ManageUsers.this,"משתמש קיים במערכת","Error",JOptionPane.ERROR_MESSAGE);
 
                 else
@@ -59,11 +57,11 @@ public class ManageUsers extends JFrame {
                     } catch (Exception exception) {
                         exception.printStackTrace();
                     }
-                    controller.insertingLoginUserToDataBase(login);
-                    controller.insertingUserToDataBase(user, login.getId());
-                    controller.addUserToUsersList(user);
-                    controller.addLoginToLoginList(login);
-                    cal.setData(controller.getUsers() ,controller.getSystemUsers());
+                    controller.insertingLoginUserToDataBase();
+                    controller.insertingUserToDataBase();
+                    controller.addUserToUsersList();
+                    controller.addLoginToLoginList();
+                    cal.setData(controller);
                     cal.refresh();
                     controller.disconnect();
                 }
@@ -81,31 +79,21 @@ public class ManageUsers extends JFrame {
                     e.printStackTrace();
                 }
                 controller.removeUser(row);
-                cal.setData(controller.getUsers(), controller.getSystemUsers());
+                cal.setData(controller);
                 controller.disconnect();
             }
 
             //-- Edit right click mouse activation --//
             @Override
-            public void rowEdit(List usersList, List loginList) throws SQLException {
+            public void rowEdit() throws SQLException {
                 try {
                     controller.connect();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                controller.updateSystemUsers(usersList);
-                controller.updateLoginUsers(loginList);
-                    /*int size = rowsList.size();
-
-                    for (int i = 0; i < size; i++)
-                    {
-                        if((int)columnsList.get(i) >= 0 && (int)columnsList.get(i) <= 4)
-                            controller.updateSystemUser(rowsList, columnsList, valuesList);
-                        else
-                            controller.updateLoginUser(rowsList, columnsList, valuesList);
-                    }*/
-
-                cal.setData(controller.getUsers(), controller.getSystemUsers());
+                controller.updateSystemUsers();
+                controller.updateLoginUsers();
+                cal.setData(controller);
                 controller.disconnect();
             }
         });
@@ -130,6 +118,7 @@ public class ManageUsers extends JFrame {
     public static ManageUsers getInstance(){
         if(single_instance == null)
             single_instance = new ManageUsers();
+
         return single_instance;
     }
 }
