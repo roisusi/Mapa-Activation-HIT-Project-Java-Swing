@@ -1,5 +1,8 @@
 package Model;
 
+import Controller.NumberRangeController;
+import com.mysql.jdbc.StringUtils;
+
 public class ActivationFormSip extends ActivationForm {
     private int id;
     private static int count=1;
@@ -16,6 +19,9 @@ public class ActivationFormSip extends ActivationForm {
     private int sbcPort;
     private String connectionType;
     private String status;
+
+    public ActivationFormSip() {
+    }
 
     //update
     public ActivationFormSip(int id, String customerID, String customerName, String contactName, String customerPhoneNumber, String customerEmail, String customerTechName, String customerTechPhoneNumber,
@@ -249,6 +255,16 @@ public class ActivationFormSip extends ActivationForm {
         super.setNumOfFails(numOfFails);
     }
 
+    @Override
+    public String getLastUpdate() {
+        return super.getLastUpdate();
+    }
+
+    @Override
+    public void setLastUpdate(String lastUpdate) {
+        super.setLastUpdate(lastUpdate);
+    }
+
     public int getId() {
         return id;
     }
@@ -351,5 +367,16 @@ public class ActivationFormSip extends ActivationForm {
         this.connectionType = connectionType;
     }
 
+    public boolean checkIP(int a , int b , int c , int d){
+        if ((a >= 0 && a <= 255) && b >= 0 && b <= 255 && c >= 0 && c <= 255 && d >= 0 && d <= 255) {
+            if ((a == 10 && b != 142) || (a == 192 && b == 168) || (a == 172 && (b >= 16 && b <= 31)) || a == 127) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

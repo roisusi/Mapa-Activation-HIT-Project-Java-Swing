@@ -3,6 +3,7 @@ package Controller;
 import Model.*;
 import View.ActivationsMoves;
 import View.FormEvent;
+import com.mysql.jdbc.StringUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -10,6 +11,7 @@ import java.util.List;
 
 public class ActivationSipController {
     DataBase db = new DataBase();
+    ActivationFormSip activationFormSip = new ActivationFormSip();
 
     public List<ActivationFormSip> getSipActivation() {
         return db.getActivationSipFromList();
@@ -153,14 +155,27 @@ public class ActivationSipController {
     }
 
     public boolean checkIP(int a , int b , int c , int d){
-        if ((a >= 0 && a <= 255) && b >= 0 && b <= 255 && c >= 0 && c <= 255 && d >= 0 && d <= 255) {
-            if ((a == 10 && b != 142) || (a == 192 && b == 168) || (a == 172 && (b >= 16 && b <= 31)) || a == 127) {
-                return false;
-            }
-            else {
-                return true;
-            }
-        }
-        return false;
+        return activationFormSip.checkIP(a,b,c,d);
     }
+
+    public boolean checkSnb(String text){
+        return activationFormSip.checkSnb(text);
+    }
+
+    public boolean checkPhoneNumber(String phone){
+        return activationFormSip.checkPhoneNumber(phone);
+    }
+
+    public boolean checkEmail(String email){
+        return activationFormSip.checkEmail(email);
+    }
+
+    public boolean checkInputDigits(String text) {
+        return activationFormSip.checkInputDigits(text);
+    }
+
+    public boolean checkEmptyCells(String text){
+        return activationFormSip.checkEmptyCells(text);
+    }
+
 }
