@@ -137,7 +137,13 @@ public class CreateUserForm extends JDialog {
             resultFlag= false;
         }
 
-        flag = usersManagerController.isNumeric(phoneNumber.getText(), phoneNumber.getText().length());
+        flag = usersManagerController.checkEmail(email.getText());
+        if (!flag) {
+            emailLabel.setForeground(Color.red);
+            resultFlag= false;
+        }
+
+        flag = usersManagerController.checkPhoneNumber(phoneNumber.getText());
         if (!flag) {
             phoneNumberLabel.setForeground(Color.red);
             resultFlag= false;

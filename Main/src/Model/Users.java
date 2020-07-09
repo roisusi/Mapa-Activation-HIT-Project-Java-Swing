@@ -9,6 +9,10 @@ public class Users implements UserFunctionality{
     protected String phoneNumber;
     private int userNameId;
 
+    public Users() {
+
+    }
+
     public Users(String firstName, String lastName, String email,String phoneNumber, UsersType usersType) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -94,4 +98,47 @@ public class Users implements UserFunctionality{
 
     @Override
     public boolean editUsers() { return false; }
+
+    public boolean isString(String str, int size)
+    {
+        boolean flag = true;
+        char[] strArray = str.toCharArray();
+
+        for (int i = 0; i < size; i++) {
+            if(!Character.isAlphabetic(strArray[i]))
+                flag = false;
+        }
+        return flag;
+    }
+
+    public boolean checkPhoneNumber(String phone){
+        String text = phone;
+        int count=0;
+        int firstThreeDigs=3;
+        if (text.length() != 11)
+            return false;
+        if (text.contains("-"))
+            count ++;
+        // check 050,052,054,055,058
+        if (count != 1 || text.indexOf("-") - firstThreeDigs != 0)
+            return false;
+        char ch = text.charAt(2);
+        if (text.charAt(0) == '0'  && text.charAt(1) == '5' && (text.charAt(2) == '0' || text.charAt(2) == '2' || text.charAt(2) == '4' || text.charAt(2) == '5' || text.charAt(2) == '8' ))
+            return true;
+        return false;
+    }
+
+    public boolean checkEmail(String email){
+        String text = email;
+        int count =0;
+        if (text.contains("@")){
+            count++;
+        }
+        if (text.contains(".co.il") || text.contains(".com") || text.contains(".net")){
+            if (count == 1)
+                return true;
+        }
+
+        return false;
+    }
 }

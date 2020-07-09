@@ -9,7 +9,7 @@ import java.util.List;
 
 public class UsersManagerController {
     DataBase db;
-    Users user;
+    Users user = new Users();
     Login login;
     List<Users> usersList;
     List<Login> loginList;
@@ -63,6 +63,14 @@ public class UsersManagerController {
         login = new Login(userName, password);
     }
 
+    public boolean checkPhoneNumber(String phone){
+        return user.checkPhoneNumber(phone);
+    }
+
+    public boolean checkEmail(String email){
+        return user.checkEmail(email);
+    }
+
     public int getLoginUserIndex(Users user)
     {
         int index = 0;
@@ -78,31 +86,7 @@ public class UsersManagerController {
 
     public boolean isString(String str, int size)
     {
-        boolean flag = true;
-        char[] strArray = str.toCharArray();
-
-        for (int i = 0; i < size; i++) {
-            if(!Character.isAlphabetic(strArray[i]))
-                flag = false;
-        }
-        return flag;
-    }
-
-    public boolean isNumeric(String str, int size)
-    {
-        boolean flag =  false;
-        char[] intArray = str.toCharArray();
-
-        for (int i = 0; i < size; i++) {
-            if( (intArray[i] >= '0' && intArray[i] <= '9') || intArray[i] == '-')
-                flag = true;
-            else
-            {
-                flag = false;
-                break;
-            }
-        }
-        return flag;
+        return user.isString(str, size);
     }
 
     public boolean isUserAlreadyExists() {

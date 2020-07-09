@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 //import static org.mockito.Mockito.*;
 
 //@ExtendWith(MockitoExtension.class)
@@ -68,5 +69,52 @@ public class ActivationSipControllerTest {
         assertFalse(activationSipController.checkIP(ipA, ipB, ipC, ipD));
     }
 
+    @Test
+    public void checkSnbSuccess()
+    {
+        String snb = "36589561";
+        String str = "Hello";
 
+        assertTrue(activationSipController.checkSnb(snb));
+        assertThrows(NumberFormatException.class, () -> { activationSipController.checkSnb(str) ;});
+    }
+
+    @Test
+    public void checkPhoneNumber()
+    {
+        String phoneNumber = "052-7463882";
+        String str = "Hello";
+
+        assertTrue(activationSipController.checkPhoneNumber(phoneNumber));
+        assertFalse(activationSipController.checkPhoneNumber(str));
+    }
+
+    @Test
+    public void checkEmailSuccess()
+    {
+        String email = "user@partner.co.il";
+        String str = "wrongEmail@";
+
+        assertTrue(activationSipController.checkEmail(email));
+        assertFalse(activationSipController.checkEmail(str));
+    }
+
+    @Test
+    public void checkInputDigitsSuccess() {
+        String phoneNumber= "0526475883";
+        String str = "Hello";
+
+        assertTrue(activationSipController.checkInputDigits(phoneNumber));
+        assertFalse(activationSipController.checkInputDigits(str));
+    }
+
+    @Test
+    public void checkEmptyCellsSuccess()
+    {
+        String empty = "";
+        String str = "Hello";
+
+        assertEquals(true, activationSipController.checkEmptyCells(empty));
+        assertEquals(false, activationSipController.checkEmptyCells(str));
+    }
 }

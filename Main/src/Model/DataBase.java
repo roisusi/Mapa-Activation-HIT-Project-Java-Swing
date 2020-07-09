@@ -14,8 +14,8 @@ public class DataBase {
     private List<Login> users;
     private List<ActivationFormSip> sipActivation;
     private List<NumberRanges> numberRanges;
-    private static Users loggedUser;
-    private static Login LoginUser;
+    private  static Users loggedUser;
+    private  static Login LoginUser;
     private Connection con;
     private NumberRangeController numberRangeController;
 
