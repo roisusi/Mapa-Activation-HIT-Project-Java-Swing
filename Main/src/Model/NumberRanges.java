@@ -75,12 +75,15 @@ public class NumberRanges {
         iter1 = from.iterator();
         iter2 = to.iterator();
 
-        while (iter1.hasNext() && iter2.hasNext()) {
+        while (iter1.hasNext()) {
             String str1 = iter1.next();
-            String str2 = iter2.next();
-
-            if (str1.equals("") || str2.equals("")){
+            if (str1.equals("")) {
                 iter1.remove();
+            }
+        }
+        while (iter2.hasNext()) {
+            String str2 = iter2.next();
+            if (str2.equals("")) {
                 iter2.remove();
             }
         }
@@ -109,7 +112,7 @@ public class NumberRanges {
 
         int i=0,j=0;
         for (i=0 ; i < size ; i ++) {
-            //strRange = (Integer.parseInt(from.get(i)));
+            strRange = (Integer.parseInt(from.get(i)));
             range = fnrBreakToSingles(from.get(i),to.get(i));
 
             // Display the FNR for Ericsson
