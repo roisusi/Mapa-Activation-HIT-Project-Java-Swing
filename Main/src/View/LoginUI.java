@@ -28,7 +28,6 @@ public class LoginUI extends JDialog {
         cancelButton = new JButton("Cancel");
         controller = new UsersManagerController();
 
-
         //-- Password --//
         passwordField.setEchoChar('*');//instead of circles we get ****
 

@@ -1,6 +1,7 @@
 package View;
 
 import Controller.ActivationSipController;
+import Controller.UsersManagerController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,10 +13,12 @@ public class HomePage extends JFrame {
     private HomePageMenu menu;
     private UpperMenu upperMenu;
     private ActivationSipController activationSipController;
+    private UsersManagerController usersManagerController;
 
     public HomePage() {
         super("Mapa Activation");
         activationSipController = new ActivationSipController();
+        usersManagerController = new UsersManagerController();
         setJMenuBar(createMenubar());
         setLayout(new BorderLayout()); //set BorderLayout
 
@@ -162,9 +165,11 @@ public class HomePage extends JFrame {
     }
     private JMenuBar createMenubar() {
         JMenuBar menuBar = new JMenuBar(); // create the menu bar
-        JMenu file = new JMenu("File"); //create the menu on the bar
+        JMenu file = new JMenu("קובץ"); //create the menu on the bar
         //-- Option in File Bar --//
-        JMenuItem exit = new JMenuItem("Exit");
+        JMenuItem disconnect = new JMenuItem("התנתק");
+        JMenuItem exit = new JMenuItem("יציאה");
+        file.add(disconnect);
         file.addSeparator(); // add trans line to separate from other items
         file.add(exit);
 
@@ -184,6 +189,17 @@ public class HomePage extends JFrame {
         });
         //--Set Accelerator those are the shortcut like Ctrl-x without using the menu--//
         exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));//for ctrl+X
+
+
+        disconnect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //LoginUI loginUI = new LoginUI((JFrame) SwingUtilities.getRootPane(HomePage.super.rootPane).getParent());
+                dispose();
+                HomePage homePage = new HomePage();
+                homePage.setVisible(true);
+            }
+        });
 
         return menuBar;
     }

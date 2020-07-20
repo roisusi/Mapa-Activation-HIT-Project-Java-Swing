@@ -117,6 +117,7 @@ public class ActivationFormSIP extends JDialog {
     protected JButton numberRangeButton;
     protected JButton templateActivaion;
     private JButton addToSchedule;
+    private JButton FNR;
 
     // Controllers //
     private ActivationSipController activationSipController;
@@ -305,9 +306,10 @@ public class ActivationFormSIP extends JDialog {
         //-- South Buttons --//
         addToSchedule = new JButton("הוסף הפעלה");
         editToSchedule = new JButton("עדכן הפעלה");
+        numberRangeButton = new JButton("הוסף טווחים");
         failActivation = new JButton("הכשל הפעלה");
         activationToFile = new JButton("הוצא נתונים");
-        numberRangeButton = new JButton("הוסף טווחים");
+        FNR = new JButton("הפק FNR");
         templateActivaion = new JButton("טופס מוכן");
 
 
@@ -419,6 +421,29 @@ public class ActivationFormSIP extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mediaAddress.setSelectedIndex(signalAddress.getSelectedIndex());
+            }
+        });
+        FNR.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                NumberRangeController numberRangeController = new NumberRangeController();
+                if (ActivationsMoves.SessionId.getFromRange() == null || ActivationsMoves.SessionId.getToRange()== null) {
+                    try {
+                        numberRangeController.connect();
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
+                    try {
+                        numberRangeController.loadNumberRangeFromDataBaseToList(activationId);
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                    numberRangeController.FNRtoFileSip(numberRangeController.getNumberRanges().get(0).getFromRange(), numberRangeController.getNumberRanges().get(0).getToRange());
+                }
+                else{
+                    numberRangeController.FNRtoFileSip(ActivationsMoves.SessionId.getFromRange(), ActivationsMoves.SessionId.getToRange());
+
+                }
             }
         });
 
@@ -1187,6 +1212,7 @@ public class ActivationFormSIP extends JDialog {
 
         //-- Buttons Panel --//
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        buttonsPanel.add(FNR);
         buttonsPanel.add(templateActivaion);
         buttonsPanel.add(activationToFile);
         buttonsPanel.add(failActivation);

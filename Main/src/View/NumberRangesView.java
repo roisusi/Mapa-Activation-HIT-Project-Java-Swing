@@ -17,7 +17,6 @@ public class NumberRangesView extends JDialog implements ActionListener {
     private JButton adding;
     private JButton remove;
     private JButton save;
-    private JButton FNR;
     private ArrayList from = new ArrayList();
     private ArrayList to = new ArrayList();
     private JPanel panel = new JPanel();
@@ -91,31 +90,14 @@ public class NumberRangesView extends JDialog implements ActionListener {
                 from = tableModel.fromTableList();
                 to = tableModel.toTableList();
                 numberRangeController = new NumberRangeController(from,to);
-                tableModel.removeViewCells();
-
                 numberRangeController.removeEmptyCells(from,to);
+                tableModel.removeViewCells();
                 numberRangeController.setFromRange(from);
                 numberRangeController.setToRange(to);
                 ActivationsMoves.SessionId.setFromRange(from);
                 ActivationsMoves.SessionId.setToRange(to);
                 tableModel.fireTableDataChanged();
                 dispose();
-            }
-        });
-
-        FNR = new JButton("הפק FNR");
-        FNR.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                from = tableModel.fromTableList();
-                to = tableModel.toTableList();
-                numberRangeController = new NumberRangeController(from,to);
-                tableModel.removeViewCells();
-                numberRangeController.removeEmptyCells(from,to);
-                numberRangeController.setFromRange(from);
-                numberRangeController.setToRange(to);
-                tableModel.fireTableDataChanged();
-                numberRangeController.FNRtoFileSip(from,to);
             }
         });
 
@@ -133,7 +115,6 @@ public class NumberRangesView extends JDialog implements ActionListener {
 
         //-- Buttons Panel --//
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.add(FNR);
         buttonPanel.add(save);
 
 
