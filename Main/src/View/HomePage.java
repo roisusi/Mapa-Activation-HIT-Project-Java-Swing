@@ -148,10 +148,10 @@ public class HomePage extends JFrame {
         });
 
         //-- Creation of UpperMenu --//
-        upperMenu = new UpperMenu("Welcome to Mapa Activation");
+        upperMenu = new UpperMenu("מערכת ניהול הפעלות");
 
         //-- adding --//
-        add(menu,BorderLayout.WEST);
+        add(menu,BorderLayout.EAST);
         add(upperMenu,BorderLayout.NORTH);
         add(cal,BorderLayout.CENTER);
 
@@ -166,14 +166,23 @@ public class HomePage extends JFrame {
     private JMenuBar createMenubar() {
         JMenuBar menuBar = new JMenuBar(); // create the menu bar
         JMenu file = new JMenu("קובץ"); //create the menu on the bar
+
         //-- Option in File Bar --//
         JMenuItem disconnect = new JMenuItem("התנתק");
         JMenuItem exit = new JMenuItem("יציאה");
+
+        //-- Align Menu To right --//
+        menuBar.add(Box.createHorizontalGlue());
+        file.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        exit.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        disconnect.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+
         file.add(disconnect);
         file.addSeparator(); // add trans line to separate from other items
         file.add(exit);
-
         menuBar.add(file);
+
+
 
         //-- Set Mnemonic those are the Key you click on shortcuts , they are view as _ under the Menus like File --//
         file.setMnemonic(KeyEvent.VK_F);// this is a static class the makes VK_F as Key
